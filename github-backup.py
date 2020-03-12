@@ -434,17 +434,10 @@ def do_print_git_clone(args):
 
     github_access_token = config.get("github_access_token")
     organization = config.get("organization")
-    backup_directory = config.get("backup_directory")
 
     # Log into GitHub.
 
     github = Github(github_access_token)
-
-    # Move existing backup directory
-
-    # Create backup directory
-
-    os.mkdir(backup_directory)
 
     # Print repository names.
 
