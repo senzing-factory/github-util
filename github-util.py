@@ -1,17 +1,15 @@
 #! /usr/bin/env python3
 
 # -----------------------------------------------------------------------------
-# github-backup.py
+# github-util.py
 #
-# Work with Slack APIs.
+# Work with GitHub.
 #
 # References:
 # - GitHub
 #   - https://github.com/PyGithub/PyGithub
 #   - https://pygithub.readthedocs.io/
 #   - https://pygithub.readthedocs.io/en/latest/github_objects.html
-# - pyGit2
-#   - https://www.pygit2.org/index.html
 # -----------------------------------------------------------------------------
 
 from glob import glob
@@ -32,7 +30,7 @@ from types import MethodType
 __all__ = []
 __version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2020-03-12'
+__updated__ = '2020-03-13'
 
 PRODUCT_ID = "5012"
 log_format = '%(asctime)s %(message)s'
@@ -41,11 +39,6 @@ log_format = '%(asctime)s %(message)s'
 # 1) Command line options, 2) Environment variables, 3) Configuration files, 4) Default values
 
 configuration_locator = {
-    "backup_directory": {
-        "default": "/tmp/senzing-backup-directory",
-        "env": "SENZING_BACKUP_DIRECTORY",
-        "cli": "backup-directory"
-    },
     "debug": {
         "default": False,
         "env": "GITHUB_DEBUG",
@@ -88,7 +81,47 @@ def get_parser():
 
     subcommands = {
         'print-git-clone': {
-            "help": 'Print awesome groups.',
+            "help": 'Print git clone https://...',
+            "arguments": {
+                "--github-access-token": {
+                    "dest": "github_access_token",
+                    "metavar": "GITHUB_ACCESS_TOKEN",
+                    "help": "GitHub Personal Access token. See https://github.com/settings/tokens"
+                },
+                "--debug": {
+                    "dest": "debug",
+                    "action": "store_true",
+                    "help": "Enable debugging. (GITHUB_DEBUG) Default: False"
+                },
+                "--organization": {
+                    "dest": "organization",
+                    "metavar": "GITHUB_ORGANIZATION",
+                    "help": "GitHub account/organization name."
+                },
+            },
+        },
+        'print-git-clone-mirror': {
+            "help": 'Print git clone --mirror https://...',
+            "arguments": {
+                "--github-access-token": {
+                    "dest": "github_access_token",
+                    "metavar": "GITHUB_ACCESS_TOKEN",
+                    "help": "GitHub Personal Access token. See https://github.com/settings/tokens"
+                },
+                "--debug": {
+                    "dest": "debug",
+                    "action": "store_true",
+                    "help": "Enable debugging. (GITHUB_DEBUG) Default: False"
+                },
+                "--organization": {
+                    "dest": "organization",
+                    "metavar": "GITHUB_ORGANIZATION",
+                    "help": "GitHub account/organization name."
+                },
+            },
+        },
+        'print-repository-names': {
+            "help": 'Print repository names.',
             "arguments": {
                 "--github-access-token": {
                     "dest": "github_access_token",
@@ -125,7 +158,7 @@ def get_parser():
         },
     }
 
-    parser = argparse.ArgumentParser(prog="github-tasks.py", description="Reports from GitHub.")
+    parser = argparse.ArgumentParser(prog="github-util.py", description="Reports from GitHub.")
     subparsers = parser.add_subparsers(dest='subcommand', help='Subcommands (GITHUB_SUBCOMMAND):')
 
     for subcommand_key, subcommand_values in subcommands.items():
@@ -421,13 +454,6 @@ def do_print_git_clone(args):
     # Get context from CLI, environment variables, and ini files.
 
     config = get_configuration(args)
-
-    # Prolog.
-
-    logging.info(entry_template(config))
-
-    # Validate input.
-
     validate_configuration(config)
 
     # Pull variables from config.
@@ -445,9 +471,53 @@ def do_print_git_clone(args):
     for repo in github_organization.get_repos():
         print("git clone {0}".format(repo.clone_url))
 
-    # Epilog.
 
-    logging.info(exit_template(config))
+def do_print_git_clone_mirror(args):
+    ''' Do a task. '''
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Pull variables from config.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+
+    # Log into GitHub.
+
+    github = Github(github_access_token)
+
+    # Print repository names.
+
+    github_organization = github.get_organization(organization)
+    for repo in github_organization.get_repos():
+        print("git clone --mirror {0}".format(repo.clone_url))
+
+
+def do_print_repository_names(args):
+    ''' Do a task. '''
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Pull variables from config.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+
+    # Log into GitHub.
+
+    github = Github(github_access_token)
+
+    # Print repository names.
+
+    github_organization = github.get_organization(organization)
+    for repo in github_organization.get_repos():
+        print("{0}".format(repo.name))
 
 
 def do_sleep(args):
