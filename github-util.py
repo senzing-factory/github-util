@@ -31,8 +31,14 @@ __version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
 __updated__ = '2021-02-22'
 
-PRODUCT_ID = "5012"
+SENZING_PRODUCT_ID = "5012"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 log_format = '%(asctime)s %(message)s'
+
+# Working with bytes.
+
+KILOBYTES = 1024
+MEGABYTES = 1024 * KILOBYTES
+GIGABYTES = 1024 * MEGABYTES
 
 # The "configuration_locator" describes where configuration variables are in:
 # 1) Command line options, 2) Environment variables, 3) Configuration files, 4) Default values
@@ -81,62 +87,19 @@ def get_parser():
     subcommands = {
         'print-git-clone': {
             "help": 'Print git clone https://...',
-            "arguments": {
-                "--github-access-token": {
-                    "dest": "github_access_token",
-                    "metavar": "GITHUB_ACCESS_TOKEN",
-                    "help": "GitHub Personal Access token. See https://github.com/settings/tokens"
-                },
-                "--debug": {
-                    "dest": "debug",
-                    "action": "store_true",
-                    "help": "Enable debugging. (SENZING_DEBUG) Default: False"
-                },
-                "--organization": {
-                    "dest": "organization",
-                    "metavar": "GITHUB_ORGANIZATION",
-                    "help": "GitHub account/organization name."
-                },
-            },
+            "argument_aspects": ["common"],
+            "arguments": {},
         },
         'print-git-clone-mirror': {
             "help": 'Print git clone --mirror https://...',
-            "arguments": {
-                "--github-access-token": {
-                    "dest": "github_access_token",
-                    "metavar": "GITHUB_ACCESS_TOKEN",
-                    "help": "GitHub Personal Access token. See https://github.com/settings/tokens"
-                },
-                "--debug": {
-                    "dest": "debug",
-                    "action": "store_true",
-                    "help": "Enable debugging. (SENZING_DEBUG) Default: False"
-                },
-                "--organization": {
-                    "dest": "organization",
-                    "metavar": "GITHUB_ORGANIZATION",
-                    "help": "GitHub account/organization name."
-                },
-            },
+            "argument_aspects": ["common"],
+            "arguments": {},
         },
         'print-repository-names': {
             "help": 'Print repository names.',
+            "argument_aspects": ["common"],
             "arguments": {
-                "--github-access-token": {
-                    "dest": "github_access_token",
-                    "metavar": "GITHUB_ACCESS_TOKEN",
-                    "help": "GitHub Personal Access token. See https://github.com/settings/tokens"
-                },
-                "--debug": {
-                    "dest": "debug",
-                    "action": "store_true",
-                    "help": "Enable debugging. (SENZING_DEBUG) Default: False"
-                },
-                "--organization": {
-                    "dest": "organization",
-                    "metavar": "GITHUB_ORGANIZATION",
-                    "help": "GitHub account/organization name."
-                },
+
             },
         },
         'sleep': {
@@ -157,7 +120,40 @@ def get_parser():
         },
     }
 
-    parser = argparse.ArgumentParser(prog="github-util.py", description="Reports from GitHub.")
+    # Define argument_aspects.
+
+    argument_aspects = {
+        "common": {
+            "--debug": {
+                "dest": "debug",
+                "action": "store_true",
+                "help": "Enable debugging. (SENZING_DEBUG) Default: False"
+            },
+            "--github-access-token": {
+                "dest": "github_access_token",
+                "metavar": "GITHUB_ACCESS_TOKEN",
+                "help": "GitHub Personal Access token. See https://github.com/settings/tokens"
+            },
+            "--organization": {
+                "dest": "organization",
+                "metavar": "GITHUB_ORGANIZATION",
+                "help": "GitHub account/organization name."
+            },
+        },
+    }
+
+    # Augment "subcommands" variable with arguments specified by aspects.
+
+    for subcommand, subcommand_value in subcommands.items():
+        if 'argument_aspects' in subcommand_value:
+            for aspect in subcommand_value['argument_aspects']:
+                if 'arguments' not in subcommands[subcommand]:
+                    subcommands[subcommand]['arguments'] = {}
+                arguments = argument_aspects.get(aspect, {})
+                for argument, argument_value in arguments.items():
+                    subcommands[subcommand]['arguments'][argument] = argument_value
+
+    parser = argparse.ArgumentParser(description="Reports from GitHub. For more information, see https://github.com/Senzing/github-util")
     subparsers = parser.add_subparsers(dest='subcommand', help='Subcommands (SENZING_SUBCOMMAND):')
 
     for subcommand_key, subcommand_values in subcommands.items():
@@ -186,28 +182,30 @@ MESSAGE_ERROR = 700
 MESSAGE_DEBUG = 900
 
 message_dictionary = {
-    "100": "senzing-" + PRODUCT_ID + "{0:04d}I",
+    "100": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}I",
     "101": "Added   Repository: {0} Label: {1}",
     "102": "Updated Repository: {0} Label: {1}",
     "103": "Deleted Repository: {0} Label: {1}",
     "104": "Repository '{0}' has been archived.  Not modifying its labels.",
-    "293": "For information on warnings and errors, see https://github.com/docktermj/python-github",
+    "293": "For information on warnings and errors, see https://github.com/Senzing/github-utils",
+    "294": "Version: {0}  Updated: {1}",
     "295": "Sleeping infinitely.",
     "296": "Sleeping {0} seconds.",
     "297": "Enter {0}",
     "298": "Exit {0}",
     "299": "{0}",
-    "300": "senzing-" + PRODUCT_ID + "{0:04d}W",
+    "300": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}W",
     "499": "{0}",
-    "500": "senzing-" + PRODUCT_ID + "{0:04d}E",
+    "500": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}E",
     "696": "Bad SENZING_SUBCOMMAND: {0}.",
     "697": "No processing done.",
     "698": "Program terminated with error.",
     "699": "{0}",
-    "700": "SENZING-" + PRODUCT_ID + "{0:04d}E",
+    "700": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}E",
     "701": "GITHUB_ACCESS_TOKEN is required",
     "899": "{0}",
-    "900": "senzing-" + PRODUCT_ID + "{0:04d}D",
+    "900": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}D",
+    "998": "Debugging enabled.",
     "999": "{0}",
 }
 
