@@ -12,7 +12,6 @@
 #   - https://pygithub.readthedocs.io/en/latest/github_objects.html
 # -----------------------------------------------------------------------------
 
-from glob import glob
 import argparse
 import datetime
 import json
@@ -30,7 +29,7 @@ from types import MethodType
 __all__ = []
 __version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2020-03-13'
+__updated__ = '2021-02-22'
 
 PRODUCT_ID = "5012"
 log_format = '%(asctime)s %(message)s'
@@ -41,7 +40,7 @@ log_format = '%(asctime)s %(message)s'
 configuration_locator = {
     "debug": {
         "default": False,
-        "env": "GITHUB_DEBUG",
+        "env": "SENZING_DEBUG",
         "cli": "debug"
     },
     "github_access_token": {
@@ -56,12 +55,12 @@ configuration_locator = {
     },
     "sleep_time_in_seconds": {
         "default": 0,
-        "env": "GITHUB_SLEEP_TIME_IN_SECONDS",
+        "env": "SENZING_SLEEP_TIME_IN_SECONDS",
         "cli": "sleep-time-in-seconds"
     },
     "subcommand": {
         "default": None,
-        "env": "GITHUB_SUBCOMMAND",
+        "env": "SENZING_SUBCOMMAND",
     }
 }
 
@@ -91,7 +90,7 @@ def get_parser():
                 "--debug": {
                     "dest": "debug",
                     "action": "store_true",
-                    "help": "Enable debugging. (GITHUB_DEBUG) Default: False"
+                    "help": "Enable debugging. (SENZING_DEBUG) Default: False"
                 },
                 "--organization": {
                     "dest": "organization",
@@ -111,7 +110,7 @@ def get_parser():
                 "--debug": {
                     "dest": "debug",
                     "action": "store_true",
-                    "help": "Enable debugging. (GITHUB_DEBUG) Default: False"
+                    "help": "Enable debugging. (SENZING_DEBUG) Default: False"
                 },
                 "--organization": {
                     "dest": "organization",
@@ -131,7 +130,7 @@ def get_parser():
                 "--debug": {
                     "dest": "debug",
                     "action": "store_true",
-                    "help": "Enable debugging. (GITHUB_DEBUG) Default: False"
+                    "help": "Enable debugging. (SENZING_DEBUG) Default: False"
                 },
                 "--organization": {
                     "dest": "organization",
@@ -145,7 +144,7 @@ def get_parser():
             "arguments": {
                 "--sleep-time-in-seconds": {
                     "dest": "sleep_time_in_seconds",
-                    "metavar": "GITHUB_SLEEP_TIME_IN_SECONDS",
+                    "metavar": "SENZING_SLEEP_TIME_IN_SECONDS",
                     "help": "Sleep time in seconds. DEFAULT: 0 (infinite)"
                 },
             },
@@ -159,7 +158,7 @@ def get_parser():
     }
 
     parser = argparse.ArgumentParser(prog="github-util.py", description="Reports from GitHub.")
-    subparsers = parser.add_subparsers(dest='subcommand', help='Subcommands (GITHUB_SUBCOMMAND):')
+    subparsers = parser.add_subparsers(dest='subcommand', help='Subcommands (SENZING_SUBCOMMAND):')
 
     for subcommand_key, subcommand_values in subcommands.items():
         subcommand_help = subcommand_values.get('help', "")
@@ -187,28 +186,28 @@ MESSAGE_ERROR = 700
 MESSAGE_DEBUG = 900
 
 message_dictionary = {
-    "100": "github-" + PRODUCT_ID + "{0:04d}I",
+    "100": "senzing-" + PRODUCT_ID + "{0:04d}I",
     "101": "Added   Repository: {0} Label: {1}",
     "102": "Updated Repository: {0} Label: {1}",
     "103": "Deleted Repository: {0} Label: {1}",
     "104": "Repository '{0}' has been archived.  Not modifying its labels.",
-    "293": "For information on warnings and errors, see https://github.com/docktermj/python-github" ,
+    "293": "For information on warnings and errors, see https://github.com/docktermj/python-github",
     "295": "Sleeping infinitely.",
     "296": "Sleeping {0} seconds.",
     "297": "Enter {0}",
     "298": "Exit {0}",
     "299": "{0}",
-    "300": "github-" + PRODUCT_ID + "{0:04d}W",
+    "300": "senzing-" + PRODUCT_ID + "{0:04d}W",
     "499": "{0}",
-    "500": "github-" + PRODUCT_ID + "{0:04d}E",
-    "696": "Bad GITHUB_SUBCOMMAND: {0}.",
+    "500": "senzing-" + PRODUCT_ID + "{0:04d}E",
+    "696": "Bad SENZING_SUBCOMMAND: {0}.",
     "697": "No processing done.",
     "698": "Program terminated with error.",
     "699": "{0}",
-    "700": "github-" + PRODUCT_ID + "{0:04d}E",
+    "700": "SENZING-" + PRODUCT_ID + "{0:04d}E",
     "701": "GITHUB_ACCESS_TOKEN is required",
     "899": "{0}",
-    "900": "github-" + PRODUCT_ID + "{0:04d}D",
+    "900": "senzing-" + PRODUCT_ID + "{0:04d}D",
     "999": "{0}",
 }
 
@@ -294,6 +293,11 @@ def get_configuration(args):
         if value:
             result[new_key] = value
 
+    # Add program information.
+
+    result['program_version'] = __version__
+    result['program_updated'] = __updated__
+
     # Special case: subcommand from command-line
 
     if args.subcommand:
@@ -317,7 +321,7 @@ def get_configuration(args):
 
     integers = [
         'sleep_time_in_seconds'
-        ]
+    ]
     for integer in integers:
         integer_string = result.get(integer)
         result[integer] = int(integer_string)
@@ -365,12 +369,19 @@ def redact_configuration(config):
     ''' Return a shallow copy of config with certain keys removed. '''
     result = config.copy()
     for key in keys_to_redact:
-        result.pop(key)
+        try:
+            result.pop(key)
+        except:
+            pass
     return result
 
 # -----------------------------------------------------------------------------
 # Utility functions
 # -----------------------------------------------------------------------------
+
+
+def bootstrap_signal_handler(signal, frame):
+    sys.exit(0)
 
 
 def create_signal_handler_function(args):
@@ -383,10 +394,6 @@ def create_signal_handler_function(args):
         sys.exit(0)
 
     return result_function
-
-
-def bootstrap_signal_handler(signal, frame):
-    sys.exit(0)
 
 
 def entry_template(config):
@@ -424,7 +431,7 @@ def exit_error(index, *args):
 
 def exit_silently():
     ''' Exit program. '''
-    sys.exit(1)
+    sys.exit(0)
 
 # -----------------------------------------------------------------------------
 # do_* functions
@@ -576,9 +583,10 @@ if __name__ == "__main__":
         "critical": logging.CRITICAL
     }
 
-    log_level_parameter = os.getenv("GITHUB_LOG_LEVEL", "info").lower()
+    log_level_parameter = os.getenv("SENZING_LOG_LEVEL", "info").lower()
     log_level = log_level_map.get(log_level_parameter, logging.INFO)
     logging.basicConfig(format=log_format, level=log_level)
+    logging.debug(message_debug(998))
 
     # Trap signals temporarily until args are parsed.
 
@@ -587,7 +595,7 @@ if __name__ == "__main__":
 
     # Parse the command line arguments.
 
-    subcommand = os.getenv("GITHUB_SUBCOMMAND", None)
+    subcommand = os.getenv("SENZING_SUBCOMMAND", None)
     parser = get_parser()
     if len(sys.argv) > 1:
         args = parser.parse_args()
@@ -596,7 +604,7 @@ if __name__ == "__main__":
         args = argparse.Namespace(subcommand=subcommand)
     else:
         parser.print_help()
-        if len(os.getenv("GITHUB_DOCKER_LAUNCHED", "")):
+        if len(os.getenv("SENZING_DOCKER_LAUNCHED", "")):
             subcommand = "sleep"
             args = argparse.Namespace(subcommand=subcommand)
             do_sleep(args)
@@ -615,7 +623,7 @@ if __name__ == "__main__":
     # Test to see if function exists in the code.
 
     if subcommand_function_name not in globals():
-        logging.warning(message_warning(596, subcommand))
+        logging.warning(message_warning(696, subcommand))
         parser.print_help()
         exit_silently()
 
