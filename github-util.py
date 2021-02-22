@@ -98,9 +98,7 @@ def get_parser():
         'print-repository-names': {
             "help": 'Print repository names.',
             "argument_aspects": ["common"],
-            "arguments": {
-
-            },
+            "arguments": {},
         },
         'sleep': {
             "help": 'Do nothing but sleep. For Docker testing.',
@@ -187,7 +185,7 @@ message_dictionary = {
     "102": "Updated Repository: {0} Label: {1}",
     "103": "Deleted Repository: {0} Label: {1}",
     "104": "Repository '{0}' has been archived.  Not modifying its labels.",
-    "293": "For information on warnings and errors, see https://github.com/Senzing/github-utils",
+    "293": "For information on warnings and errors, see https://github.com/Senzing/github-util",
     "294": "Version: {0}  Updated: {1}",
     "295": "Sleeping infinitely.",
     "296": "Sleeping {0} seconds.",
