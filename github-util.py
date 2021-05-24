@@ -29,7 +29,7 @@ from types import MethodType
 __all__ = []
 __version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-02-22'
+__updated__ = '2021-05-24'
 
 SENZING_PRODUCT_ID = "5012"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 log_format = '%(asctime)s %(message)s'
@@ -100,6 +100,11 @@ def get_parser():
             "argument_aspects": ["common"],
             "arguments": {},
         },
+        'print-submodules-sh': {
+            "help": 'Print modules.sh',
+            "argument_aspects": ["common"],
+            "arguments": {},
+        },        
         'sleep': {
             "help": 'Do nothing but sleep. For Docker testing.',
             "arguments": {
@@ -523,6 +528,67 @@ def do_print_repository_names(args):
         print("{0}".format(repo.name))
 
 
+def do_print_submodules_sh(args):
+    
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Prolog.
+
+    logging.info(entry_template(config))
+
+    # Pull values from configuration.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+    
+    # Internal variables.
+    
+    repositories = {
+        "redoer": {
+            "artifact": "redoer.py"
+        },
+        "resolver": {
+            "artifact": "resolver.py"
+        },         
+        "stream-loader": {
+            "artifact": "stream-loader.py"
+        }, 
+        "stream-producer": {
+            "artifact": "stream-producer.py"        
+        }
+    }
+
+    # Log into GitHub.
+
+    github = Github(github_access_token)
+
+    # Determine current version.
+
+    github_organization = github.get_organization(organization)
+    for repository in repositories.keys():
+        repo = github_organization.get_repo(repository)
+        release = repo.get_latest_release()
+        repositories[repository]['version'] = release.title
+
+    # Print output.
+    
+    print('#!/usr/bin/env bash')
+    print('')
+    print('# Format: repository;version;artifact')
+    print('')
+    print('SUBMODULES=(')
+    for key, value in repositories.items():
+        print('    "{0};{1};{2}"'.format(key, value.get('version', '0.0.0'), value.get('artifact')))
+    print(')')
+
+    # Epilog.
+
+    logging.info(exit_template(config))    
+
+    
 def do_sleep(args):
     ''' Sleep.  Used for debugging. '''
 
