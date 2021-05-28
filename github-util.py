@@ -104,7 +104,7 @@ def get_parser():
             "help": 'Print modules.sh',
             "argument_aspects": ["common"],
             "arguments": {},
-        },        
+        },
         'sleep': {
             "help": 'Do nothing but sleep. For Docker testing.',
             "arguments": {
@@ -529,7 +529,7 @@ def do_print_repository_names(args):
 
 
 def do_print_submodules_sh(args):
-    
+
     # Get context from CLI, environment variables, and ini files.
 
     config = get_configuration(args)
@@ -542,22 +542,59 @@ def do_print_submodules_sh(args):
     # Pull values from configuration.
 
     github_access_token = config.get("github_access_token")
+    github_access_token = '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'
     organization = config.get("organization")
-    
+
     # Internal variables.
-    
+
     repositories = {
-        "redoer": {
-            "artifact": "redoer.py"
+        "compressedfile": {
+            "artifact": "CompressedFile.py"
         },
-        "resolver": {
-            "artifact": "resolver.py"
-        },         
-        "stream-loader": {
-            "artifact": "stream-loader.py"
-        }, 
-        "stream-producer": {
-            "artifact": "stream-producer.py"        
+        "dumpstack": {
+            "artifact": "DumpStack.py"
+        },
+        "g2anon": {
+            "artifact": "G2AnonModule.py"
+        },
+        "g2audit": {
+            "artifact": "G2AuditModule.py"
+        },
+        "g2command": {
+            "artifact": "G2Command.py"
+        },
+        "g2config": {
+            "artifact": "G2ConfigModule.py"
+        },
+        "g2configtables": {
+            "artifact": "G2ConfigTables.py"
+        },
+        "g2database": {
+            "artifact": "G2Database.py"
+        },
+        "g2exception": {
+            "artifact": "G2Exception.py"
+        },
+        "g2export": {
+            "artifact": "G2Export.py"
+        },
+        "g2loader": {
+            "artifact": "G2Loader.py"
+        },
+        "g2module": {
+            "artifact": "G2Module.ini G2Module.py"
+        },
+        "g2project": {
+            "artifact": "G2Project.ini G2Project.py"
+        },
+        "g2report": {
+            "artifact": "G2Report.py"
+        },
+        "g2service": {
+            "artifact": "G2Service.py"
+        },
+        "g2vcompare": {
+            "artifact": "G2VCompare.py"
         }
     }
 
@@ -574,7 +611,7 @@ def do_print_submodules_sh(args):
         repositories[repository]['version'] = release.title
 
     # Print output.
-    
+
     print('#!/usr/bin/env bash')
     print('')
     print('# Format: repository;version;artifact')
@@ -586,9 +623,9 @@ def do_print_submodules_sh(args):
 
     # Epilog.
 
-    logging.info(exit_template(config))    
+    logging.info(exit_template(config))
 
-    
+
 def do_sleep(args):
     ''' Sleep.  Used for debugging. '''
 
