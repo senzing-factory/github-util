@@ -107,6 +107,9 @@ repositories = {
     "g2database": {
         "artifacts": ["G2Database.py"]
     },
+    "g2diagnostic": {
+        "artifacts": ["G2Diagnostic.py"]
+    },
     "g2engine": {
         "artifacts": ["G2Engine.py"]
     },
