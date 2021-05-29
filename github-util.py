@@ -76,6 +76,70 @@ keys_to_redact = [
     "github_access_token",
 ]
 
+repositories = {
+    "compressedfile": {
+        "artifacts": ["CompressedFile.py"]
+    },
+    "dumpstack": {
+        "artifacts": ["DumpStack.py"]
+    },
+    "g2anon": {
+        "artifacts": ["G2AnonModule.py"]
+    },
+    "g2audit": {
+        "artifacts": ["G2Audit.py", "G2AuditModule.py"]
+    },
+    "g2command": {
+        "artifacts": ["G2Command.py"]
+    },
+    "g2config": {
+        "artifacts": ["G2config.py", "G2ConfigModule.py"]
+    },
+    "g2configtables": {
+        "artifacts": ["G2ConfigTables.py"]
+    },
+    "g2configtool": {
+        "artifacts": ["G2ConfigTool.py", "G2ConfigTool.readme"]
+    },
+    "g2createinstance": {
+        "artifacts": ["G2CreateInstance.py"]
+    },
+    "g2database": {
+        "artifacts": ["G2Database.py"]
+    },
+    "g2engine": {
+        "artifacts": ["G2Engine.py"]
+    },
+    "g2exception": {
+        "artifacts": ["G2Exception.py"]
+    },
+    "g2export": {
+        "artifacts": ["G2Export.py"]
+    },
+    "g2loader": {
+        "artifacts": ["G2Loader.py"]
+    },
+    "g2module": {
+        "artifacts": ["G2Module.ini", "G2Module.py"]
+    },
+    "g2product": {
+        "artifacts": ["G2Product.py", "G2ProductModule.py"]
+    },
+    "g2project": {
+        "artifacts": ["G2Project.ini", "G2Project.py"]
+    },
+    "g2s3": {
+        "artifacts": ["G2S3.py", ]
+    }
+}
+
+etc_files = [
+    "demo",
+    "g2config.json",
+    "g2purge.umf",
+    "g2silent.cfg"
+]
+
 # -----------------------------------------------------------------------------
 # Define argument parser
 # -----------------------------------------------------------------------------
@@ -85,6 +149,11 @@ def get_parser():
     ''' Parse commandline arguments. '''
 
     subcommands = {
+        'print-copy-files-from-senzing-install': {
+            "help": 'Print copy-files-from-senzing-install.sh',
+            "argument_aspects": ["common"],
+            "arguments": {},
+        },
         'print-git-clone': {
             "help": 'Print git clone https://...',
             "argument_aspects": ["common"],
@@ -542,61 +611,7 @@ def do_print_submodules_sh(args):
     # Pull values from configuration.
 
     github_access_token = config.get("github_access_token")
-    github_access_token = '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'
     organization = config.get("organization")
-
-    # Internal variables.
-
-    repositories = {
-        "compressedfile": {
-            "artifact": "CompressedFile.py"
-        },
-        "dumpstack": {
-            "artifact": "DumpStack.py"
-        },
-        "g2anon": {
-            "artifact": "G2AnonModule.py"
-        },
-        "g2audit": {
-            "artifact": "G2AuditModule.py"
-        },
-        "g2command": {
-            "artifact": "G2Command.py"
-        },
-        "g2config": {
-            "artifact": "G2ConfigModule.py"
-        },
-        "g2configtables": {
-            "artifact": "G2ConfigTables.py"
-        },
-        "g2database": {
-            "artifact": "G2Database.py"
-        },
-        "g2exception": {
-            "artifact": "G2Exception.py"
-        },
-        "g2export": {
-            "artifact": "G2Export.py"
-        },
-        "g2loader": {
-            "artifact": "G2Loader.py"
-        },
-        "g2module": {
-            "artifact": "G2Module.ini G2Module.py"
-        },
-        "g2project": {
-            "artifact": "G2Project.ini G2Project.py"
-        },
-        "g2report": {
-            "artifact": "G2Report.py"
-        },
-        "g2service": {
-            "artifact": "G2Service.py"
-        },
-        "g2vcompare": {
-            "artifact": "G2VCompare.py"
-        }
-    }
 
     # Log into GitHub.
 
@@ -618,8 +633,51 @@ def do_print_submodules_sh(args):
     print('')
     print('SUBMODULES=(')
     for key, value in repositories.items():
-        print('    "{0};{1};{2}"'.format(key, value.get('version', '0.0.0'), value.get('artifact')))
+        version = value.get('version', '0.0.0')
+        artifacts = value.get('artifacts', [])
+        for artifact in artifacts:
+            print('    "{0};{1};{2}"'.format(key, version, artifact))
     print(')')
+
+    # Epilog.
+
+    logging.info(exit_template(config))
+
+
+def do_print_copy_files_from_senzing_install(args):
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Prolog.
+
+    logging.info(entry_template(config))
+
+    # Print output.
+
+    print('#!/usr/bin/env bash')
+    print('')
+    print('# Read metadata.')
+    print('')
+    print('source 01-user-variables.sh')
+    print('')
+    print('# Move files to individual repositories')
+    print('')
+    for key, value in repositories.items():
+        artifacts = value.get('artifacts', [])
+        for artifact in artifacts:
+            print("sudo cp ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/{1}".format(artifact, key))
+            print("sudo rm ${{SOURCE_PYTHON_DIR}}/{0}".format(artifact))
+            print('')
+
+    print('# Move files to g2-python/g2/python ')
+    print('')
+    for file in etc_files:
+        print("sudo cp -r  ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/g2-python/g2/python".format(file))
+        print("sudo rm -rf ${{SOURCE_PYTHON_DIR}}/{0}".format(file))
+        print("")
 
     # Epilog.
 
