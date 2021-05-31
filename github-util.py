@@ -83,9 +83,6 @@ repositories = {
     "dumpstack": {
         "artifacts": ["DumpStack.py"]
     },
-    "g2anon": {
-        "artifacts": ["G2AnonModule.py"]
-    },
     "g2audit": {
         "artifacts": ["G2Audit.py", "G2AuditModule.py"]
     },
