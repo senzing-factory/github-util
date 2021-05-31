@@ -29,7 +29,7 @@ from types import MethodType
 __all__ = []
 __version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-05-24'
+__updated__ = '2021-05-31'
 
 SENZING_PRODUCT_ID = "5012"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 log_format = '%(asctime)s %(message)s'
@@ -93,7 +93,7 @@ repositories = {
         "artifacts": ["G2Command.py"]
     },
     "g2config": {
-        "artifacts": ["G2config.py", "G2ConfigModule.py"]
+        "artifacts": ["G2Config.py", "G2ConfigModule.py"]
     },
     "g2configtables": {
         "artifacts": ["G2ConfigTables.py"]
@@ -118,6 +118,9 @@ repositories = {
     },
     "g2export": {
         "artifacts": ["G2Export.py"]
+    },
+    "g2hasher": {
+        "artifacts": ["G2HasherModule.py"]
     },
     "g2loader": {
         "artifacts": ["G2Loader.py"]
