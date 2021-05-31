@@ -117,13 +117,16 @@ repositories = {
         "artifacts": ["G2Export.py"]
     },
     "g2hasher": {
-        "artifacts": ["G2HasherModule.py"]
+        "artifacts": ["G2Hasher.py", "G2HasherModule.py"]
     },
     "g2loader": {
         "artifacts": ["G2Loader.py"]
     },
     "g2module": {
         "artifacts": ["G2Module.ini", "G2Module.py"]
+    },
+    "g2paths": {
+        "artifacts": ["G2Paths.py"]
     },
     "g2product": {
         "artifacts": ["G2Product.py", "G2ProductModule.py"]
