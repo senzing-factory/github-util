@@ -29,7 +29,7 @@ from types import MethodType
 __all__ = []
 __version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-05-31'
+__updated__ = '2021-06-01'
 
 SENZING_PRODUCT_ID = "5012"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 log_format = '%(asctime)s %(message)s'
@@ -84,13 +84,16 @@ repositories = {
         "artifacts": ["DumpStack.py"]
     },
     "g2audit": {
-        "artifacts": ["G2Audit.py", "G2AuditModule.py"]
+        "artifacts": ["G2Audit.py"]
     },
     "g2command": {
         "artifacts": ["G2Command.py"]
     },
     "g2config": {
-        "artifacts": ["G2Config.py", "G2ConfigModule.py"]
+        "artifacts": ["G2Config.py"]
+    },
+    "g2configmgr": {
+        "artifacts": ["G2ConfigMgr.py"]
     },
     "g2configtables": {
         "artifacts": ["G2ConfigTables.py"]
@@ -98,8 +101,8 @@ repositories = {
     "g2configtool": {
         "artifacts": ["G2ConfigTool.py", "G2ConfigTool.readme"]
     },
-    "g2createinstance": {
-        "artifacts": ["G2CreateInstance.py"]
+    "g2createproject": {
+        "artifacts": ["G2CreateProject.py"]
     },
     "g2database": {
         "artifacts": ["G2Database.py"]
@@ -117,33 +120,34 @@ repositories = {
         "artifacts": ["G2Export.py"]
     },
     "g2hasher": {
-        "artifacts": ["G2Hasher.py", "G2HasherModule.py"]
+        "artifacts": ["G2Hasher.py"]
+    },
+    "g2iniparams": {
+        "artifacts": ["G2IniParams.py"]
     },
     "g2loader": {
         "artifacts": ["G2Loader.py"]
-    },
-    "g2module": {
-        "artifacts": ["G2Module.ini", "G2Module.py"]
     },
     "g2paths": {
         "artifacts": ["G2Paths.py"]
     },
     "g2product": {
-        "artifacts": ["G2Product.py", "G2ProductModule.py"]
+        "artifacts": ["G2Product.py"]
     },
     "g2project": {
-        "artifacts": ["G2Project.ini", "G2Project.py"]
+        "artifacts": ["G2Project.py"]
     },
     "g2s3": {
-        "artifacts": ["G2S3.py", ]
+        "artifacts": ["G2S3.py"]
+    },
+    "g2updateproject": {
+        "artifacts": ["G2UpdateProject.py"]
     }
 }
 
 etc_files = [
     "demo",
-    "g2config.json",
     "g2purge.umf",
-    "g2silent.cfg"
 ]
 
 # -----------------------------------------------------------------------------
