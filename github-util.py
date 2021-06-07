@@ -160,6 +160,7 @@ repositories = {
 etc_files = [
     "demo",
     "g2purge.umf",
+    "governor_postgres_xid.py",
 ]
 
 # -----------------------------------------------------------------------------
