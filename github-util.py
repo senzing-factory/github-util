@@ -29,7 +29,7 @@ from types import MethodType
 __all__ = []
 __version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-02-22'
+__updated__ = '2021-06-06'
 
 SENZING_PRODUCT_ID = "5012"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 log_format = '%(asctime)s %(message)s'
@@ -76,6 +76,93 @@ keys_to_redact = [
     "github_access_token",
 ]
 
+repositories = {
+    "compressedfile": {
+        "artifacts": ["CompressedFile.py"]
+    },
+    "dumpstack": {
+        "artifacts": ["DumpStack.py"]
+    },
+    "g2audit": {
+        "artifacts": ["G2Audit.py"]
+    },
+    "g2command": {
+        "artifacts": ["G2Command.py"]
+    },
+    "g2config": {
+        "artifacts": ["G2Config.py"]
+    },
+    "g2configmgr": {
+        "artifacts": ["G2ConfigMgr.py"]
+    },
+    "g2configtables": {
+        "artifacts": ["G2ConfigTables.py"]
+    },
+    "g2configtool": {
+        "artifacts": ["G2ConfigTool.py", "G2ConfigTool.readme"]
+    },
+    "g2createproject": {
+        "artifacts": ["G2CreateProject.py"]
+    },
+    "g2database": {
+        "artifacts": ["G2Database.py"]
+    },
+    "g2diagnostic": {
+        "artifacts": ["G2Diagnostic.py"]
+    },
+    "g2engine": {
+        "artifacts": ["G2Engine.py"]
+    },
+    "g2exception": {
+        "artifacts": ["G2Exception.py"]
+    },
+    "g2explorer": {
+        "artifacts": ["G2Explorer.py"]
+    },
+    "g2export": {
+        "artifacts": ["G2Export.py"]
+    },
+    "g2health": {
+        "artifacts": ["G2Health.py"]
+    },
+    "g2hasher": {
+        "artifacts": ["G2Hasher.py"]
+    },
+    "g2iniparams": {
+        "artifacts": ["G2IniParams.py"]
+    },
+    "g2loader": {
+        "artifacts": ["G2Loader.py"]
+    },
+    "g2paths": {
+        "artifacts": ["G2Paths.py"]
+    },
+    "g2product": {
+        "artifacts": ["G2Product.py"]
+    },
+    "g2project": {
+        "artifacts": ["G2Project.py"]
+    },
+    "g2s3": {
+        "artifacts": ["G2S3.py"]
+    },
+    "g2setupconfig": {
+        "artifacts": ["G2SetupConfig.py"]
+    },
+    "g2snapshot": {
+        "artifacts": ["G2Snapshot.py"]
+    },
+    "g2updateproject": {
+        "artifacts": ["G2UpdateProject.py"]
+    }
+}
+
+etc_files = [
+    "demo",
+    "g2purge.umf",
+    "governor_postgres_xid.py",
+]
+
 # -----------------------------------------------------------------------------
 # Define argument parser
 # -----------------------------------------------------------------------------
@@ -85,6 +172,11 @@ def get_parser():
     ''' Parse commandline arguments. '''
 
     subcommands = {
+        'print-copy-files-from-senzing-install': {
+            "help": 'Print copy-files-from-senzing-install.sh',
+            "argument_aspects": ["common"],
+            "arguments": {},
+        },
         'print-git-clone': {
             "help": 'Print git clone https://...',
             "argument_aspects": ["common"],
@@ -97,6 +189,11 @@ def get_parser():
         },
         'print-repository-names': {
             "help": 'Print repository names.',
+            "argument_aspects": ["common"],
+            "arguments": {},
+        },
+        'print-submodules-sh': {
+            "help": 'Print modules.sh',
             "argument_aspects": ["common"],
             "arguments": {},
         },
@@ -521,6 +618,93 @@ def do_print_repository_names(args):
     github_organization = github.get_organization(organization)
     for repo in github_organization.get_repos():
         print("{0}".format(repo.name))
+
+
+def do_print_submodules_sh(args):
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Prolog.
+
+    logging.info(entry_template(config))
+
+    # Pull values from configuration.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+
+    # Log into GitHub.
+
+    github = Github(github_access_token)
+
+    # Determine current version.
+
+    github_organization = github.get_organization(organization)
+    for repository in repositories.keys():
+        repo = github_organization.get_repo(repository)
+        release = repo.get_latest_release()
+        repositories[repository]['version'] = release.title
+
+    # Print output.
+
+    print('#!/usr/bin/env bash')
+    print('')
+    print('# Format: repository;version;artifact')
+    print('')
+    print('SUBMODULES=(')
+    for key, value in repositories.items():
+        version = value.get('version', '0.0.0')
+        artifacts = value.get('artifacts', [])
+        for artifact in artifacts:
+            print('    "{0};{1};{2}"'.format(key, version, artifact))
+    print(')')
+
+    # Epilog.
+
+    logging.info(exit_template(config))
+
+
+def do_print_copy_files_from_senzing_install(args):
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Prolog.
+
+    logging.info(entry_template(config))
+
+    # Print output.
+
+    print('#!/usr/bin/env bash')
+    print('')
+    print('# Read metadata.')
+    print('')
+    print('source 01-user-variables.sh')
+    print('')
+    print('# Move files to individual repositories')
+    print('')
+    for key, value in repositories.items():
+        artifacts = value.get('artifacts', [])
+        for artifact in artifacts:
+            print("sudo cp ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/{1}".format(artifact, key))
+            print("sudo rm ${{SOURCE_PYTHON_DIR}}/{0}".format(artifact))
+            print('')
+
+    print('# Move files to g2-python/g2/python ')
+    print('')
+    for file in etc_files:
+        print("sudo cp -r  ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/g2-python/g2/python".format(file))
+        print("sudo rm -rf ${{SOURCE_PYTHON_DIR}}/{0}".format(file))
+        print("")
+
+    # Epilog.
+
+    logging.info(exit_template(config))
 
 
 def do_sleep(args):
