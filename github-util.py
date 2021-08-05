@@ -13,25 +13,22 @@
 # -----------------------------------------------------------------------------
 
 import argparse
-import datetime
 import json
 import linecache
 import logging
 import os
-import pytz
 import signal
 import sys
 import time
 from github import Github
-import github
-from types import MethodType
 
 __all__ = []
-__version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
+__version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-06-06'
+__updated__ = '2021-08-05'
 
-SENZING_PRODUCT_ID = "5012"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
+# See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
+SENZING_PRODUCT_ID = "5012"
 log_format = '%(asctime)s %(message)s'
 
 # Working with bytes.
@@ -59,10 +56,45 @@ configuration_locator = {
         "env": "GITHUB_ORGANIZATION",
         "cli": "organization"
     },
+    "print_format": {
+        "default": "{0}",
+        "env": "SENZING_PRINT_FORMAT",
+        "cli": "print-format"
+    },
     "sleep_time_in_seconds": {
         "default": 0,
         "env": "SENZING_SLEEP_TIME_IN_SECONDS",
         "cli": "sleep-time-in-seconds"
+    },
+    "topics_all": {
+        "default": "",
+        "env": "SENZING_TOPICS_ALL",
+        "cli": "topics-all"
+    },
+    "topics_any": {
+        "default": "",
+        "env": "SENZING_TOPICS_ANY",
+        "cli": "topics-any"
+    },
+    "topics_excluded": {
+        "default": "",
+        "env": "SENZING_TOPICS_EXCLUDED",
+        "cli": "topics-excluded"
+    },
+    "topics_included": {
+        "default": "",
+        "env": "SENZING_TOPICS_INCLUDED",
+        "cli": "topics-included"
+    },
+    "topics_not_all": {
+        "default": "",
+        "env": "SENZING_TOPICS_NOT_ALL",
+        "cli": "topics-not-all"
+    },
+    "topics_not_any": {
+        "default": "",
+        "env": "SENZING_TOPICS_NOT_ANY",
+        "cli": "topics-not-any"
     },
     "subcommand": {
         "default": None,
@@ -189,8 +221,39 @@ def get_parser():
         },
         'print-repository-names': {
             "help": 'Print repository names.',
-            "argument_aspects": ["common"],
-            "arguments": {},
+            "argument_aspects": ["common", "print"],
+            "arguments": {
+                "--topics-all": {
+                    "dest": "topics_all",
+                    "metavar": "SENZING_TOPICS_ALL",
+                    "help": "All repository topics must be present. DEFAULT: '' (no evaluation)"
+                },
+                "--topics-any": {
+                    "dest": "topics_any",
+                    "metavar": "SENZING_TOPICS_ANY",
+                    "help": "Any repository topics must be present. DEFAULT: '' (no evaluation)"
+                },
+                "--topics-excluded": {
+                    "dest": "topics_excluded",
+                    "metavar": "SENZING_TOPICS_EXCLUDED",
+                    "help": "Which repository topics to exclude. DEFAULT: '' (exclude none)"
+                },
+                "--topics-included": {
+                    "dest": "topics_included",
+                    "metavar": "SENZING_TOPICS_INCLUDED",
+                    "help": "Which repository topics to include. DEFAULT: '' (include all)"
+                },
+                "--topics-not-all": {
+                    "dest": "topics_not_all",
+                    "metavar": "SENZING_TOPICS_NOT_ALL",
+                    "help": "All repository topics are bit present. DEFAULT: '' (no evaluation)"
+                },
+                "--topics-not-any": {
+                    "dest": "topics_not_any",
+                    "metavar": "SENZING_TOPICS_NOT_ANY",
+                    "help": "Any repository topics is not present. DEFAULT: '' (no evaluation)"
+                },
+            },
         },
         'print-submodules-sh': {
             "help": 'Print modules.sh',
@@ -235,6 +298,13 @@ def get_parser():
                 "help": "GitHub account/organization name."
             },
         },
+        "print": {
+            "--print-format": {
+                "dest": "print_format",
+                "metavar": "SENZING_PRINT_FORMAT",
+                "help": "Format of output. Default: '{0}'"
+            },
+        },
     }
 
     # Augment "subcommands" variable with arguments specified by aspects.
@@ -248,8 +318,10 @@ def get_parser():
                 for argument, argument_value in arguments.items():
                     subcommands[subcommand]['arguments'][argument] = argument_value
 
-    parser = argparse.ArgumentParser(description="Reports from GitHub. For more information, see https://github.com/Senzing/github-util")
-    subparsers = parser.add_subparsers(dest='subcommand', help='Subcommands (SENZING_SUBCOMMAND):')
+    parser = argparse.ArgumentParser(
+        description="Reports from GitHub. For more information, see https://github.com/Senzing/github-util")
+    subparsers = parser.add_subparsers(
+        dest='subcommand', help='Subcommands (SENZING_SUBCOMMAND):')
 
     for subcommand_key, subcommand_values in subcommands.items():
         subcommand_help = subcommand_values.get('help', "")
@@ -307,7 +379,8 @@ message_dictionary = {
 
 def message(index, *args):
     index_string = str(index)
-    template = message_dictionary.get(index_string, "No message for index {0}.".format(index_string))
+    template = message_dictionary.get(
+        index_string, "No message for index {0}.".format(index_string))
     return template.format(*args)
 
 
@@ -419,6 +492,21 @@ def get_configuration(args):
         integer_string = result.get(integer)
         result[integer] = int(integer_string)
 
+    # Special case: Turn string to list
+
+    topic_list = [
+        "topics_all",
+        "topics_any",
+        "topics_excluded",
+        "topics_included",
+        "topics_not_all",
+        "topics_not_any"
+    ]
+
+    for topic in topic_list:
+        if result.get(topic):
+            result["{0}_list".format(topic)] = result.get(topic).split(',')
+
     return result
 
 
@@ -526,6 +614,66 @@ def exit_silently():
     ''' Exit program. '''
     sys.exit(0)
 
+
+def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
+    ''' Verify that the topic qualifies the repository. '''
+
+    # print(f"MJD: {topics}, {topics_all_list}, {topics_any_list}, {topics_excluded_list}, {topics_included_list}, {topics_not_all_list}, {topics_not_any_list}")
+
+
+    if topics_excluded_list:
+        for topic in topics:
+            if topic in topics_excluded_list:
+                return False
+
+    if topics_included_list:
+        count = 0
+        for topic in topics:
+            if topic in topics_included_list:
+                count += 1
+        if count == 0:
+            return False
+
+    if topics_any_list:
+        count = 0
+        for topic in topics:
+            if topic in topics_any_list:
+                count += 1
+        if count == 0:
+            return False
+        return True
+
+    if topics_not_any_list:
+        count = 0
+        for topic in topics:
+            if topic in topics_not_any_list:
+                count += 1
+        if count == 0:
+            return True
+        return False
+
+    if topics_all_list:
+        total = len(topics_all_list)
+        count = 0
+        for topic in topics:
+            if topic in topics_all_list:
+                count += 1
+        if count != total:
+            return False
+        return True
+
+    if topics_not_all_list:
+        total = len(topics_not_all_list)
+        count = 0
+        for topic in topics:
+            if topic in topics_not_all_list:
+                count += 1
+        if count != total:
+            return True
+        return False
+
+    return True
+
 # -----------------------------------------------------------------------------
 # do_* functions
 #   Common function signature: do_XXX(args)
@@ -604,10 +752,19 @@ def do_print_repository_names(args):
     config = get_configuration(args)
     validate_configuration(config)
 
+    # print(f"MJD: {config}")
+
     # Pull variables from config.
 
     github_access_token = config.get("github_access_token")
     organization = config.get("organization")
+    print_format = config.get("print_format")
+    topics_all_list = config.get("topics_all_list")
+    topics_any_list = config.get("topics_any_list")
+    topics_excluded_list = config.get("topics_excluded_list")
+    topics_included_list = config.get("topics_included_list")
+    topics_not_all_list = config.get("topics_not_all_list")
+    topics_not_any_list = config.get("topics_not_any_list")
 
     # Log into GitHub.
 
@@ -616,8 +773,16 @@ def do_print_repository_names(args):
     # Print repository names.
 
     github_organization = github.get_organization(organization)
+
+    # https://pygithub.readthedocs.io/en/latest/github_objects/Organization.html
+
     for repo in github_organization.get_repos():
-        print("{0}".format(repo.name))
+
+        # https://pygithub.readthedocs.io/en/latest/github_objects/Repository.html
+
+        topics = repo.get_topics()
+        if has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
+            print(print_format.format(repo.name))
 
 
 def do_print_submodules_sh(args):
@@ -691,14 +856,16 @@ def do_print_copy_files_from_senzing_install(args):
     for key, value in repositories.items():
         artifacts = value.get('artifacts', [])
         for artifact in artifacts:
-            print("sudo cp ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/{1}".format(artifact, key))
+            print(
+                "sudo cp ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/{1}".format(artifact, key))
             print("sudo rm ${{SOURCE_PYTHON_DIR}}/{0}".format(artifact))
             print('')
 
     print('# Move files to g2-python/g2/python ')
     print('')
     for file in etc_files:
-        print("sudo cp -r  ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/g2-python/g2/python".format(file))
+        print(
+            "sudo cp -r  ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/g2-python/g2/python".format(file))
         print("sudo rm -rf ${{SOURCE_PYTHON_DIR}}/{0}".format(file))
         print("")
 
