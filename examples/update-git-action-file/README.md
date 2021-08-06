@@ -1,4 +1,4 @@
-# Repository teams
+# Update git action file
 
 ## Prerequisites
 
@@ -11,9 +11,11 @@
     export GITHUB_ACCESS_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     ```
 
-## Find repositories assigned to a team
+## update-git-action-add-triage-label.sh
 
-1. Repositories assigned to `t-ast`.
+
+1. In `update-git-action-add-triage-label.sh` modify ``
+Repositories assigned to `t-ast`.
    Example:
 
     ```console
