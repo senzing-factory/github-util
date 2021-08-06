@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
-# User-modifiable: parameters.
+# -----------------------------------------------------------------------------
+# User modifications
+# -----------------------------------------------------------------------------
+
+# Internal parameters.
 
 GITHUB_UTIL_DIR=~/senzing.git/github-util
 GIT_REPOSITORY_DIR=~/senzing-test.git
 GIT_MESSAGE="Add add-triage-label.yaml"
 ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/update-git-action-file/add-triage-label.yaml
 
-# User-modifiable: OS environment variable for use by github-util.py.
+# OS environment variable for use by github-util.py.
 
 export SENZING_TOPICS_INCLUDED=t-ast
+
+# -----------------------------------------------------------------------------
+# Main
+# -----------------------------------------------------------------------------
 
 # Verify parameters.
 
