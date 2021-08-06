@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-# Parameters for paths.
+# User-modifiable: parameters.
 
-SENZING_GITHUB_UTIL_DIR=~/senzing.git/github-util
-SENZING_GIT_REPOSITORY_DIR=~/senzing-test.git
+GITHUB_UTIL_DIR=~/senzing.git/github-util
+GIT_REPOSITORY_DIR=~/senzing-test.git
+GIT_MESSAGE="Add add-triage-label.yaml"
+SOURCE_FILE=~/senzing.git/github-util/examples/update-git-action-file/add-triage-label.yaml
 
-# Parameters for github-util.py.
+# User-modifiable: OS environment variable for use by github-util.py.
 
 export SENZING_TOPICS_INCLUDED=test-ground
 
@@ -18,42 +20,44 @@ fi
 
 # Make the directory to clone repositories into.
 
-mkdir -p ${SENZING_GIT_REPOSITORY_DIR}
-
-
-# BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null 2>&1 && pwd )"
-# GIT_REPOSITORY_DIR="$(dirname ${BIN_DIR})"
-# TARGET_PYTHON_DIR=${GIT_REPOSITORY_DIR}/g2/python
-
-# Populate submodules.
-
-
-# git pull
-# git submodule update --init --recursive
+mkdir -p ${GIT_REPOSITORY_DIR}
 
 # Process each submodule.
 
-export REPOSITORIES=$(${SENZING_GITHUB_UTIL_DIR}/github-util.py print-repository-names)
+export REPOSITORIES=$(${GITHUB_UTIL_DIR}/github-util.py print-repository-names)
 for REPOSITORY in ${REPOSITORIES[@]};
 do
+    echo "---- ${REPOSITORY} ------------------------------------------"
 
-    echo ${REPOSITORY}
+    DESTINATION_DIR=${GIT_REPOSITORY_DIR}/${REPOSITORY}/.github/workflows
 
-    cd ${SENZING_GIT_REPOSITORY_DIR}
+    # Clone repository.
+
+    cd ${GIT_REPOSITORY_DIR}
     git clone "git@github.com:Senzing/${REPOSITORY}.git"
 
-    # Get requested version of submodule.
+    # Make repository directory the current working directory.
 
-    # cd ${GIT_REPOSITORY_DIR}/${SUBMODULE_NAME}
-    # git checkout main
-    # git pull
-    # git checkout ${SUBMODULE_VERSION}
+    cd ${GIT_REPOSITORY_DIR}/${REPOSITORY}
 
-    # echo "Copy ${SUBMODULE_NAME}/${SUBMODULE_ARTIFACT}"
+    # Checkout current main/master branch.
 
-    # Copy artifact into collection.
+    git checkout main
+    git checkout master
+    git pull
 
-    # cd ${GIT_REPOSITORY_DIR}/${SUBMODULE_NAME}
-    # cp ${SUBMODULE_ARTIFACT} ${TARGET_PYTHON_DIR}/
+    # Manipulate the files in the repository.
+
+    mkdir -p ${DESTINATION_DIR}
+    cp ${SOURCE_FILE} ${DESTINATION_DIR}
+
+    # Add and commit all changes to local git repository.
+
+    git add --all
+    git commit -a -m "${GIT_MESSAGE}"
+
+    # Push changes to GitHub
+
+    git push
 
 done
