@@ -13,45 +13,17 @@
 
 ## update-git-action-add-triage-label.sh
 
+1. In `update-git-action-add-triage-label.sh`, modify:
 
-1. In `update-git-action-add-triage-label.sh` modify ``
-Repositories assigned to `t-ast`.
+    1. `ACTION_SOURCE_FILE`: Location of file to be copied into a repository's `.github/workflow` directory.
+    1. `GIT_MESSAGE`:  The message used when commiting the change.
+    1. `GIT_REPOSITORY_DIR`: A fresh directory where Git repositories can be cloned from GitHub.
+    1. `GITHUB_UTIL_DIR`: Directory containing `github-util.py`.
+    1. `SENZING_TOPICS_INCLUDED`: List of GitHub topics used to select repositories.
+
+1. Run `update-git-action-add-triage-label.sh`.
    Example:
 
     ```console
-    github-util.py print-repository-names --topics-include=t-ast
-    ```
-
-1. Repositories assigned to `t-comm`.
-   Example:
-
-    ```console
-    github-util.py print-repository-names --topics-include=t-comm
-    ```
-
-1. Repositories assigned to `t-g2-python`.
-   Example:
-
-    ```console
-    github-util.py print-repository-names --topics-include=t-g2-python
-    ```
-
-1. Repositories assigned to `t-gdev`.
-   Example:
-
-    ```console
-    github-util.py print-repository-names --topics-include=t-gdev
-    ```
-
-## Find repositories that aren't assigned to a team
-
-Currently there are 4 teams identified by GitHub topics:  `t-ast`, `t-comm`, `t-g2-python`, `t-gdev`.
-
-1. List any repositories that do not belong to a team and are not deprecated/archived/obsolete.
-   Example:
-
-    ```console
-    github-util.py print-repository-names \
-      --topics-not-any=t-ast,t-comm,t-g2-python,t-gdev \
-      --topics-exclude=archived,deprecated,obsolete
+    ./update-git-action-add-triage-label.sh
     ```

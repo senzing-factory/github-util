@@ -5,11 +5,11 @@
 GITHUB_UTIL_DIR=~/senzing.git/github-util
 GIT_REPOSITORY_DIR=~/senzing-test.git
 GIT_MESSAGE="Add add-triage-label.yaml"
-SOURCE_FILE=~/senzing.git/github-util/examples/update-git-action-file/add-triage-label.yaml
+ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/update-git-action-file/add-triage-label.yaml
 
 # User-modifiable: OS environment variable for use by github-util.py.
 
-export SENZING_TOPICS_INCLUDED=test-ground
+export SENZING_TOPICS_INCLUDED=t-ast
 
 # Verify parameters.
 
@@ -49,7 +49,7 @@ do
     # Manipulate the files in the repository.
 
     mkdir -p ${DESTINATION_DIR}
-    cp ${SOURCE_FILE} ${DESTINATION_DIR}
+    cp ${ACTION_SOURCE_FILE} ${DESTINATION_DIR}
 
     # Add and commit all changes to local git repository.
 
