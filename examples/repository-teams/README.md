@@ -1,5 +1,16 @@
 # Repository teams
 
+## Prerequisites
+
+1. :pencil2: Set `GITHUB_ACCESS_TOKEN`.
+   This is needed to access GitHub above the "public" limit.
+   For information on how to obtain an access token, see
+   [Creating a personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+
+    ```console
+    export GITHUB_ACCESS_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    ```
+
 ## Find repositories assigned to a team
 
 1. Repositories assigned to `t-ast`.
@@ -32,7 +43,7 @@
 
 ## Find repositories that aren't assigned to a team
 
-Currently there are 3 teams identified by GitHub topics:  `t-ast`, `t-comm`, `t-g2-python`, `t-gdev`.
+Currently there are 4 teams identified by GitHub topics:  `t-ast`, `t-comm`, `t-g2-python`, `t-gdev`.
 
 1. List any repositories that do not belong to a team and are not deprecated/archived/obsolete.
    Example:
