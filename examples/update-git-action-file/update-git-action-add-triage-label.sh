@@ -13,7 +13,7 @@ ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/update-git-action-file/add
 
 # OS environment variable for use by github-util.py.
 
-export SENZING_TOPICS_INCLUDED=t-ast
+export SENZING_TOPICS_INCLUDED=t-comm
 
 # -----------------------------------------------------------------------------
 # Main
