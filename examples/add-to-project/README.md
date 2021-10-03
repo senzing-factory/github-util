@@ -31,7 +31,7 @@
     export SENZING_TOPICS_INCLUDED=t-g2-python
     export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-g2-python.yaml
 
-    ./add-to-project-g2-python.sh
+    ./add-to-project.sh
     ```
 
 1. Run `add-to-project.sh` for `t-ast`.
@@ -43,7 +43,7 @@
     export SENZING_TOPICS_INCLUDED=t-ast
     export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-ast.yaml
 
-    ./add-to-project-g2-python.sh
+    ./add-to-project.sh
     ```
 
 1. Run `add-to-project.sh` for `t-comm`.
@@ -55,7 +55,7 @@
     export SENZING_TOPICS_INCLUDED=t-comm
     export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-comm.yaml
 
-    ./add-to-project-g2-python.sh
+    ./add-to-project.sh
     ```
 
 1. Run `add-to-project.sh` for `t-gdev`.
@@ -67,5 +67,5 @@
     export SENZING_TOPICS_INCLUDED=t-gdev
     export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-gdev.yaml
 
-    ./add-to-project-g2-python.sh
+    ./add-to-project.sh
     ```
