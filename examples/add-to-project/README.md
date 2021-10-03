@@ -22,18 +22,6 @@
 
 ## add-to-project.sh
 
-1. Run `add-to-project.sh` for `t-g2-python`.
-   Example:
-
-    ```console
-    cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
-
-    export SENZING_TOPICS_INCLUDED=t-g2-python
-    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-g2-python.yaml
-
-    ./add-to-project.sh
-    ```
-
 1. Run `add-to-project.sh` for `t-ast`.
    Example:
 
@@ -54,6 +42,18 @@
 
     export SENZING_TOPICS_INCLUDED=t-comm
     export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-comm.yaml
+
+    ./add-to-project.sh
+    ```
+
+1. Run `add-to-project.sh` for `t-g2-python`.
+   Example:
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
+
+    export SENZING_TOPICS_INCLUDED=t-g2-python
+    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-t-g2-python.yaml
 
     ./add-to-project.sh
     ```
