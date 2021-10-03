@@ -22,14 +22,6 @@
 
 ## update-git-action-add-triage-label.sh
 
-1. In `update-git-action-add-triage-label.sh`, modify:
-
-    1. `ACTION_SOURCE_FILE`: Location of file to be copied into a repository's `.github/workflow` directory.
-    1. `GIT_MESSAGE`:  The message used when commiting the change.
-    1. `GIT_REPOSITORY_DIR`: A fresh directory where Git repositories can be cloned from GitHub.
-    1. `GITHUB_UTIL_DIR`: Directory containing `github-util.py`.
-    1. `SENZING_TOPICS_INCLUDED`: List of GitHub topics used to select repositories.
-
 1. Run `update-git-action-add-triage-label.sh`.
    Example:
 
