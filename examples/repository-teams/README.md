@@ -26,7 +26,7 @@
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
+    cd ${GIT_REPOSITORY_DIR}/examples/repository-teams
     ./github-util.py print-repository-names --topics-include=t-ast
     ```
 
@@ -34,7 +34,7 @@
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
+    cd ${GIT_REPOSITORY_DIR}/examples/repository-teams
     ./github-util.py print-repository-names --topics-include=t-comm
     ```
 
@@ -42,7 +42,7 @@
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
+    cd ${GIT_REPOSITORY_DIR}/examples/repository-teams
     ./github-util.py print-repository-names --topics-include=t-g2-python
     ```
 
@@ -50,7 +50,7 @@
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
+    cd ${GIT_REPOSITORY_DIR}/examples/repository-teams
     ./github-util.py print-repository-names --topics-include=t-gdev
     ```
 
@@ -62,7 +62,7 @@ Currently there are 4 teams identified by GitHub topics:  `t-ast`, `t-comm`, `t-
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
+    cd ${GIT_REPOSITORY_DIR}/examples/repository-teams
 
     ./github-util.py print-repository-names \
       --topics-not-any=t-ast,t-comm,t-g2-python,t-gdev \
