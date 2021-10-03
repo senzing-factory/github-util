@@ -2,6 +2,15 @@
 
 ## Prerequisites
 
+1. Set these environment variable values:
+
+    ```console
+    export GIT_ACCOUNT=senzing
+    export GIT_REPOSITORY=github-util
+    export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
+    export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
+    ```
+
 1. :pencil2: Set `GITHUB_ACCESS_TOKEN`.
    This is needed to access GitHub above the "public" limit.
    For information on how to obtain an access token, see
@@ -25,5 +34,6 @@
    Example:
 
     ```console
+    cd ${GIT_REPOSITORY_DIR}
     ./update-git-action-add-triage-label.sh
     ```
