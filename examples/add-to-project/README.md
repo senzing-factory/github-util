@@ -29,7 +29,7 @@
     cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
 
     export SENZING_TOPICS_INCLUDED=t-ast
-    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-ast.yaml
+    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-t-ast.yaml
 
     ./add-to-project.sh
     ```
@@ -41,7 +41,7 @@
     cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
 
     export SENZING_TOPICS_INCLUDED=t-comm
-    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-comm.yaml
+    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-t-comm.yaml
 
     ./add-to-project.sh
     ```
@@ -65,7 +65,7 @@
     cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
 
     export SENZING_TOPICS_INCLUDED=t-gdev
-    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-gdev.yaml
+    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-t-gdev.yaml
 
     ./add-to-project.sh
     ```
