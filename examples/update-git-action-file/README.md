@@ -34,6 +34,6 @@
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}
+    cd ${GIT_REPOSITORY_DIR}/examples/update-git-action-file
     ./update-git-action-add-triage-label.sh
     ```
