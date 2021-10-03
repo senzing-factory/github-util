@@ -2,6 +2,15 @@
 
 ## Prerequisites
 
+1. Set these environment variable values:
+
+    ```console
+    export GIT_ACCOUNT=senzing
+    export GIT_REPOSITORY=github-util
+    export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
+    export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
+    ```
+
 1. :pencil2: Set `GITHUB_ACCESS_TOKEN`.
    This is needed to access GitHub above the "public" limit.
    For information on how to obtain an access token, see
@@ -17,28 +26,32 @@
    Example:
 
     ```console
-    github-util.py print-repository-names --topics-include=t-ast
+    cd ${GIT_REPOSITORY_DIR}
+    ./github-util.py print-repository-names --topics-include=t-ast
     ```
 
 1. Repositories assigned to `t-comm`.
    Example:
 
     ```console
-    github-util.py print-repository-names --topics-include=t-comm
+    cd ${GIT_REPOSITORY_DIR}
+    ./github-util.py print-repository-names --topics-include=t-comm
     ```
 
 1. Repositories assigned to `t-g2-python`.
    Example:
 
     ```console
-    github-util.py print-repository-names --topics-include=t-g2-python
+    cd ${GIT_REPOSITORY_DIR}
+    ./github-util.py print-repository-names --topics-include=t-g2-python
     ```
 
 1. Repositories assigned to `t-gdev`.
    Example:
 
     ```console
-    github-util.py print-repository-names --topics-include=t-gdev
+    cd ${GIT_REPOSITORY_DIR}
+    ./github-util.py print-repository-names --topics-include=t-gdev
     ```
 
 ## Find repositories that aren't assigned to a team
@@ -49,7 +62,9 @@ Currently there are 4 teams identified by GitHub topics:  `t-ast`, `t-comm`, `t-
    Example:
 
     ```console
-    github-util.py print-repository-names \
+    cd ${GIT_REPOSITORY_DIR}
+
+    ./github-util.py print-repository-names \
       --topics-not-any=t-ast,t-comm,t-g2-python,t-gdev \
       --topics-exclude=archived,deprecated,obsolete
     ```
