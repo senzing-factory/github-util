@@ -629,8 +629,6 @@ def exit_silently():
 def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
     ''' Verify that the topic qualifies the repository. '''
 
-    # print(f"MJD: {topics}, {topics_all_list}, {topics_any_list}, {topics_excluded_list}, {topics_included_list}, {topics_not_all_list}, {topics_not_any_list}")
-
     if topics_excluded_list:
         for topic in topics:
             if topic in topics_excluded_list:
@@ -846,8 +844,6 @@ def do_print_repository_names(args):
 
     config = get_configuration(args)
     validate_configuration(config)
-
-    # print(f"MJD: {config}")
 
     # Pull variables from config.
 

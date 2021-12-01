@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added in 1.2.0
 
-- `print-dependabot` subcommand
+- New subcommands
+  - `print-dependabot`
+  - `print-submodules-sh`
 
 ## [1.1.1] - 2021-02-22
 
