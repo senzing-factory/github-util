@@ -626,7 +626,6 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
 
     # print(f"MJD: {topics}, {topics_all_list}, {topics_any_list}, {topics_excluded_list}, {topics_included_list}, {topics_not_all_list}, {topics_not_any_list}")
 
-
     if topics_excluded_list:
         for topic in topics:
             if topic in topics_excluded_list:
@@ -681,7 +680,7 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
     return True
 
 
-def run_query(headers, query): # A simple function to use requests.post to make the API call. Note the json= section.
+def run_query(headers, query):  # A simple function to use requests.post to make the API call. Note the json= section.
     request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
     if request.status_code == 200:
         return request.json()
@@ -727,28 +726,13 @@ def do_print_dependabot(args):
 
     github = Github(github_access_token)
 
-    # Print repository names.
+    # See https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
     headers = {
         "Authorization": "Bearer {0}".format(config.get("github_access_token"))
     }
 
-    # Gists: https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
     query = """
-{
-  viewer {
-    login
-  }
-  rateLimit {
-    limit
-    cost
-    remaining
-    resetAt
-  }
-}
-"""
-
-    query2 = """
 {{
   repository(name: "{repository-name}", owner: "senzing") {{
     vulnerabilityAlerts(first: 100) {{
@@ -774,12 +758,11 @@ def do_print_dependabot(args):
         variables = {
             "repository-name": repository.name
         }
-        result = run_query(headers, query2.format(**variables))
+        result = run_query(headers, query.format(**variables))
         nodes = result.get('data', {}).get('repository', {}).get('vulnerabilityAlerts', {}).get('nodes', [])
         if len(nodes) == 0:
             continue
-        print("\n")
-        print("Repository: {0}".format(repository.name))
+        print("\nRepository: {0}".format(repository.name))
         print("  Vulnerabilities:")
         packages = []
         for node in nodes:
@@ -787,53 +770,6 @@ def do_print_dependabot(args):
             if package_name not in packages:
                 packages.append(package_name)
                 print("   - {0}".format(package_name))
-    return
-
-
-    print(result)
-
-    return
-
-
-    result = run_query(headers, query) # Execute the query
-    print(result)
-
-    remaining_rate_limit = result["data"]["rateLimit"]["remaining"] # Drill down the dictionary
-    print("Remaining rate limit - {}".format(remaining_rate_limit))
-
-    return
-
-    repository = github.get_repo("senzing/entity-search-web-app")
-    events = repository.get_vulnerability_alert()
-    for event in events:
-        print(event)
-
-
-    return
-
-    repository = github.get_repo("senzing/entity-search-web-app")
-    events = repository.get_events()
-    for event in events:
-        # event_dictionary = json.loads(event.payload)
-        payload = event.payload
-        pull_request = payload.get("pull_request", {})
-        state = pull_request.get('state')
-        user_login = pull_request.get("user", {}).get("login")
-        # print("{0}  {1}".format(state, user_login))
-        if state == "open" and user_login == "dependabot[bot]":
-            print("")
-            print(event.payload)
-
-    return
-
-    github_organization = github.get_organization(organization)
-    for repository in github_organization.get_repos():
-        events = repository.get_events()
-        print("")
-        print("git clone {0}".format(repository.clone_url))
-        for event in events:
-            print("")
-            print(event.payload)
 
 
 def do_print_git_clone(args):
