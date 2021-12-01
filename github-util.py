@@ -769,11 +769,18 @@ def do_print_dependabot(args):
 }}
 """
 
-    variables = {
-        "repository-name": "entity-search-web-app"
-    }
+    github_organization = github.get_organization(organization)
+    for repository in github_organization.get_repos():
+        variables = {
+            "repository-name": repository.name
+        }
+        result = run_query(headers, query2.format(**variables))
+        print(repository.name)
+        print(result)
+        print("---")
+        return
 
-    result = run_query(headers, query2.format(**variables))
+
     print(result)
 
     return
