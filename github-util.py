@@ -20,12 +20,13 @@ import os
 import signal
 import sys
 import time
+import requests
 from github import Github
 
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-08-05'
+__updated__ = '2021-12-01'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -206,6 +207,11 @@ def get_parser():
     subcommands = {
         'print-copy-files-from-senzing-install': {
             "help": 'Print copy-files-from-senzing-install.sh',
+            "argument_aspects": ["common"],
+            "arguments": {},
+        },
+        'print-dependabot': {
+            "help": 'Print dependabot alerts',
             "argument_aspects": ["common"],
             "arguments": {},
         },
@@ -674,6 +680,14 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
 
     return True
 
+
+def run_query(headers, query): # A simple function to use requests.post to make the API call. Note the json= section.
+    request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
+    if request.status_code == 200:
+        return request.json()
+    else:
+        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+
 # -----------------------------------------------------------------------------
 # do_* functions
 #   Common function signature: do_XXX(args)
@@ -694,6 +708,87 @@ def do_docker_acceptance_test(args):
     # Epilog.
 
     logging.info(exit_template(config))
+
+
+def do_print_dependabot(args):
+    ''' Do a task. '''
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Pull variables from config.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+
+    # Log into GitHub.
+
+    github = Github(github_access_token)
+
+    # Print repository names.
+
+    headers = {
+        "Authorization": "Bearer {0}".format(config.get("github_access_token"))
+    }
+
+    query = """
+{
+  viewer {
+    login
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+"""
+
+
+    result = run_query(headers, query) # Execute the query
+
+    print("hi")
+    print(result)
+
+    remaining_rate_limit = result["data"]["rateLimit"]["remaining"] # Drill down the dictionary
+    print("Remaining rate limit - {}".format(remaining_rate_limit))
+
+    return
+
+    repository = github.get_repo("senzing/entity-search-web-app")
+    events = repository.get_vulnerability_alert()
+    for event in events:
+        print(event)
+
+
+    return
+
+    repository = github.get_repo("senzing/entity-search-web-app")
+    events = repository.get_events()
+    for event in events:
+        # event_dictionary = json.loads(event.payload)
+        payload = event.payload
+        pull_request = payload.get("pull_request", {})
+        state = pull_request.get('state')
+        user_login = pull_request.get("user", {}).get("login")
+        # print("{0}  {1}".format(state, user_login))
+        if state == "open" and user_login == "dependabot[bot]":
+            print("")
+            print(event.payload)
+
+    return
+
+    github_organization = github.get_organization(organization)
+    for repository in github_organization.get_repos():
+        events = repository.get_events()
+        print("")
+        print("git clone {0}".format(repository.clone_url))
+        for event in events:
+            print("")
+            print(event.payload)
 
 
 def do_print_git_clone(args):
