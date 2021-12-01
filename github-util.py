@@ -12,6 +12,8 @@
 #   - https://pygithub.readthedocs.io/en/latest/github_objects.html
 # -----------------------------------------------------------------------------
 
+# Import from standard library. https://docs.python.org/3/library/
+
 import argparse
 import json
 import linecache
@@ -20,6 +22,9 @@ import os
 import signal
 import sys
 import time
+
+# Import from https://pypi.org/
+
 import requests
 from github import Github
 
