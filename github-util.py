@@ -733,6 +733,7 @@ def do_print_dependabot(args):
         "Authorization": "Bearer {0}".format(config.get("github_access_token"))
     }
 
+    # Gists: https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
     query = """
 {
   viewer {
@@ -747,10 +748,38 @@ def do_print_dependabot(args):
 }
 """
 
+    query2 = """
+{{
+  repository(name: "{repository-name}", owner: "senzing") {{
+    vulnerabilityAlerts(first: 100) {{
+      nodes {{
+        createdAt
+        dismissedAt
+        securityVulnerability {{
+          package {{
+            name
+          }}
+          advisory {{
+            description
+          }}
+        }}
+      }}
+    }}
+  }}
+}}
+"""
+
+    variables = {
+        "repository-name": "entity-search-web-app"
+    }
+
+    result = run_query(headers, query2.format(**variables))
+    print(result)
+
+    return
+
 
     result = run_query(headers, query) # Execute the query
-
-    print("hi")
     print(result)
 
     remaining_rate_limit = result["data"]["rateLimit"]["remaining"] # Drill down the dictionary
