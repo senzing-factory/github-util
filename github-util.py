@@ -775,10 +775,19 @@ def do_print_dependabot(args):
             "repository-name": repository.name
         }
         result = run_query(headers, query2.format(**variables))
-        print(repository.name)
-        print(result)
-        print("---")
-        return
+        nodes = result.get('data', {}).get('repository', {}).get('vulnerabilityAlerts', {}).get('nodes', [])
+        if len(nodes) == 0:
+            continue
+        print("\n")
+        print("Repository: {0}".format(repository.name))
+        print("  Vulnerabilities:")
+        packages = []
+        for node in nodes:
+            package_name = node.get("securityVulnerability", {}).get("package", {}).get('name')
+            if package_name not in packages:
+                packages.append(package_name)
+                print("   - {0}".format(package_name))
+    return
 
 
     print(result)
