@@ -755,21 +755,35 @@ def do_print_dependabot(args):
 
     github_organization = github.get_organization(organization)
     for repository in github_organization.get_repos():
+
+        # Query GitHub's GraphQL API https://docs.github.com/en/graphql
+
         variables = {
             "repository-name": repository.name
         }
         result = run_query(headers, query.format(**variables))
+
+        # Parse results.
+
         nodes = result.get('data', {}).get('repository', {}).get('vulnerabilityAlerts', {}).get('nodes', [])
         if len(nodes) == 0:
             continue
-        print("\nRepository: {0}".format(repository.name))
-        print("  Vulnerabilities:")
+
+        # Assemble report.
+
         packages = []
         for node in nodes:
             package_name = node.get("securityVulnerability", {}).get("package", {}).get('name')
             if package_name not in packages:
                 packages.append(package_name)
-                print("   - {0}".format(package_name))
+        packages.sort()
+
+        # Print report.
+
+        print("\nRepository: {0}".format(repository.name))
+        print("  Vulnerabilities found by dependabot:")
+        for package in packages:
+            print("   - {0}".format(package))
 
 
 def do_print_git_clone(args):
