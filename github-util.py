@@ -12,6 +12,8 @@
 #   - https://pygithub.readthedocs.io/en/latest/github_objects.html
 # -----------------------------------------------------------------------------
 
+# Import from standard library. https://docs.python.org/3/library/
+
 import argparse
 import json
 import linecache
@@ -20,12 +22,16 @@ import os
 import signal
 import sys
 import time
+
+# Import from https://pypi.org/
+
+import requests
 from github import Github
 
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-08-05'
+__updated__ = '2021-12-01'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -206,6 +212,11 @@ def get_parser():
     subcommands = {
         'print-copy-files-from-senzing-install': {
             "help": 'Print copy-files-from-senzing-install.sh',
+            "argument_aspects": ["common"],
+            "arguments": {},
+        },
+        'print-dependabot': {
+            "help": 'Print dependabot alerts',
             "argument_aspects": ["common"],
             "arguments": {},
         },
@@ -618,9 +629,6 @@ def exit_silently():
 def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
     ''' Verify that the topic qualifies the repository. '''
 
-    # print(f"MJD: {topics}, {topics_all_list}, {topics_any_list}, {topics_excluded_list}, {topics_included_list}, {topics_not_all_list}, {topics_not_any_list}")
-
-
     if topics_excluded_list:
         for topic in topics:
             if topic in topics_excluded_list:
@@ -674,6 +682,14 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
 
     return True
 
+
+def run_query(headers, query):  # A simple function to use requests.post to make the API call. Note the json= section.
+    request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
+    if request.status_code == 200:
+        return request.json()
+    else:
+        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+
 # -----------------------------------------------------------------------------
 # do_* functions
 #   Common function signature: do_XXX(args)
@@ -694,6 +710,83 @@ def do_docker_acceptance_test(args):
     # Epilog.
 
     logging.info(exit_template(config))
+
+
+def do_print_dependabot(args):
+    ''' Do a task. '''
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Pull variables from config.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+
+    # Log into GitHub.
+
+    github = Github(github_access_token)
+
+    # See https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
+
+    headers = {
+        "Authorization": "Bearer {0}".format(config.get("github_access_token"))
+    }
+
+    query = """
+{{
+  repository(name: "{repository-name}", owner: "senzing") {{
+    vulnerabilityAlerts(first: 100) {{
+      nodes {{
+        createdAt
+        dismissedAt
+        securityVulnerability {{
+          package {{
+            name
+          }}
+          advisory {{
+            description
+          }}
+        }}
+      }}
+    }}
+  }}
+}}
+"""
+
+    github_organization = github.get_organization(organization)
+    for repository in github_organization.get_repos():
+
+        # Query GitHub's GraphQL API https://docs.github.com/en/graphql
+
+        variables = {
+            "repository-name": repository.name
+        }
+        result = run_query(headers, query.format(**variables))
+
+        # Parse results.
+
+        nodes = result.get('data', {}).get('repository', {}).get('vulnerabilityAlerts', {}).get('nodes', [])
+        if len(nodes) == 0:
+            continue
+
+        # Assemble report.
+
+        packages = []
+        for node in nodes:
+            package_name = node.get("securityVulnerability", {}).get("package", {}).get('name')
+            if package_name not in packages:
+                packages.append(package_name)
+        packages.sort()
+
+        # Print report.
+
+        print("\nRepository: {0}".format(repository.name))
+        print("  Vulnerabilities found by dependabot:")
+        for package in packages:
+            print("   - {0}".format(package))
 
 
 def do_print_git_clone(args):
@@ -751,8 +844,6 @@ def do_print_repository_names(args):
 
     config = get_configuration(args)
     validate_configuration(config)
-
-    # print(f"MJD: {config}")
 
     # Pull variables from config.
 
