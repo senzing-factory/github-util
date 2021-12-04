@@ -31,7 +31,7 @@ from github import Github
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-12-01'
+__updated__ = '2021-12-03'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -280,6 +280,11 @@ def get_parser():
                     "help": "Sleep time in seconds. DEFAULT: 0 (infinite)"
                 },
             },
+        },
+        'update-dockerfiles': {
+            "help": 'Update Dockerfiles.',
+            "argument_aspects": ["common"],
+            "arguments": {},
         },
         'version': {
             "help": 'Print version of program.',
@@ -995,6 +1000,68 @@ def do_sleep(args):
     # Epilog.
 
     logging.info(exit_template(config))
+
+def do_update_dockerfiles(args):
+    ''' Update dockerfiles. '''
+
+    # Reference: https://gist.github.com/nottrobin/a18f9e33286f9db4b83e48af6d285e29
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Prolog.
+
+    logging.info(entry_template(config))
+
+    # Pull values from configuration.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+
+    # Log into GitHub.
+
+    github = Github(github_access_token)
+
+    repository = github.get_repo("senzing/test-ground")
+
+    # Make branch.
+
+    branch_name = "bob"
+
+    branch1 = repository.create_git_ref(
+        'refs/heads/{branch_name}'.format(branch_name=branch_name),
+        repository.get_branch('master').commit.sha)
+
+    print(branch1)
+
+    ## Get branch as object
+
+    branch = repository.get_branch(branch_name)
+    print(branch)
+
+    return
+
+    # TODO:  Update Dockerfile
+    # See https://gist.github.com/nottrobin/a18f9e33286f9db4b83e48af6d285e29#file-github-api-create-pull-request-end-to-end-py-L20-L31
+
+    # Pull Request metadata
+
+    pull_request_title = "Use 'requests' instead of 'httplib'"
+    pull_request_branch_name="dockter.github-util"
+    pull_request_base = "master"
+
+    pull_request_body = '''
+SUMMARY
+Change HTTP library used to send requests
+
+TESTS
+  - [x] Send 'GET' request
+  - [x] Send 'POST' request with/without body
+'''
+
+    pull_request = repository.create_pull(title=pull_request_title, body=pull_request_body, head=pull_request_branch_name, base=pull_request_base)
 
 
 def do_version(args):
