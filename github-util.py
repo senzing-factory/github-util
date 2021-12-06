@@ -600,6 +600,20 @@ def bootstrap_signal_handler(signal, frame):
     sys.exit(0)
 
 
+def construct_line(command, line, properties):
+
+    result = line  # Default.
+    if line.startswith(command):
+        regex_string = "{0}(.+?)=".format(command)
+        match = re.search(regex_string, line)
+        if match:
+            key = match.group(1).strip()
+            value = properties.get(key)
+            if value:
+                result = "{0} {1}={2}".format(command, key, value)
+    return result
+
+
 def create_signal_handler_function(args):
     ''' Tricky code.  Uses currying technique. Create a function for signal handling.
         that knows about "args".
@@ -624,6 +638,18 @@ def entry_template(config):
     return message_info(297, config_json)
 
 
+def exit_error(index, *args):
+    ''' Log error message and exit program. '''
+    logging.error(message_error(index, *args))
+    logging.error(message_error(698))
+    sys.exit(1)
+
+
+def exit_silently():
+    ''' Exit program. '''
+    sys.exit(0)
+
+
 def exit_template(config):
     ''' Format of exit message. '''
     debug = config.get("debug", False)
@@ -636,18 +662,6 @@ def exit_template(config):
         final_config = redact_configuration(config)
     config_json = json.dumps(final_config, sort_keys=True)
     return message_info(298, config_json)
-
-
-def exit_error(index, *args):
-    ''' Log error message and exit program. '''
-    logging.error(message_error(index, *args))
-    logging.error(message_error(698))
-    sys.exit(1)
-
-
-def exit_silently():
-    ''' Exit program. '''
-    sys.exit(0)
 
 
 def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
@@ -707,6 +721,16 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
     return True
 
 
+def run_query(headers, query):
+    ''' A simple function to use requests.post to make the API call. Note the json= section. '''
+
+    request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
+    if request.status_code == 200:
+        return request.json()
+    else:
+        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+
+
 def symbolic_resolution(properties, values):
     ''' Do symbolic resolution recursively through a dictionary. '''
 
@@ -727,30 +751,6 @@ def symbolic_resolution(properties, values):
         else:
             result[key] = symbolic_resolution(value, values)
 
-    return result
-
-
-def run_query(headers, query):
-    ''' A simple function to use requests.post to make the API call. Note the json= section. '''
-
-    request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
-    if request.status_code == 200:
-        return request.json()
-    else:
-        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
-
-
-def construct_line(command, line, properties):
-
-    result = line  # Default.
-    if line.startswith(command):
-        regex_string = "{0}(.+?)=".format(command)
-        match = re.search(regex_string, line)
-        if match:
-            key = match.group(1).strip()
-            value = properties.get(key)
-            if value:
-                result = "{0} {1}={2}".format(command, key, value)
     return result
 
 
