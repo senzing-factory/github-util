@@ -4,7 +4,7 @@
         "branchName": "github-util-test-1",
         "refreshedAt": "2021-12-05"
     },
-    "property_sets": {
+    "propertySets": {
         "common": {
             "arg": {
                 "BASE_IMAGE": "baseImage"
@@ -16,8 +16,14 @@
     },
     "repositories": {
         "test-ground": {
-            "property_sets": ["common"],
-            "properties": {}
+            "mainBranch": "master",
+            "propertySets": ["common"],
+            "properties": {
+                "bob": "mary",
+                "arg": {
+                    "BASE_IMAGE": "baseImageXXXX"
+                }
+            }
         }
     }
 }

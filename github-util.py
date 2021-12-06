@@ -31,7 +31,7 @@ from github import Github
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-12-03'
+__updated__ = '2021-12-05'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -47,6 +47,11 @@ GIGABYTES = 1024 * MEGABYTES
 # 1) Command line options, 2) Environment variables, 3) Configuration files, 4) Default values
 
 configuration_locator = {
+    "configuration_file": {
+        "default": None,
+        "env": "GITHUB_CONFIGURATION_FILE",
+        "cli": "github-configuration-file"
+    },
     "debug": {
         "default": False,
         "env": "SENZING_DEBUG",
@@ -284,7 +289,13 @@ def get_parser():
         'update-dockerfiles': {
             "help": 'Update Dockerfiles.',
             "argument_aspects": ["common"],
-            "arguments": {},
+            "arguments": {
+                "--configuration-file": {
+                    "dest": "configuration_file",
+                    "metavar": "SENZING_CONFIGURATION_FILE",
+                    "help": "Configuration file. DEFAULT: None"
+                },
+            },
         },
         'version': {
             "help": 'Print version of program.',
@@ -688,6 +699,13 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
     return True
 
 
+def rectify_properties(properties, values):
+    # TODO:  recursively replace variable names with values.
+
+    result = properties
+    return result
+
+
 def run_query(headers, query):  # A simple function to use requests.post to make the API call. Note the json= section.
     request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
     if request.status_code == 200:
@@ -1001,6 +1019,7 @@ def do_sleep(args):
 
     logging.info(exit_template(config))
 
+
 def do_update_dockerfiles(args):
     ''' Update dockerfiles. '''
 
@@ -1019,24 +1038,77 @@ def do_update_dockerfiles(args):
 
     github_access_token = config.get("github_access_token")
     organization = config.get("organization")
+    configuration_file = config.get("configuration_file")
+
+    # Load configuration file
+
+    with open(configuration_file) as f:
+        config['file'] = json.load(f)
+
+    # Pull values from configuration file.
+
+    config_repositories = config.get('file', {}).get('repositories', {})
+    config_properties = config.get('file', {}).get('properties', {})
+    config_property_sets = config.get('file', {}).get('propertySets', {})
+
+    branch_name = config_properties.get('branchName', "github-util")
 
     # Log into GitHub.
 
     github = Github(github_access_token)
+    github_organization = github.get_organization(organization)
 
-    repository = github.get_repo("senzing/test-ground")
+    # Process each repository listed in the configuration.
 
-    # Make branch.
+    for repository_name, repository_properties in config_repositories.items():
 
-    branch_name = "bob"
+        properties = repository_properties.get("properties")
+        property_set_names = repository_properties.get("propertySets")
 
-    branch1 = repository.create_git_ref(
+        # Assemble properties.
+
+        aggregated_properties = {}
+        for property_set_name in property_set_names:
+            property_set = config_property_sets.get(property_set_name, {})
+            for property_name, property_value in property_set.items():
+                aggregated_properties[property_name] = property_value
+        for property_name, property_value in properties.items():
+            aggregated_properties[property_name] = property_value
+
+        # Symbolic replacement of property values.
+
+        aggregated_properties = rectify_properties(aggregated_properties, config_properties)
+        print(aggregated_properties)
+
+        # ....
+
+        repository = github_organization.get_repo(repository_name)
+
+        # ....
+
+        main_branch = repository_properties.get("mainBranch", "main")
+        print(main_branch)
+
+
+    return
+
+
+    branch = repository.create_git_ref(
         'refs/heads/{branch_name}'.format(branch_name=branch_name),
         repository.get_branch('master').commit.sha)
 
+
+    ### OLD Stuff
+
+    return
+
+    branch1 = repository.create_git_ref(
+        'refs/heads/{branch_name}'.format(branch_name=branch_name),
+        repository.get_branch(main_branch).commit.sha)
+
     print(branch1)
 
-    ## Get branch as object
+    # # Get branch as object
 
     branch = repository.get_branch(branch_name)
     print(branch)
@@ -1049,7 +1121,7 @@ def do_update_dockerfiles(args):
     # Pull Request metadata
 
     pull_request_title = "Use 'requests' instead of 'httplib'"
-    pull_request_branch_name="dockter.github-util"
+    pull_request_branch_name = "dockter.github-util"
     pull_request_base = "master"
 
     pull_request_body = '''
