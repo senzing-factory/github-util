@@ -740,37 +740,29 @@ def run_query(headers, query):
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 
 
-def update_line(line, resolved_properties):
-    arg = resolved_properties.get("arg", {})
-    env = resolved_properties.get("env", {})
+def construct_line(command, line, properties):
 
-    # Handle "ARG"
+    result = line  # Default.
+    if line.startswith(command):
+        regex_string = "{0}(.+?)=".format(command)
+        match = re.search(regex_string, line)
+        if match:
+            key = match.group(1).strip()
+            value = properties.get(key)
+            if value:
+                result = "{0} {1}={2}".format(command, key, value)
+    return result
+
+
+def update_line(line, resolved_properties):
+    '''Update line based on Docker Keyword.'''
 
     if line.startswith("ARG"):
-        result = line  # Default.
-        match = re.search('ARG(.+?)=', line)
-        if match:
-            arg_key = match.group(1).strip()
-            arg_value = arg.get(arg_key)
-            if arg_value:
-                result = "ARG {0}={1}".format(arg_key, arg_value)
-
-    # Handle "ENV"
-
+        result = construct_line("ARG", line, resolved_properties.get("arg", {}))
     elif line.startswith("ENV"):
-        result = line  # Default.
-        match = re.search('ENV(.+?)=', line)
-        if match:
-            env_key = match.group(1).strip()
-            env_value = env.get(env_key)
-            if env_value:
-                result = "ENV {0}={1}".format(env_key, env_value)
-
-    # No modification needed.
-
+        result = construct_line("ENV", line, resolved_properties.get("env", {}))
     else:
         result = line
-
     return result
 
 # -----------------------------------------------------------------------------
