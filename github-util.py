@@ -383,6 +383,10 @@ message_dictionary = {
     "102": "Updated Repository: {0} Label: {1}",
     "103": "Deleted Repository: {0} Label: {1}",
     "104": "Repository '{0}' has been archived.  Not modifying its labels.",
+    "120": "Processing Repository: {0}",
+    "121": "  Created branch: {0}",
+    "122": "  Processing file: {0}",
+    "123": "  Created pull request: {0}",
     "293": "For information on warnings and errors, see https://github.com/Senzing/github-util",
     "294": "Version: {0}  Updated: {1}",
     "295": "Sleeping infinitely.",
@@ -391,6 +395,8 @@ message_dictionary = {
     "298": "Exit {0}",
     "299": "{0}",
     "300": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}W",
+    "350": "  Branch '{0}' already exists. Reusing it. Exception: {1}",
+    "351": "  Pull request already exists for '{0}'. Exception: {1}",
     "499": "{0}",
     "500": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}E",
     "696": "Bad SENZING_SUBCOMMAND: {0}.",
@@ -745,7 +751,6 @@ def update_line(line, resolved_properties):
         match = re.search('ARG(.+?)=', line)
         if match:
             arg_key = match.group(1).strip()
-            print(arg_key)
             arg_value = arg.get(arg_key)
             if arg_value:
                 result = "ARG {0}={1}".format(arg_key, arg_value)
@@ -1116,7 +1121,7 @@ def do_update_dockerfiles(args):
     # Process each repository listed in the configuration.
 
     for repository_name, repository_properties in config_repositories.items():
-
+        logging.info(message_info(120, repository_name))
         properties = repository_properties.get("properties")
         property_set_names = repository_properties.get("propertySets")
 
@@ -1133,37 +1138,45 @@ def do_update_dockerfiles(args):
         # Symbolic replacement of property values.
 
         resolved_properties = symbolic_resolution(aggregated_properties, config_properties)
-        print(resolved_properties)
 
         # Get values from properties.
 
+        assignee = resolved_properties.get("assignee")
         commit_message = resolved_properties.get("commitMessage")
         main_branch_name = resolved_properties.get("branchNameMain", "main")
         new_branch_name = resolved_properties.get("branchNameNew")
         pull_request_body = resolved_properties.get("pullRequestBody")
         pull_request_title = resolved_properties.get("pullRequestTitle")
+        reviewers = resolved_properties.get("reviewers")
         source_file_names = resolved_properties.get("files")
 
-        # Create branch.
+        # Create or find branch.
 
         repository = github_organization.get_repo(repository_name)
-        branch = repository.create_git_ref(
-            'refs/heads/{branch_name}'.format(branch_name=new_branch_name),
-            repository.get_branch(main_branch_name).commit.sha)
+        refs_heads_branch = 'refs/heads/{branch_name}'.format(branch_name=new_branch_name)
+
+        try:
+            branch = repository.create_git_ref(
+                refs_heads_branch,
+                repository.get_branch(main_branch_name).commit.sha)
+            logging.info(message_info(121, new_branch_name))
+        except Exception as err:
+            logging.warning(message_warning(350, new_branch_name, err))
+            branch = repository.get_branch(new_branch_name)
 
         # Process files.
 
         for source_file_name in source_file_names:
-            print(source_file_name)
+            logging.info(message_info(122, source_file_name))
 
             # Modify file.
 
-            source_file = repository.get_contents(source_file_name)
+            source_file = repository.get_contents(source_file_name, refs_heads_branch)
             source_file_content = base64.b64decode(source_file.content).decode('utf-8')
-            target_file = ""
+            target_list = []
             for line in source_file_content.split('\n'):
-                new_line = update_line(line, resolved_properties)
-                target_file = target_file + "\n" + new_line
+                target_list.append(update_line(line, resolved_properties))
+            target_file = "\n".join(target_list)
             target_file_content = target_file.encode()
 
             # Commit file.
@@ -1177,11 +1190,21 @@ def do_update_dockerfiles(args):
 
     # Create pull request.
 
-    # pull_request = repository.create_pull(
-    #     title=pull_request_title,
-    #     body=pull_request_body,
-    #     base=main_branch_name,
-    #     head=new_branch_name)
+    try:
+        pull_request = repository.create_pull(
+            title=pull_request_title,
+            body=pull_request_body,
+            base=main_branch_name,
+            head=new_branch_name)
+        pull_request.create_review_request(reviewers)
+        pull_request.add_to_assignees(assignee)
+        logging.info(message_info(123, pull_request_title))
+    except Exception as err:
+        logging.error(message_error(351, pull_request_title, err))
+
+    # Epilog.
+
+    logging.info(exit_template(config))
 
 
 def do_version(args):

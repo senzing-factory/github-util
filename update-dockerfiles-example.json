@@ -27,6 +27,10 @@
                 "BASE_IMAGE": "imageDebian"
             }
         },
+        "reviewersDefault": {
+            "assignee": "docktermj",
+            "reviewers": ["roncewind"]
+        },
         "senzing": {
             "arg": {
                 "BASE_IMAGE": "imageSenzingBase"
@@ -35,7 +39,7 @@
     },
     "repositories": {
         "test-ground": {
-            "propertySets": ["common", "debian"],
+            "propertySets": ["common", "debian", "reviewersDefault"],
             "properties": {
                 "branchNameMain": "master"
             }
