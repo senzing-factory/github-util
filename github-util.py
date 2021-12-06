@@ -733,9 +733,12 @@ def run_query(headers, query):
     else:
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 
+
 def update_line(line, resolved_properties):
     arg = resolved_properties.get("arg", {})
     env = resolved_properties.get("env", {})
+
+    # Handle "ARG"
 
     if line.startswith("ARG"):
         result = line  # Default.
@@ -746,6 +749,9 @@ def update_line(line, resolved_properties):
             arg_value = arg.get(arg_key)
             if arg_value:
                 result = "ARG {0}={1}".format(arg_key, arg_value)
+
+    # Handle "ENV"
+
     elif line.startswith("ENV"):
         result = line  # Default.
         match = re.search('ENV(.+?)=', line)
@@ -754,11 +760,13 @@ def update_line(line, resolved_properties):
             env_value = env.get(env_key)
             if env_value:
                 result = "ENV {0}={1}".format(env_key, env_value)
+
+    # No modification needed.
+
     else:
         result = line
 
     return result
-
 
 # -----------------------------------------------------------------------------
 # do_* functions
@@ -1130,19 +1138,18 @@ def do_update_dockerfiles(args):
         # Get values from properties.
 
         commit_message = resolved_properties.get("commitMessage")
-        main_branch_name = resolved_properties.get("mainBranchName", "main")
-        new_branch_name = resolved_properties.get("branchName")
+        main_branch_name = resolved_properties.get("branchNameMain", "main")
+        new_branch_name = resolved_properties.get("branchNameNew")
         pull_request_body = resolved_properties.get("pullRequestBody")
         pull_request_title = resolved_properties.get("pullRequestTitle")
-        source_file_names =  resolved_properties.get("files")
+        source_file_names = resolved_properties.get("files")
 
         # Create branch.
 
         repository = github_organization.get_repo(repository_name)
-
-        # branch = repository.create_git_ref(
-        #     'refs/heads/{branch_name}'.format(branch_name=new_branch_name),
-        #     repository.get_branch(main_branch_name).commit.sha)
+        branch = repository.create_git_ref(
+            'refs/heads/{branch_name}'.format(branch_name=new_branch_name),
+            repository.get_branch(main_branch_name).commit.sha)
 
         # Process files.
 
@@ -1153,18 +1160,20 @@ def do_update_dockerfiles(args):
 
             source_file = repository.get_contents(source_file_name)
             source_file_content = base64.b64decode(source_file.content).decode('utf-8')
+            target_file = ""
             for line in source_file_content.split('\n'):
                 new_line = update_line(line, resolved_properties)
-                print(new_line)
+                target_file = target_file + "\n" + new_line
+            target_file_content = target_file.encode()
 
             # Commit file.
 
-            # repository.update_file(
-            #     path="/{0}".format(source_file_name),
-            #     message=commit_message,
-            #     content=target_file_content,
-            #     sha=source_file.sha,
-            #     branch=new_branch_name)
+            repository.update_file(
+                path=source_file_name,
+                message=commit_message,
+                content=target_file_content,
+                sha=source_file.sha,
+                branch=new_branch_name)
 
     # Create pull request.
 

@@ -1,17 +1,17 @@
 {
     "properties": {
-        "baseImage": "debian:10.11@sha256:9a1f494bb52e5d18e2dfb0fd6e59dbfe69aae9feecff1b246ad69984fbe25772",
+        "branchNameNew": "github-util-test-1",
         "commitMessage": "Update version",
-        "newBranchName": "github-util-test-1",
+        "imageDebian": "debian:10.11@sha256:9a1f494bb52e5d18e2dfb0fd6e59dbfe69aae9feecff1b246ad69984fbe25772",
+        "imageSenzingBase": "senzing/senzing-base:1.6.3",
         "pullRequestBody": "Test Pull request #1",
         "pullRequestTitle": "Test Pull request #1",
         "refreshedAt": "2021-12-05"
     },
     "propertySets": {
         "common": {
-            "arg": {
-                "BASE_IMAGE": "baseImage"
-            },
+            "branchNameMain": "main",
+            "branchNameNew": "branchNameNew",
             "commitMessage": "commitMessage",
             "env": {
                 "REFRESHED_AT": "refreshedAt"
@@ -19,17 +19,25 @@
             "files": [
                 "Dockerfile"
             ],
-            "mainBranchName": "main",
-            "newBranchName": "newBranchName",
             "pullRequestBody": "pullRequestBody",
             "pullRequestTitle": "pullRequestTitle"
+        },
+        "debian": {
+            "arg": {
+                "BASE_IMAGE": "imageDebian"
+            }
+        },
+        "senzing": {
+            "arg": {
+                "BASE_IMAGE": "imageSenzingBase"
+            }
         }
     },
     "repositories": {
         "test-ground": {
-            "propertySets": ["common"],
+            "propertySets": ["common", "debian"],
             "properties": {
-                "mainBranchName": "master"
+                "branchNameMain": "master"
             }
         }
     }
