@@ -31,7 +31,7 @@ from github import Github
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-12-05'
+__updated__ = '2021-12-06'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -700,13 +700,57 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
 
 
 def rectify_properties(properties, values):
-    # TODO:  recursively replace variable names with values.
+    ''' Do symbolic resolution recursively through a dictionary. '''
 
-    result = properties
+    # Simple symbolic resolution for a string.
+
+    if type(properties) == str:
+        return values.get(properties, properties)
+
+    # Complex symbolic resolution for other data types.
+
+    result = {}
+    for key, value in properties.items():
+        if type(value) == list:
+            new_list = []
+            for list_element in value:
+                new_list.append(rectify_properties(list_element, values))
+            result[key] = new_list
+        else:
+            result[key] = rectify_properties(value, values)
+
     return result
 
 
-def run_query(headers, query):  # A simple function to use requests.post to make the API call. Note the json= section.
+def rectify_properties_old(properties, values):
+    ''' Do symbolic resolution recursively through a dictionary. '''
+
+    # Simple symbolic resolution for a string.
+
+    if type(properties) == str:
+        return values.get(properties, properties)
+
+    result = {}
+    for key, value in properties.items():
+        if type(value) == dict:
+            result[key] = rectify_properties(value, values)
+        elif type(value) == list:
+            new_list = []
+            for list_element in value:
+                new_list.append(rectify_properties(list_element, values))
+            result[key] = new_list
+        else:
+
+            # Tricky code:  If the property value exists, use it.  If not, use the property key.
+
+            result[key] = values.get(value, value)
+
+    return result
+
+
+def run_query(headers, query):
+    ''' A simple function to use requests.post to make the API call. Note the json= section. '''
+
     request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
     if request.status_code == 200:
         return request.json()
@@ -1080,25 +1124,22 @@ def do_update_dockerfiles(args):
         aggregated_properties = rectify_properties(aggregated_properties, config_properties)
         print(aggregated_properties)
 
-        # ....
+        # Get Information.
 
         repository = github_organization.get_repo(repository_name)
+        main_branch_name = aggregated_properties.get("mainBranchName", "main")
+        new_branch_name = aggregated_properties.get("branchName")
+        print(main_branch_name)
 
-        # ....
-
-        main_branch = repository_properties.get("mainBranch", "main")
-        print(main_branch)
-
+        # Create branch
 
     return
-
 
     branch = repository.create_git_ref(
         'refs/heads/{branch_name}'.format(branch_name=branch_name),
         repository.get_branch('master').commit.sha)
 
-
-    ### OLD Stuff
+    # ## OLD Stuff
 
     return
 
