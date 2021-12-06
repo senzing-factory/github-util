@@ -1,9 +1,11 @@
 {
     "properties": {
-        "branchNameNew": "github-util-test-1",
+        "branchNameNew": "github-util.update-dockerfiles.20211206",
         "commitMessage": "#1 Update version",
         "imageDebian": "debian:10.11@sha256:9a1f494bb52e5d18e2dfb0fd6e59dbfe69aae9feecff1b246ad69984fbe25772",
+        "imageLambdaPython": "public.ecr.aws/lambda/python:3.8",
         "imageSenzingBase": "senzing/senzing-base:1.6.3",
+        "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.3",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "Update FROM version",
         "refreshedAt": "2021-12-05"
@@ -22,24 +24,55 @@
             "pullRequestBody": "pullRequestBody",
             "pullRequestTitle": "pullRequestTitle"
         },
-        "debian": {
+        "imageDebian": {
             "arg": {
                 "BASE_IMAGE": "imageDebian"
+            }
+        },
+        "imageLambdaPython": {
+            "arg": {
+                "BASE_IMAGE": "imageSenzingBase"
+            }
+        },
+        "imageSenzing": {
+            "arg": {
+                "BASE_IMAGE": "imageSenzingBase"
+            }
+        },
+        "imageSenzingBuilderDebian": {
+            "arg": {
+                "BASE_BUILDER_IMAGE": "imageSenzingBuilderDebian"
             }
         },
         "reviewersDefault": {
             "assignee": "docktermj",
             "reviewers": ["roncewind"]
-        },
-        "senzing": {
-            "arg": {
-                "BASE_IMAGE": "imageSenzingBase"
-            }
         }
     },
     "repositories": {
         "test-ground": {
-            "propertySets": ["common", "debian", "reviewersDefault"],
+            "propertySets": ["common", "imageDebian", "reviewersDefault"],
+            "properties": {
+                "branchNameMain": "master"
+            }
+        },
+        "accountant-aws-marketplace": {
+            "propertySets": ["common", "imageSenzing", "reviewersDefault"]
+        },
+        "aws-lambda-cognito-authorizer": {
+            "propertySets": ["common", "imageLambdaPython", "reviewersDefault"]
+        },
+        "aws-lambda-self-signed-certificate": {
+            "propertySets": ["common", "imageLambdaPython", "reviewersDefault"]
+        },
+        "configurator": {
+            "propertySets": ["common", "imageSenzing", "reviewersDefault"],
+            "properties": {
+                "branchNameMain": "master"
+            }
+        },
+        "connector-neo4j": {
+            "propertySets": ["common", "imageSenzing", "imageSenzingBuilderDebian", "reviewersDefault"],
             "properties": {
                 "branchNameMain": "master"
             }
