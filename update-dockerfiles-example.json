@@ -1,0 +1,23 @@
+{
+    "properties": {
+        "baseImage": "debian:10.11@sha256:9a1f494bb52e5d18e2dfb0fd6e59dbfe69aae9feecff1b246ad69984fbe25772",
+        "branchName": "github-util-test-1",
+        "refreshedAt": "2021-12-05"
+    },
+    "property_sets": {
+        "common": {
+            "arg": {
+                "BASE_IMAGE": "baseImage"
+            },
+            "env": {
+                "REFRESHED_AT": "refreshedAt"
+            }
+        }
+    },
+    "repositories": {
+        "test-ground": {
+            "property_sets": ["common"],
+            "properties": {}
+        }
+    }
+}
