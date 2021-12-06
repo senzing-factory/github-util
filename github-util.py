@@ -20,6 +20,7 @@ import json
 import linecache
 import logging
 import os
+import re
 import signal
 import sys
 import time
@@ -732,6 +733,33 @@ def run_query(headers, query):
     else:
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 
+def update_line(line, resolved_properties):
+    arg = resolved_properties.get("arg", {})
+    env = resolved_properties.get("env", {})
+
+    if line.startswith("ARG"):
+        result = line  # Default.
+        match = re.search('ARG(.+?)=', line)
+        if match:
+            arg_key = match.group(1).strip()
+            print(arg_key)
+            arg_value = arg.get(arg_key)
+            if arg_value:
+                result = "ARG {0}={1}".format(arg_key, arg_value)
+    elif line.startswith("ENV"):
+        result = line  # Default.
+        match = re.search('ENV(.+?)=', line)
+        if match:
+            env_key = match.group(1).strip()
+            env_value = env.get(env_key)
+            if env_value:
+                result = "ENV {0}={1}".format(env_key, env_value)
+    else:
+        result = line
+
+    return result
+
+
 # -----------------------------------------------------------------------------
 # do_* functions
 #   Common function signature: do_XXX(args)
@@ -1096,17 +1124,17 @@ def do_update_dockerfiles(args):
 
         # Symbolic replacement of property values.
 
-        aggregated_properties = symbolic_resolution(aggregated_properties, config_properties)
-        print(aggregated_properties)
+        resolved_properties = symbolic_resolution(aggregated_properties, config_properties)
+        print(resolved_properties)
 
         # Get values from properties.
 
-        commit_message = aggregated_properties.get("commitMessage")
-        main_branch_name = aggregated_properties.get("mainBranchName", "main")
-        new_branch_name = aggregated_properties.get("branchName")
-        pull_request_body = aggregated_properties.get("pullRequestBody")
-        pull_request_title = aggregated_properties.get("pullRequestTitle")
-        source_file_names =  aggregated_properties.get("files")
+        commit_message = resolved_properties.get("commitMessage")
+        main_branch_name = resolved_properties.get("mainBranchName", "main")
+        new_branch_name = resolved_properties.get("branchName")
+        pull_request_body = resolved_properties.get("pullRequestBody")
+        pull_request_title = resolved_properties.get("pullRequestTitle")
+        source_file_names =  resolved_properties.get("files")
 
         # Create branch.
 
@@ -1126,7 +1154,8 @@ def do_update_dockerfiles(args):
             source_file = repository.get_contents(source_file_name)
             source_file_content = base64.b64decode(source_file.content).decode('utf-8')
             for line in source_file_content.split('\n'):
-                print(">>> {0}".format(line))
+                new_line = update_line(line, resolved_properties)
+                print(new_line)
 
             # Commit file.
 
