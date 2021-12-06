@@ -15,6 +15,7 @@
 # Import from standard library. https://docs.python.org/3/library/
 
 import argparse
+import base64
 import json
 import linecache
 import logging
@@ -699,7 +700,7 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
     return True
 
 
-def rectify_properties(properties, values):
+def symbolic_resolution(properties, values):
     ''' Do symbolic resolution recursively through a dictionary. '''
 
     # Simple symbolic resolution for a string.
@@ -714,36 +715,10 @@ def rectify_properties(properties, values):
         if type(value) == list:
             new_list = []
             for list_element in value:
-                new_list.append(rectify_properties(list_element, values))
+                new_list.append(symbolic_resolution(list_element, values))
             result[key] = new_list
         else:
-            result[key] = rectify_properties(value, values)
-
-    return result
-
-
-def rectify_properties_old(properties, values):
-    ''' Do symbolic resolution recursively through a dictionary. '''
-
-    # Simple symbolic resolution for a string.
-
-    if type(properties) == str:
-        return values.get(properties, properties)
-
-    result = {}
-    for key, value in properties.items():
-        if type(value) == dict:
-            result[key] = rectify_properties(value, values)
-        elif type(value) == list:
-            new_list = []
-            for list_element in value:
-                new_list.append(rectify_properties(list_element, values))
-            result[key] = new_list
-        else:
-
-            # Tricky code:  If the property value exists, use it.  If not, use the property key.
-
-            result[key] = values.get(value, value)
+            result[key] = symbolic_resolution(value, values)
 
     return result
 
@@ -1121,60 +1096,54 @@ def do_update_dockerfiles(args):
 
         # Symbolic replacement of property values.
 
-        aggregated_properties = rectify_properties(aggregated_properties, config_properties)
+        aggregated_properties = symbolic_resolution(aggregated_properties, config_properties)
         print(aggregated_properties)
 
-        # Get Information.
+        # Get values from properties.
 
-        repository = github_organization.get_repo(repository_name)
+        commit_message = aggregated_properties.get("commitMessage")
         main_branch_name = aggregated_properties.get("mainBranchName", "main")
         new_branch_name = aggregated_properties.get("branchName")
-        print(main_branch_name)
+        pull_request_body = aggregated_properties.get("pullRequestBody")
+        pull_request_title = aggregated_properties.get("pullRequestTitle")
+        source_file_names =  aggregated_properties.get("files")
 
-        # Create branch
+        # Create branch.
 
-    return
+        repository = github_organization.get_repo(repository_name)
 
-    branch = repository.create_git_ref(
-        'refs/heads/{branch_name}'.format(branch_name=branch_name),
-        repository.get_branch('master').commit.sha)
+        # branch = repository.create_git_ref(
+        #     'refs/heads/{branch_name}'.format(branch_name=new_branch_name),
+        #     repository.get_branch(main_branch_name).commit.sha)
 
-    # ## OLD Stuff
+        # Process files.
 
-    return
+        for source_file_name in source_file_names:
+            print(source_file_name)
 
-    branch1 = repository.create_git_ref(
-        'refs/heads/{branch_name}'.format(branch_name=branch_name),
-        repository.get_branch(main_branch).commit.sha)
+            # Modify file.
 
-    print(branch1)
+            source_file = repository.get_contents(source_file_name)
+            source_file_content = base64.b64decode(source_file.content).decode('utf-8')
+            for line in source_file_content.split('\n'):
+                print(">>> {0}".format(line))
 
-    # # Get branch as object
+            # Commit file.
 
-    branch = repository.get_branch(branch_name)
-    print(branch)
+            # repository.update_file(
+            #     path="/{0}".format(source_file_name),
+            #     message=commit_message,
+            #     content=target_file_content,
+            #     sha=source_file.sha,
+            #     branch=new_branch_name)
 
-    return
+    # Create pull request.
 
-    # TODO:  Update Dockerfile
-    # See https://gist.github.com/nottrobin/a18f9e33286f9db4b83e48af6d285e29#file-github-api-create-pull-request-end-to-end-py-L20-L31
-
-    # Pull Request metadata
-
-    pull_request_title = "Use 'requests' instead of 'httplib'"
-    pull_request_branch_name = "dockter.github-util"
-    pull_request_base = "master"
-
-    pull_request_body = '''
-SUMMARY
-Change HTTP library used to send requests
-
-TESTS
-  - [x] Send 'GET' request
-  - [x] Send 'POST' request with/without body
-'''
-
-    pull_request = repository.create_pull(title=pull_request_title, body=pull_request_body, head=pull_request_branch_name, base=pull_request_base)
+    # pull_request = repository.create_pull(
+    #     title=pull_request_title,
+    #     body=pull_request_body,
+    #     base=main_branch_name,
+    #     head=new_branch_name)
 
 
 def do_version(args):
