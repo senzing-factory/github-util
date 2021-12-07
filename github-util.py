@@ -33,7 +33,7 @@ from github import Github
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-12-06'
+__updated__ = '2021-12-07'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -387,6 +387,7 @@ message_dictionary = {
     "121": "  Created branch: {0}",
     "122": "  Processing file: {0}",
     "123": "  Created pull request: {0}",
+    "124": "  Skipping",
     "293": "For information on warnings and errors, see https://github.com/Senzing/github-util",
     "294": "Version: {0}  Updated: {1}",
     "295": "Sleeping infinitely.",
@@ -736,19 +737,22 @@ def symbolic_resolution(properties, values):
 
     # Simple symbolic resolution for a string.
 
-    if type(properties) == str:
+    if type(properties) is str:
+        return values.get(properties, properties)
+
+    if type(properties) is bool:
         return values.get(properties, properties)
 
     # Complex symbolic resolution for other data types.
 
-    result = {}
-    for key, value in properties.items():
-        if type(value) == list:
-            new_list = []
-            for list_element in value:
-                new_list.append(symbolic_resolution(list_element, values))
-            result[key] = new_list
-        else:
+    if type(properties) is list:
+        result = []
+        for value in properties:
+            result.append(symbolic_resolution(value, values))
+
+    if type(properties) is dict:
+        result = {}
+        for key, value in properties.items():
             result[key] = symbolic_resolution(value, values)
 
     return result
@@ -1105,7 +1109,7 @@ def do_update_dockerfiles(args):
 
     branch_name = config_properties.get('branchName', "github-util")
 
-    # Log into GitHub.
+    # Log into GitHub and get the organization.
 
     github = Github(github_access_token)
     github_organization = github.get_organization(organization)
@@ -1114,8 +1118,8 @@ def do_update_dockerfiles(args):
 
     for repository_name, repository_properties in config_repositories.items():
         logging.info(message_info(120, repository_name))
-        properties = repository_properties.get("properties")
-        property_set_names = repository_properties.get("propertySets")
+        properties = repository_properties.get("properties", {})
+        property_set_names = repository_properties.get("propertySets", [])
 
         # Assemble properties.
 
@@ -1123,13 +1127,25 @@ def do_update_dockerfiles(args):
         for property_set_name in property_set_names:
             property_set = config_property_sets.get(property_set_name, {})
             for property_name, property_value in property_set.items():
-                aggregated_properties[property_name] = property_value
+                property_type = type(aggregated_properties.get(property_name))
+                if property_type is dict:
+                    aggregated_properties[property_name].update(property_value)
+                elif property_type is list:
+                    aggregated_properties[property_name].extend(property_value)
+                else:
+                    aggregated_properties[property_name] = property_value
         for property_name, property_value in properties.items():
             aggregated_properties[property_name] = property_value
 
         # Symbolic replacement of property values.
 
         resolved_properties = symbolic_resolution(aggregated_properties, config_properties)
+
+        # Short circuit if "skip" requested.
+
+        if resolved_properties.get("skip", False):
+            logging.info(message_info(124))
+            continue
 
         # Get values from properties.
 
@@ -1180,19 +1196,19 @@ def do_update_dockerfiles(args):
                 sha=source_file.sha,
                 branch=new_branch_name)
 
-    # Create pull request.
+        # Create pull request.
 
-    try:
-        pull_request = repository.create_pull(
-            title=pull_request_title,
-            body=pull_request_body,
-            base=main_branch_name,
-            head=new_branch_name)
-        pull_request.create_review_request(reviewers)
-        pull_request.add_to_assignees(assignee)
-        logging.info(message_info(123, pull_request_title))
-    except Exception as err:
-        logging.error(message_error(351, pull_request_title, err))
+        try:
+            pull_request = repository.create_pull(
+                title=pull_request_title,
+                body=pull_request_body,
+                base=main_branch_name,
+                head=new_branch_name)
+            pull_request.create_review_request(reviewers)
+            pull_request.add_to_assignees(assignee)
+            logging.info(message_info(123, pull_request_title))
+        except Exception as err:
+            logging.error(message_error(351, pull_request_title, err))
 
     # Epilog.
 
