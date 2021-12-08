@@ -33,7 +33,7 @@ from github import Github
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-12-07'
+__updated__ = '2021-12-08'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -1135,7 +1135,13 @@ def do_update_dockerfiles(args):
                 else:
                     aggregated_properties[property_name] = property_value
         for property_name, property_value in properties.items():
-            aggregated_properties[property_name] = property_value
+            property_type = type(aggregated_properties.get(property_name))
+            if property_type is dict:
+                aggregated_properties[property_name].update(property_value)
+            elif property_type is list:
+                aggregated_properties[property_name].extend(property_value)
+            else:
+                aggregated_properties[property_name] = property_value
 
         # Symbolic replacement of property values.
 
@@ -1146,6 +1152,11 @@ def do_update_dockerfiles(args):
         if resolved_properties.get("skip", False):
             logging.info(message_info(124))
             continue
+
+        # FIXME: for debugging
+
+        print(json.dumps(resolved_properties))
+        return
 
         # Get values from properties.
 

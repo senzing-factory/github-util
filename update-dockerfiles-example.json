@@ -59,12 +59,6 @@
         }
     },
     "repositories": {
-        "test-ground": {
-            "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"],
-            "properties": {
-                "branchNameMain": "master"
-            }
-        },
         "accountant-aws-marketplace": {
             "propertySets": ["common", "baseImageSenzing", "reviewersDefault", "skip"]
         },
@@ -78,7 +72,69 @@
             "propertySets": ["common", "baseImageSenzing", "reviewersDefault", "master", "skip"]
         },
         "connector-neo4j": {
-            "propertySets": ["common", "baseImageSenzing", "baseBuilderImageSenzingBuilderDebian", "master", "reviewersDefault", "reviewersTest"]
+            "propertySets": ["common", "baseImageSenzing", "baseBuilderImageSenzingBuilderDebian", "master", "reviewersDefault", "skip"]
+        },
+        "docker-apt": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
+        },
+        "docker-aptdownloader": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
+        },
+        "docker-compose-air-gapper": {
+            "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"]
+        },
+        "docker-db2-driver-installer": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
+        },
+        "docker-g2command": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-g2configtool": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-g2loader": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-init-container": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-installer": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
+        },
+        "docker-opt-senzing": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
+        },
+        "docker-python-demo": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-senzing-base": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
+        },
+        "docker-senzing-console": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-senzing-debug": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-sshd": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-test": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-web-app-demo": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault"],
+            "properties": {
+                "env": {"BOB": "Mary"},
+                "files": ["Dockerfile-unstable"],
+                "reviewers": ["arawinters"]
+            }
+        },
+        "test-ground": {
+            "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"],
+            "properties": {
+                "branchNameMain": "master"
+            }
         }
     }
 }
