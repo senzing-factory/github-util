@@ -202,7 +202,7 @@
             "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
         },
         "template-python": {
-            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault"]
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
         },
         "test-ground": {
             "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"],
