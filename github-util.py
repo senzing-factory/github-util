@@ -389,6 +389,7 @@ message_dictionary = {
     "122": "  Processing file: {0}",
     "123": "  Created pull request: {0}",
     "124": "  Skipping",
+    "125": "  resolved_properties: {0}",
     "293": "For information on warnings and errors, see https://github.com/Senzing/github-util",
     "294": "Version: {0}  Updated: {1}",
     "295": "Sleeping infinitely.",
@@ -397,7 +398,7 @@ message_dictionary = {
     "298": "Exit {0}",
     "299": "{0}",
     "300": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}W",
-    "350": "  Branch '{0}' already exists. Reusing it. Exception: {1}",
+    "350": "  Branch '{0}' already exists. Reusing it. Ref: {1}; Exception: {2}",
     "351": "  Pull request already exists for '{0}'. Exception: {1}",
     "499": "{0}",
     "500": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}E",
@@ -1154,9 +1155,11 @@ def do_update_dockerfiles(args):
             logging.info(message_info(124))
             continue
 
-        # FIXME: for debugging
-        # print(json.dumps(resolved_properties))
-        # return
+        # Debug a particular repository. Will exit on first use.
+
+        if resolved_properties.get("debug", False):
+            logging.info(message_info(125, json.dumps(resolved_properties, sort_keys=True)))
+            return
 
         # Get values from properties.
 
@@ -1173,14 +1176,13 @@ def do_update_dockerfiles(args):
 
         repository = github_organization.get_repo(repository_name)
         refs_heads_branch = 'refs/heads/{branch_name}'.format(branch_name=new_branch_name)
+        sha_of_main_branch = repository.get_branch(main_branch_name).commit.sha
 
         try:
-            branch = repository.create_git_ref(
-                refs_heads_branch,
-                repository.get_branch(main_branch_name).commit.sha)
+            branch = repository.create_git_ref(refs_heads_branch, sha_of_main_branch)
             logging.info(message_info(121, new_branch_name))
         except Exception as err:
-            logging.warning(message_warning(350, new_branch_name, err))
+            logging.warning(message_warning(350, new_branch_name, refs_heads_branch, err))
             branch = repository.get_branch(new_branch_name)
 
         # Process files.

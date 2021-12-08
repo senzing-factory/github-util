@@ -1,10 +1,12 @@
 {
     "properties": {
-        "baseBuilderImageSenzingBuilderDebian": "senzing/base-image-debian:1.0.3",
+        "baseBuilderImageSenzingBuilderCentos": "senzing/base-image-centos:1.0.2",
+        "baseBuilderImageSenzingBuilderDebian": "senzing/base-image-debian:1.0.6",
+        "baseBuilderImageNodeLtsBusterSlim": "node:lts-buster-slim",
         "baseImageDebian": "debian:10.11@sha256:9a1f494bb52e5d18e2dfb0fd6e59dbfe69aae9feecff1b246ad69984fbe25772",
         "baseImageLambdaPython": "public.ecr.aws/lambda/python:3.8",
         "baseImageSenzingBase": "senzing/senzing-base:1.6.3",
-        "branchNameNew": "github-util.update-dockerfiles.20211207-test-1",
+        "branchNameNew": "github-util.update-dockerfiles.20211207",
         "commitMessage": "#1 Update version - test",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
@@ -24,6 +26,16 @@
         "baseImageSenzing": {
             "arg": {
                 "BASE_IMAGE": "baseImageSenzingBase"
+            }
+        },
+        "baseBuilderImageNodeLtsBusterSlim": {
+            "arg": {
+                "BASE_BUILDER_IMAGE": "baseBuilderImageNodeLtsBusterSlim"
+            }
+        },
+        "baseBuilderImageSenzingBuilderCentos": {
+            "arg": {
+                "BASE_BUILDER_IMAGE": "baseBuilderImageSenzingBuilderCentos"
             }
         },
         "baseBuilderImageSenzingBuilderDebian": {
@@ -107,9 +119,6 @@
         "docker-python-demo": {
             "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
         },
-        "docker-senzing-base": {
-            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
-        },
         "docker-senzing-console": {
             "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
         },
@@ -130,7 +139,34 @@
             }
         },
         "docker-wrap-image-with-senzing-apt": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "docker-wrap-image-with-senzing-data": {
+            "propertySets": ["common", "baseImageSenzing", "reviewersDefault", "skip"]
+        },
+        "docker-xterm": {
+            "propertySets": ["common", "baseImageSenzing", "baseBuilderImageNodeLtsBusterSlim", "master", "reviewersDefault", "skip"]
+        },
+        "dockerhub-util": {
+            "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"]
+        },
+        "g2-configuration-initializer": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "redoer": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"],
+            "properties": {
+                "files": ["Dockerfile-with-data"]
+            }
+        },
+        "resolver": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "risk-score-calculator": {
             "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault"]
+        },
+        "senzing-poc-server": {
+            "propertySets": ["common", "baseImageSenzing", "baseBuilderImageSenzingBuilderDebian", "reviewersDefault", "skip"]
         },
         "test-ground": {
             "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"],
