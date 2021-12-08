@@ -16,6 +16,7 @@
 
 import argparse
 import base64
+import copy
 import json
 import linecache
 import logging
@@ -769,6 +770,18 @@ def update_line(line, resolved_properties):
         result = line
     return result
 
+
+def add_property(dictionary, property_name, property_value):
+    '''Add a property to a dictionary.'''
+
+    property_type = type(dictionary.get(property_name))
+    if property_type is dict:
+        dictionary[property_name].update(property_value)
+    elif property_type is list:
+        dictionary[property_name].extend(property_value)
+    else:
+        dictionary[property_name] = property_value
+
 # -----------------------------------------------------------------------------
 # do_* functions
 #   Common function signature: do_XXX(args)
@@ -1125,23 +1138,11 @@ def do_update_dockerfiles(args):
 
         aggregated_properties = {}
         for property_set_name in property_set_names:
-            property_set = config_property_sets.get(property_set_name, {})
+            property_set = copy.deepcopy(config_property_sets.get(property_set_name, {}))
             for property_name, property_value in property_set.items():
-                property_type = type(aggregated_properties.get(property_name))
-                if property_type is dict:
-                    aggregated_properties[property_name].update(property_value)
-                elif property_type is list:
-                    aggregated_properties[property_name].extend(property_value)
-                else:
-                    aggregated_properties[property_name] = property_value
+                add_property(aggregated_properties, property_name, property_value)
         for property_name, property_value in properties.items():
-            property_type = type(aggregated_properties.get(property_name))
-            if property_type is dict:
-                aggregated_properties[property_name].update(property_value)
-            elif property_type is list:
-                aggregated_properties[property_name].extend(property_value)
-            else:
-                aggregated_properties[property_name] = property_value
+            add_property(aggregated_properties, property_name, property_value)
 
         # Symbolic replacement of property values.
 
@@ -1154,9 +1155,8 @@ def do_update_dockerfiles(args):
             continue
 
         # FIXME: for debugging
-
-        print(json.dumps(resolved_properties))
-        return
+        # print(json.dumps(resolved_properties))
+        # return
 
         # Get values from properties.
 

@@ -123,12 +123,14 @@
             "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
         },
         "docker-web-app-demo": {
-            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault"],
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"],
             "properties": {
-                "env": {"BOB": "Mary"},
                 "files": ["Dockerfile-unstable"],
                 "reviewers": ["arawinters"]
             }
+        },
+        "docker-wrap-image-with-senzing-apt": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault"]
         },
         "test-ground": {
             "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"],
