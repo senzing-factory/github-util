@@ -163,10 +163,46 @@
             "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
         },
         "risk-score-calculator": {
-            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault"]
+            "propertySets": ["common", "baseImageSenzing", "baseBuilderImageSenzingBuilderDebian", "master", "reviewersDefault", "skip"],
+            "properties": {
+                "reviewers": ["oskar700"]
+            }
+        },
+        "senzing-api-server": {
+            "propertySets": ["common", "baseImageSenzing", "baseBuilderImageSenzingBuilderDebian", "master", "reviewersDefault", "skip"],
+            "properties": {
+                "reviewers": ["barrycaceres"]
+            }
+        },
+        "senzing-environment": {
+            "propertySets": ["common", "baseImageDebian", "reviewersDefault", "master", "skip"]
+        },
+        "senzing-package": {
+            "propertySets": ["common", "baseImageDebian", "reviewersDefault", "master", "skip"]
         },
         "senzing-poc-server": {
             "propertySets": ["common", "baseImageSenzing", "baseBuilderImageSenzingBuilderDebian", "reviewersDefault", "skip"]
+        },
+        "stream-configuration": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "stream-loader": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"],
+            "properties": {
+                "files": ["Dockerfile-with-data"]
+            }
+        },
+        "stream-logger": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
+        },
+        "stream-producer": {
+            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault", "skip"]
+        },
+        "template-docker": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "template-python": {
+            "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault"]
         },
         "test-ground": {
             "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"],
