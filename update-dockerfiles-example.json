@@ -7,6 +7,7 @@
         "imageCentos7": "centos:7@sha256:9d4bcbbb213dfd745b58be38b13b996ebb5ac315fe75711bd618426a630e0987",
         "imageCentos8": "centos:8@sha256:a27fd8080b517143cbbbab9dfb7c8571c40d67d534bbdee55bd6c473f432b177",
         "imageDebian": "debian:10.11@sha256:9a1f494bb52e5d18e2dfb0fd6e59dbfe69aae9feecff1b246ad69984fbe25772",
+        "imageGolang": "golang:1.13.4-alpine3.10@sha256:9d2a7c5b6447f525da0a4f18efd2cb05bf7d70228f75d713b7a67345f30157ac",
         "imageLambdaPython": "public.ecr.aws/lambda/python:3.8",
         "imageNodeLtsBusterSlim": "node:lts-buster-slim",
         "imageSenzingBaseImageCentos": "senzing/base-image-centos:1.0.2",
@@ -61,6 +62,11 @@
         "baseImageDebian": {
             "arg": {
                 "BASE_IMAGE": "imageDebian"
+            }
+        },
+        "baseImageGolang": {
+            "arg": {
+                "BASE_IMAGE": "imageGolang"
             }
         },
         "baseImageLambdaPython": {
@@ -210,7 +216,7 @@
             "propertySets": ["common", "baseImageCentos7", "master", "reviewersDefault", "skip"]
         },
         "postgresql-client": {
-            "propertySets": ["common", "baseImageAlpine", "master", "reviewersDefault"]
+            "propertySets": ["common", "baseImageAlpine", "master", "reviewersDefault", "skip"]
         },
         "redoer": {
             "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"],
@@ -262,6 +268,12 @@
         },
         "template-python": {
             "propertySets": ["common", "baseImageSenzing", "master", "reviewersDefault", "skip"]
+        },
+        "terraform-aws-backend": {
+            "propertySets": ["common", "baseImageGolang", "master", "reviewersDefault", "skip"]
+        },
+        "terraform-aws-modules": {
+            "propertySets": ["common", "baseImageGolang", "master", "reviewersDefault", "skip"]
         },
         "test-ground": {
             "propertySets": ["common", "baseImageDebian", "reviewersDefault", "skip"],
