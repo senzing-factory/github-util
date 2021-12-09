@@ -15,10 +15,13 @@
 # Import from standard library. https://docs.python.org/3/library/
 
 import argparse
+import base64
+import copy
 import json
 import linecache
 import logging
 import os
+import re
 import signal
 import sys
 import time
@@ -31,7 +34,7 @@ from github import Github
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-12-01'
+__updated__ = '2021-12-08'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -47,6 +50,11 @@ GIGABYTES = 1024 * MEGABYTES
 # 1) Command line options, 2) Environment variables, 3) Configuration files, 4) Default values
 
 configuration_locator = {
+    "configuration_file": {
+        "default": None,
+        "env": "GITHUB_CONFIGURATION_FILE",
+        "cli": "github-configuration-file"
+    },
     "debug": {
         "default": False,
         "env": "SENZING_DEBUG",
@@ -281,6 +289,17 @@ def get_parser():
                 },
             },
         },
+        'update-dockerfiles': {
+            "help": 'Update Dockerfiles.',
+            "argument_aspects": ["common"],
+            "arguments": {
+                "--configuration-file": {
+                    "dest": "configuration_file",
+                    "metavar": "SENZING_CONFIGURATION_FILE",
+                    "help": "Configuration file. DEFAULT: None"
+                },
+            },
+        },
         'version': {
             "help": 'Print version of program.',
         },
@@ -365,6 +384,12 @@ message_dictionary = {
     "102": "Updated Repository: {0} Label: {1}",
     "103": "Deleted Repository: {0} Label: {1}",
     "104": "Repository '{0}' has been archived.  Not modifying its labels.",
+    "120": "Processing Repository: {0}",
+    "121": "  Created branch: {0}",
+    "122": "  Processing file: {0}",
+    "123": "  Created pull request: {0}",
+    "124": "  Skipping",
+    "125": "  resolved_properties: {0}",
     "293": "For information on warnings and errors, see https://github.com/Senzing/github-util",
     "294": "Version: {0}  Updated: {1}",
     "295": "Sleeping infinitely.",
@@ -373,6 +398,8 @@ message_dictionary = {
     "298": "Exit {0}",
     "299": "{0}",
     "300": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}W",
+    "350": "  Branch '{0}' already exists. Reusing it. Ref: {1}; Exception: {2}",
+    "351": "  Pull request already exists for '{0}'. Exception: {1}",
     "499": "{0}",
     "500": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}E",
     "696": "Bad SENZING_SUBCOMMAND: {0}.",
@@ -576,6 +603,20 @@ def bootstrap_signal_handler(signal, frame):
     sys.exit(0)
 
 
+def construct_line(command, line, properties):
+
+    result = line  # Default.
+    if line.startswith(command):
+        regex_string = "{0}(.+?)=".format(command)
+        match = re.search(regex_string, line)
+        if match:
+            key = match.group(1).strip()
+            value = properties.get(key)
+            if value:
+                result = "{0} {1}={2}".format(command, key, value)
+    return result
+
+
 def create_signal_handler_function(args):
     ''' Tricky code.  Uses currying technique. Create a function for signal handling.
         that knows about "args".
@@ -600,6 +641,18 @@ def entry_template(config):
     return message_info(297, config_json)
 
 
+def exit_error(index, *args):
+    ''' Log error message and exit program. '''
+    logging.error(message_error(index, *args))
+    logging.error(message_error(698))
+    sys.exit(1)
+
+
+def exit_silently():
+    ''' Exit program. '''
+    sys.exit(0)
+
+
 def exit_template(config):
     ''' Format of exit message. '''
     debug = config.get("debug", False)
@@ -612,18 +665,6 @@ def exit_template(config):
         final_config = redact_configuration(config)
     config_json = json.dumps(final_config, sort_keys=True)
     return message_info(298, config_json)
-
-
-def exit_error(index, *args):
-    ''' Log error message and exit program. '''
-    logging.error(message_error(index, *args))
-    logging.error(message_error(698))
-    sys.exit(1)
-
-
-def exit_silently():
-    ''' Exit program. '''
-    sys.exit(0)
 
 
 def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
@@ -683,12 +724,64 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
     return True
 
 
-def run_query(headers, query):  # A simple function to use requests.post to make the API call. Note the json= section.
+def run_query(headers, query):
+    ''' A simple function to use requests.post to make the API call. Note the json= section. '''
+
     request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
     if request.status_code == 200:
         return request.json()
     else:
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+
+
+def symbolic_resolution(properties, values):
+    ''' Do symbolic resolution recursively through a dictionary. '''
+
+    # Simple symbolic resolution for a string.
+
+    if type(properties) is str:
+        return values.get(properties, properties)
+
+    if type(properties) is bool:
+        return values.get(properties, properties)
+
+    # Complex symbolic resolution for other data types.
+
+    if type(properties) is list:
+        result = []
+        for value in properties:
+            result.append(symbolic_resolution(value, values))
+
+    if type(properties) is dict:
+        result = {}
+        for key, value in properties.items():
+            result[key] = symbolic_resolution(value, values)
+
+    return result
+
+
+def update_line(line, resolved_properties):
+    '''Update line based on Docker Keyword.'''
+
+    if line.startswith("ARG"):
+        result = construct_line("ARG", line, resolved_properties.get("arg", {}))
+    elif line.startswith("ENV"):
+        result = construct_line("ENV", line, resolved_properties.get("env", {}))
+    else:
+        result = line
+    return result
+
+
+def add_property(dictionary, property_name, property_value):
+    '''Add a property to a dictionary.'''
+
+    property_type = type(dictionary.get(property_name))
+    if property_type is dict:
+        dictionary[property_name].update(property_value)
+    elif property_type is list:
+        dictionary[property_name].extend(property_value)
+    else:
+        dictionary[property_name] = property_value
 
 # -----------------------------------------------------------------------------
 # do_* functions
@@ -991,6 +1084,144 @@ def do_sleep(args):
         while True:
             logging.info(message_info(295))
             time.sleep(sleep_time_in_seconds)
+
+    # Epilog.
+
+    logging.info(exit_template(config))
+
+
+def do_update_dockerfiles(args):
+    ''' Update dockerfiles. '''
+
+    # Reference: https://gist.github.com/nottrobin/a18f9e33286f9db4b83e48af6d285e29
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Prolog.
+
+    logging.info(entry_template(config))
+
+    # Pull values from configuration.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+    configuration_file = config.get("configuration_file")
+
+    # Load configuration file
+
+    with open(configuration_file) as f:
+        config['file'] = json.load(f)
+
+    # Pull values from configuration file.
+
+    config_repositories = config.get('file', {}).get('repositories', {})
+    config_properties = config.get('file', {}).get('properties', {})
+    config_property_sets = config.get('file', {}).get('propertySets', {})
+
+    branch_name = config_properties.get('branchName', "github-util")
+
+    # Log into GitHub and get the organization.
+
+    github = Github(github_access_token)
+    github_organization = github.get_organization(organization)
+
+    # Process each repository listed in the configuration.
+
+    for repository_name, repository_properties in config_repositories.items():
+        logging.info(message_info(120, repository_name))
+        properties = repository_properties.get("properties", {})
+        property_set_names = repository_properties.get("propertySets", [])
+
+        # Assemble properties.
+
+        aggregated_properties = {}
+        for property_set_name in property_set_names:
+            property_set = copy.deepcopy(config_property_sets.get(property_set_name, {}))
+            for property_name, property_value in property_set.items():
+                add_property(aggregated_properties, property_name, property_value)
+        for property_name, property_value in properties.items():
+            add_property(aggregated_properties, property_name, property_value)
+
+        # Symbolic replacement of property values.
+
+        resolved_properties = symbolic_resolution(aggregated_properties, config_properties)
+
+        # Short circuit if "skip" requested.
+
+        if resolved_properties.get("skip", False):
+            logging.info(message_info(124))
+            continue
+
+        # Debug a particular repository. Will exit on first use.
+
+        if resolved_properties.get("debug", False):
+            logging.info(message_info(125, json.dumps(resolved_properties, sort_keys=True)))
+            return
+
+        # Get values from properties.
+
+        assignee = resolved_properties.get("assignee")
+        commit_message = resolved_properties.get("commitMessage")
+        main_branch_name = resolved_properties.get("branchNameMain", "main")
+        new_branch_name = resolved_properties.get("branchNameNew")
+        pull_request_body = resolved_properties.get("pullRequestBody")
+        pull_request_title = resolved_properties.get("pullRequestTitle")
+        reviewers = resolved_properties.get("reviewers")
+        source_file_names = resolved_properties.get("files")
+
+        # Create or find branch.
+
+        repository = github_organization.get_repo(repository_name)
+        refs_heads_branch = 'refs/heads/{branch_name}'.format(branch_name=new_branch_name)
+        sha_of_main_branch = repository.get_branch(main_branch_name).commit.sha
+
+        try:
+            branch = repository.create_git_ref(refs_heads_branch, sha_of_main_branch)
+            logging.info(message_info(121, new_branch_name))
+        except Exception as err:
+            logging.warning(message_warning(350, new_branch_name, refs_heads_branch, err))
+            branch = repository.get_branch(new_branch_name)
+
+        # Process files.
+
+        for source_file_name in source_file_names:
+            logging.info(message_info(122, source_file_name))
+
+            # Modify file.
+
+            source_file = repository.get_contents(source_file_name, refs_heads_branch)
+            source_file_content = base64.b64decode(source_file.content).decode('utf-8')
+            target_list = []
+            for line in source_file_content.split('\n'):
+                target_list.append(update_line(line, resolved_properties))
+            target_file = "\n".join(target_list)
+            target_file_content = target_file.encode()
+
+            # Commit file.
+
+            repository.update_file(
+                path=source_file_name,
+                message=commit_message,
+                content=target_file_content,
+                sha=source_file.sha,
+                branch=new_branch_name)
+
+        # Create pull request.
+
+        try:
+            pull_request = repository.create_pull(
+                title=pull_request_title,
+                body=pull_request_body,
+                base=main_branch_name,
+                head=new_branch_name)
+            pull_request.create_review_request(reviewers)
+            pull_request.add_to_assignees(assignee)
+            logging.info(message_info(123, pull_request_title))
+        except Exception as err:
+            logging.error(message_error(351, pull_request_title, err))
 
     # Epilog.
 
