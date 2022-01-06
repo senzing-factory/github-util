@@ -34,7 +34,7 @@ from github import Github
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2021-12-08'
+__updated__ = '2022-01-06'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -79,6 +79,11 @@ configuration_locator = {
         "default": 0,
         "env": "SENZING_SLEEP_TIME_IN_SECONDS",
         "cli": "sleep-time-in-seconds"
+    },
+    "sleep_time_in_seconds_dockerfiles": {
+        "default": 10,
+        "env": "SENZING_SLEEP_TIME_IN_SECONDS_DOCKERFILES",
+        "cli": "sleep-time-in-seconds-dockerfiles"
     },
     "topics_all": {
         "default": "",
@@ -297,6 +302,11 @@ def get_parser():
                     "dest": "configuration_file",
                     "metavar": "SENZING_CONFIGURATION_FILE",
                     "help": "Configuration file. DEFAULT: None"
+                },
+                "--sleep-time-in-seconds-dockerfiles": {
+                    "dest": "sleep_time_in_seconds_dockerfiles",
+                    "metavar": "SENZING_SLEEP_TIME_IN_SECONDS_DOCKERFILES",
+                    "help": "Sleep time in seconds. DEFAULT: 10 seconds"
                 },
             },
         },
@@ -524,7 +534,8 @@ def get_configuration(args):
     # Special case: Change integer strings to integers.
 
     integers = [
-        'sleep_time_in_seconds'
+        'sleep_time_in_seconds',
+        'sleep_time_in_seconds_dockerfiles'
     ]
     for integer in integers:
         integer_string = result.get(integer)
@@ -1106,9 +1117,10 @@ def do_update_dockerfiles(args):
 
     # Pull values from configuration.
 
+    configuration_file = config.get("configuration_file")
     github_access_token = config.get("github_access_token")
     organization = config.get("organization")
-    configuration_file = config.get("configuration_file")
+    sleep_time_in_seconds_dockerfiles = config.get('sleep_time_in_seconds_dockerfiles')
 
     # Load configuration file
 
@@ -1222,6 +1234,12 @@ def do_update_dockerfiles(args):
             logging.info(message_info(123, pull_request_title))
         except Exception as err:
             logging.error(message_error(351, pull_request_title, err))
+
+    # Sleep
+
+        if sleep_time_in_seconds_dockerfiles > 0:
+            logging.info(message_info(296, sleep_time_in_seconds_dockerfiles))
+            time.sleep(sleep_time_in_seconds_dockerfiles)
 
     # Epilog.
 
