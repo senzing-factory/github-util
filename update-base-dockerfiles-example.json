@@ -3,7 +3,7 @@
         "branchNameNew": "github-util.update-dockerfiles.20220106",
         "commitMessage": "#1 Update version",
         "imageCentos": "centos:7@sha256:9d4bcbbb213dfd745b58be38b13b996ebb5ac315fe75711bd618426a630e0987",
-        "imageDebian": "debian:10.11@sha256:94ccfd1c5115a6903cbb415f043a0b04e307be3f37b768cf6d6d3edff0021da3",
+        "imageDebian": "debian:11.3-slim@sha256:78fd65998de7a59a001d792fe2d3a6d2ea25b6f3f068e5c84881250373577414",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
         "refreshedAt": "2022-01-06"
@@ -40,7 +40,9 @@
         },
         "reviewersDefault": {
             "assignee": "docktermj",
-            "reviewers": ["roncewind"]
+            "reviewers": [
+                "roncewind"
+            ]
         },
         "skip": {
             "skip": true
@@ -48,16 +50,36 @@
     },
     "repositories": {
         "docker-base-image-centos": {
-            "propertySets": ["common", "baseImageCentos", "master", "reviewersDefault"]
+            "propertySets": [
+                "common",
+                "baseImageCentos",
+                "master",
+                "reviewersDefault"
+            ]
         },
         "docker-base-image-debian": {
-            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault"]
+            "propertySets": [
+                "common",
+                "baseImageDebian",
+                "master",
+                "reviewersDefault"
+            ]
         },
         "docker-python-db2-cluster-base": {
-            "propertySets": ["common", "baseImageCentos", "master", "reviewersDefault"]
+            "propertySets": [
+                "common",
+                "baseImageCentos",
+                "master",
+                "reviewersDefault"
+            ]
         },
         "docker-senzing-base": {
-            "propertySets": ["common", "baseImageDebian", "master", "reviewersDefault"]
+            "propertySets": [
+                "common",
+                "baseImageDebian",
+                "master",
+                "reviewersDefault"
+            ]
         }
     }
 }
