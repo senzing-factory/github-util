@@ -3,6 +3,7 @@
         "branchNameNew": "github-util.update-dockerfiles.20220106",
         "commitMessage": "#1 Update version",
         "imageAlpine": "alpine:3.15.3@sha256:f22945d45ee2eb4dd463ed5a431d9f04fcd80ca768bb1acf898d91ce51f7bf04",
+        "imageAmazon": "amazonlinux:2@sha256:ffc013f79b36a2c0352b444f5322ff43de25152a8ac1ad0fa473e90f1cbedcbe",
         "imageBusybox": "busybox:1.35.0@sha256:130df6999605f982ec67e5bee29d3a52614a075e949490f0a41702ee1dd98f3f",
         "imageCentos7": "centos:7@sha256:9d4bcbbb213dfd745b58be38b13b996ebb5ac315fe75711bd618426a630e0987",
         "imageCentos8": "centos:8@sha256:a27fd8080b517143cbbbab9dfb7c8571c40d67d534bbdee55bd6c473f432b177",
@@ -42,6 +43,11 @@
         "baseImageAlpine": {
             "arg": {
                 "BASE_IMAGE": "imageAlpine"
+            }
+        },
+        "baseImageAmazon": {
+            "arg": {
+                "BASE_IMAGE": "imageAmazon"
             }
         },
         "baseImageBusybox": {
@@ -138,7 +144,7 @@
         "configurator": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "reviewersDefault",
                 "master"
             ]
@@ -218,7 +224,7 @@
         "docker-init-container": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ]
@@ -250,7 +256,7 @@
         "docker-python-demo": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ]
@@ -258,7 +264,7 @@
         "docker-senzing-console": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ]
@@ -274,7 +280,7 @@
         "docker-sshd": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ]
@@ -282,7 +288,7 @@
         "docker-test": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ]
@@ -321,8 +327,7 @@
         "docker-xterm": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
-                "baseBuilderImageNodeLtsBusterSlim",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ]
@@ -330,7 +335,7 @@
         "docker-yum": {
             "propertySets": [
                 "common",
-                "baseImageCentos8",
+                "baseImageAmazon",
                 "master",
                 "reviewersDefault"
             ]
@@ -390,7 +395,7 @@
         "redoer": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ],
@@ -425,7 +430,7 @@
         "senzing-api-server": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "baseBuilderImageSenzingBuilderDebian",
                 "master",
                 "reviewersDefault"
@@ -500,7 +505,7 @@
         "template-docker": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ]
@@ -508,7 +513,7 @@
         "template-python": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "master",
                 "reviewersDefault"
             ]
