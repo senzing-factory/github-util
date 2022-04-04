@@ -13,7 +13,7 @@
         "imageSenzingBaseImageCentos": "senzing/base-image-centos:1.0.3",
         "imageSenzingBaseImageDebian": "senzing/base-image-debian:1.0.7",
         "imageSenzingPythonDb2ClusterBase": "senzing/python-db2-cluster-base:1.0.2",
-        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.4",
+        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.6",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
         "refreshedAt": "2022-04-01"
