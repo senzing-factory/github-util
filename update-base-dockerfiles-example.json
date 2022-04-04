@@ -6,7 +6,7 @@
         "imageDebian": "debian:11.3-slim@sha256:78fd65998de7a59a001d792fe2d3a6d2ea25b6f3f068e5c84881250373577414",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2022-01-06"
+        "refreshedAt": "2022-04-01"
     },
     "propertySets": {
         "baseImageCentos": {
