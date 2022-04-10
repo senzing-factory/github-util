@@ -34,7 +34,7 @@ from github import Github
 __all__ = []
 __version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2022-01-06'
+__updated__ = '2022-04-10'
 
 # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 SENZING_PRODUCT_ID = "5012"
@@ -64,6 +64,11 @@ configuration_locator = {
         "default": None,
         "env": "GITHUB_ACCESS_TOKEN",
         "cli": "github-access-token"
+    },
+    "is_user": {
+        "default": False,
+        "env": "SENZING_IS_USER",
+        "cli": "is-user"
     },
     "organization": {
         "default": "Senzing",
@@ -247,6 +252,11 @@ def get_parser():
             "help": 'Print repository names.',
             "argument_aspects": ["common", "print"],
             "arguments": {
+                "--is-user": {
+                    "dest": "is_user",
+                    "metavar": "SENZING_IS_USER",
+                    "help": "Use a GitHub User, not GitHub Organization. DEFAULT: 'False' (not a user)"
+                },
                 "--topics-all": {
                     "dest": "topics_all",
                     "metavar": "SENZING_TOPICS_ALL",
@@ -521,6 +531,7 @@ def get_configuration(args):
 
     booleans = [
         'debug',
+        'is_user',
     ]
     for boolean in booleans:
         boolean_value = result.get(boolean)
@@ -960,18 +971,24 @@ def do_print_repository_names(args):
     topics_included_list = config.get("topics_included_list")
     topics_not_all_list = config.get("topics_not_all_list")
     topics_not_any_list = config.get("topics_not_any_list")
+    is_user = config.get("is_user")
 
     # Log into GitHub.
 
     github = Github(github_access_token)
 
+    if is_user:
+        # https://pygithub.readthedocs.io/en/latest/github_objects/AuthenticatedUser.html
+        github_organization = github.get_user()
+        repos = github_organization.get_repos(affiliation="owner")
+    else:
+        # https://pygithub.readthedocs.io/en/latest/github_objects/Organization.html
+        github_organization = github.get_organization(organization)
+        repos = github_organization.get_repos()
+
     # Print repository names.
 
-    github_organization = github.get_organization(organization)
-
-    # https://pygithub.readthedocs.io/en/latest/github_objects/Organization.html
-
-    for repo in github_organization.get_repos():
+    for repo in repos:
 
         # https://pygithub.readthedocs.io/en/latest/github_objects/Repository.html
 
