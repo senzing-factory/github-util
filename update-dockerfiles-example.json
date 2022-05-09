@@ -272,7 +272,7 @@
         "docker-senzing-debug": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "main",
                 "reviewersDefault"
             ]
@@ -460,7 +460,7 @@
         "senzing-poc-server": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "baseBuilderImageSenzingBuilderDebian",
                 "reviewersDefault"
             ]
@@ -468,7 +468,7 @@
         "stream-configuration": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageDebian",
                 "main",
                 "reviewersDefault"
             ]
