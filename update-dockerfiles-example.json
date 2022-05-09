@@ -106,8 +106,8 @@
         "debug": {
             "debug": true
         },
-        "master": {
-            "branchNameMain": "master"
+        "main": {
+            "branchNameMain": "main"
         },
         "reviewersDefault": {
             "assignee": "docktermj",
@@ -146,7 +146,7 @@
                 "common",
                 "baseImageDebian",
                 "reviewersDefault",
-                "master"
+                "main"
             ]
         },
         "connector-neo4j": {
@@ -154,7 +154,7 @@
                 "common",
                 "baseImageSenzing",
                 "baseBuilderImageSenzingBuilderDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -170,7 +170,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -178,7 +178,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -193,7 +193,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -201,7 +201,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -209,7 +209,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -217,7 +217,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -225,7 +225,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -233,7 +233,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -241,7 +241,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -249,7 +249,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzingPythonDb2ClusterBase",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -257,7 +257,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -265,7 +265,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -273,7 +273,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -281,7 +281,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -289,7 +289,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -297,7 +297,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ],
             "properties": {
@@ -313,7 +313,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -328,7 +328,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -336,7 +336,7 @@
             "propertySets": [
                 "common",
                 "baseImageAmazon",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -344,7 +344,7 @@
             "propertySets": [
                 "common",
                 "baseImageCentos7",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -359,7 +359,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ],
             "properties": {
@@ -372,7 +372,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -380,7 +380,7 @@
             "propertySets": [
                 "common",
                 "baseImageCentos7",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -388,7 +388,7 @@
             "propertySets": [
                 "common",
                 "baseImageAlpine",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -396,7 +396,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ],
             "properties": {
@@ -409,7 +409,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -418,7 +418,7 @@
                 "common",
                 "baseImageSenzing",
                 "baseBuilderImageSenzingBuilderDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ],
             "properties": {
@@ -432,7 +432,7 @@
                 "common",
                 "baseImageDebian",
                 "baseBuilderImageSenzingBuilderDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ],
             "properties": {
@@ -446,7 +446,7 @@
                 "common",
                 "baseImageDebian",
                 "reviewersDefault",
-                "master"
+                "main"
             ]
         },
         "senzing-package": {
@@ -454,7 +454,7 @@
                 "common",
                 "baseImageDebian",
                 "reviewersDefault",
-                "master"
+                "main"
             ]
         },
         "senzing-poc-server": {
@@ -469,7 +469,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzing",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -477,7 +477,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ],
             "properties": {
@@ -490,7 +490,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -498,7 +498,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -506,7 +506,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -514,7 +514,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -522,7 +522,7 @@
             "propertySets": [
                 "common",
                 "baseImageGolang",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -530,7 +530,7 @@
             "propertySets": [
                 "common",
                 "baseImageGolang",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -541,7 +541,7 @@
                 "reviewersDefault"
             ],
             "properties": {
-                "branchNameMain": "master"
+                "branchNameMain": "main"
             }
         }
     }

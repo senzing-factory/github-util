@@ -35,8 +35,8 @@
         "debug": {
             "debug": true
         },
-        "master": {
-            "branchNameMain": "master"
+        "main": {
+            "branchNameMain": "main"
         },
         "reviewersDefault": {
             "assignee": "docktermj",
@@ -53,7 +53,7 @@
             "propertySets": [
                 "common",
                 "baseImageCentos",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -61,7 +61,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -69,7 +69,7 @@
             "propertySets": [
                 "common",
                 "baseImageCentos",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         },
@@ -77,7 +77,7 @@
             "propertySets": [
                 "common",
                 "baseImageDebian",
-                "master",
+                "main",
                 "reviewersDefault"
             ]
         }
