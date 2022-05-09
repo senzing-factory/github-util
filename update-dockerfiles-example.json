@@ -518,22 +518,6 @@
                 "reviewersDefault"
             ]
         },
-        "terraform-aws-backend": {
-            "propertySets": [
-                "common",
-                "baseImageGolang",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "terraform-aws-modules": {
-            "propertySets": [
-                "common",
-                "baseImageGolang",
-                "main",
-                "reviewersDefault"
-            ]
-        },
         "test-ground": {
             "propertySets": [
                 "common",
