@@ -44,10 +44,10 @@ do
 
     cd ${GIT_REPOSITORY_DIR}/${REPOSITORY}
 
-    # Checkout current main/master branch.
+    # Checkout current main/main branch.
 
     git checkout main
-    git checkout master
+    git checkout main
     git pull
 
     # Manipulate the files in the repository.
