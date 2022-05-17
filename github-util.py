@@ -32,11 +32,12 @@ import requests
 from github import Github
 
 __all__ = []
-__version__ = "1.2.0"  # See https://www.python.org/dev/peps/pep-0396/
+__version__ = "1.4.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2022-04-10'
+__updated__ = '2022-05-17'
 
 # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
+
 SENZING_PRODUCT_ID = "5012"
 log_format = '%(asctime)s %(message)s'
 
@@ -228,6 +229,11 @@ def get_parser():
     ''' Parse commandline arguments. '''
 
     subcommands = {
+        'print-branches': {
+            "help": 'Print branches',
+            "argument_aspects": ["common"],
+            "arguments": {},
+        },
         'print-copy-files-from-senzing-install': {
             "help": 'Print copy-files-from-senzing-install.sh',
             "argument_aspects": ["common"],
@@ -245,6 +251,11 @@ def get_parser():
         },
         'print-git-clone-mirror': {
             "help": 'Print git clone --mirror https://...',
+            "argument_aspects": ["common"],
+            "arguments": {},
+        },
+        'print-pull-requests': {
+            "help": 'Print pull requests',
             "argument_aspects": ["common"],
             "arguments": {},
         },
@@ -410,6 +421,8 @@ message_dictionary = {
     "123": "  Created pull request: {0}",
     "124": "  Skipping",
     "125": "  resolved_properties: {0}",
+    "126": "  No changes in repository '{0}'.",
+    "140": "Changed repositories: {0}",
     "293": "For information on warnings and errors, see https://github.com/Senzing/github-util",
     "294": "Version: {0}  Updated: {1}",
     "295": "Sleeping infinitely.",
@@ -952,6 +965,38 @@ def do_print_git_clone_mirror(args):
         print("git clone --mirror {0}".format(repo.clone_url))
 
 
+def do_print_pull_requests(args):
+    ''' Do a task. '''
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Pull variables from config.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+    print_format = config.get("print_format")
+
+    # Log into GitHub and get the organization.
+
+    github = Github(github_access_token)
+    github_organization = github.get_organization(organization)
+    repositories = github_organization.get_repos()
+
+    # Process each repository listed in the configuration.
+
+    for repository in repositories:
+        pulls = repository.get_pulls()
+        for pull in pulls:
+            assignee = "none"
+            if pull.assignee is not None:
+                assignee = pull.assignee.login
+            print_string = "{0} - {1} - {2}".format(repository.name, assignee, pull.title)
+            print(print_format.format(print_string))
+
+
 def do_print_repository_names(args):
     ''' Do a task. '''
 
@@ -1043,6 +1088,34 @@ def do_print_submodules_sh(args):
 
     logging.info(exit_template(config))
 
+def do_print_branches(args):
+    ''' Do a task. '''
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(args)
+    validate_configuration(config)
+
+    # Pull variables from config.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+    print_format = config.get("print_format")
+
+    # Log into GitHub and get the organization.
+
+    github = Github(github_access_token)
+    github_organization = github.get_organization(organization)
+    repositories = github_organization.get_repos()
+
+    # Process each repository listed in the configuration.
+
+    for repository in repositories:
+        branches = repository.get_branches()
+        for branch in branches:
+            if branch.name != "main":
+                print_string = "{0} - {1}".format(repository.name, branch.name)
+                print(print_format.format(print_string))
 
 def do_print_copy_files_from_senzing_install(args):
 
@@ -1159,7 +1232,17 @@ def do_update_dockerfiles(args):
 
     # Process each repository listed in the configuration.
 
+    changed_repositories = []
     for repository_name, repository_properties in config_repositories.items():
+
+        # Sleep.
+
+        if sleep_time_in_seconds_dockerfiles > 0:
+            logging.info(message_info(296, sleep_time_in_seconds_dockerfiles))
+            time.sleep(sleep_time_in_seconds_dockerfiles)
+
+        # Start processing.
+
         logging.info(message_info(120, repository_name))
         properties = repository_properties.get("properties", {})
         property_set_names = repository_properties.get("propertySets", [])
@@ -1177,6 +1260,8 @@ def do_update_dockerfiles(args):
         # Symbolic replacement of property values.
 
         resolved_properties = symbolic_resolution(aggregated_properties, config_properties)
+        resolved_properties_test = symbolic_resolution(aggregated_properties, config_properties)
+        resolved_properties_test.get("env").pop("REFRESHED_AT")
 
         # Short circuit if "skip" requested.
 
@@ -1200,6 +1285,36 @@ def do_update_dockerfiles(args):
         pull_request_title = resolved_properties.get("pullRequestTitle")
         reviewers = resolved_properties.get("reviewers")
         source_file_names = resolved_properties.get("files")
+
+        # Determine if there are any changes.
+
+        has_changed = False
+        repository = github_organization.get_repo(repository_name)
+        for source_file_name in source_file_names:
+            logging.info(message_info(122, source_file_name))
+
+            source_file = repository.get_contents(source_file_name, main_branch_name)
+            source_file_content = base64.b64decode(source_file.content).decode('utf-8')
+            target_list = []
+            for line in source_file_content.split('\n'):
+                target_list.append(update_line(line, resolved_properties_test))
+            target_file = "\n".join(target_list)
+            target_file_content = target_file.encode()
+
+            if source_file_content != target_file:
+                has_changed = True
+
+        # If no changes, skip making a Pull Request.
+
+        if not has_changed:
+            logging.info(message_info(126, repository_name))
+            continue
+
+        # FIXME: temporary.
+
+        changed_repositories.append(repository_name)
+        continue
+        logging.info(message_info(299, ">>>>>>>>>>>>>>>>>> Shouldn't be here"))
 
         # Create or find branch.
 
@@ -1252,11 +1367,14 @@ def do_update_dockerfiles(args):
         except Exception as err:
             logging.error(message_error(351, pull_request_title, err))
 
-    # Sleep
+        # Add to list of changed repositories.
 
-        if sleep_time_in_seconds_dockerfiles > 0:
-            logging.info(message_info(296, sleep_time_in_seconds_dockerfiles))
-            time.sleep(sleep_time_in_seconds_dockerfiles)
+        changed_repositories.append(repository_name)
+
+    # Log changed repositories.
+
+    changed_repository_list = ", ".join(changed_repositories)
+    logging.info(message_info(140, changed_repository_list))
 
     # Epilog.
 
