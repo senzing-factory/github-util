@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+'''
 # -----------------------------------------------------------------------------
 # github-util.py
 #
@@ -11,6 +12,7 @@
 #   - https://pygithub.readthedocs.io/
 #   - https://pygithub.readthedocs.io/en/latest/github_objects.html
 # -----------------------------------------------------------------------------
+'''
 
 # Import from standard library. https://docs.python.org/3/library/
 
@@ -39,7 +41,7 @@ __updated__ = '2022-05-17'
 # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
 
 SENZING_PRODUCT_ID = "5012"
-log_format = '%(asctime)s %(message)s'
+LOG_FORMAT = '%(asctime)s %(message)s'
 
 # Working with bytes.
 
@@ -50,7 +52,7 @@ GIGABYTES = 1024 * MEGABYTES
 # The "configuration_locator" describes where configuration variables are in:
 # 1) Command line options, 2) Environment variables, 3) Configuration files, 4) Default values
 
-configuration_locator = {
+CONFIGURATION_LOCATOR = {
     "configuration_file": {
         "default": None,
         "env": "GITHUB_CONFIGURATION_FILE",
@@ -129,11 +131,11 @@ configuration_locator = {
 
 # Enumerate keys in 'configuration_locator' that should not be printed to the log.
 
-keys_to_redact = [
+KEYS_TO_REDACT = [
     "github_access_token",
 ]
 
-repositories = {
+G2_REPOSITORIES = {
     "compressedfile": {
         "artifacts": ["CompressedFile.py"]
     },
@@ -214,7 +216,7 @@ repositories = {
     }
 }
 
-etc_files = [
+ETC_FILES = [
     "demo",
     "g2purge.umf",
     "governor_postgres_xid.py",
@@ -409,7 +411,7 @@ MESSAGE_WARN = 300
 MESSAGE_ERROR = 700
 MESSAGE_DEBUG = 900
 
-message_dictionary = {
+MESSAGE_DICTIONARY = {
     "100": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}I",
     "101": "Added   Repository: {0} Label: {1}",
     "102": "Updated Repository: {0} Label: {1}",
@@ -449,30 +451,34 @@ message_dictionary = {
 
 
 def message(index, *args):
+    ''' Return an instantiated message. '''
     index_string = str(index)
-    template = message_dictionary.get(
-        index_string, "No message for index {0}.".format(index_string))
+    template = MESSAGE_DICTIONARY.get(index_string, "No message for index {0}.".format(index_string))
     return template.format(*args)
 
 
 def message_generic(generic_index, index, *args):
-    index_string = str(index)
+    ''' Return a formatted message. '''
     return "{0} {1}".format(message(generic_index, index), message(index, *args))
 
 
 def message_info(index, *args):
+    ''' Return an info message. '''
     return message_generic(MESSAGE_INFO, index, *args)
 
 
 def message_warning(index, *args):
+    ''' Return a warning message. '''
     return message_generic(MESSAGE_WARN, index, *args)
 
 
 def message_error(index, *args):
+    ''' Return an error message. '''
     return message_generic(MESSAGE_ERROR, index, *args)
 
 
 def message_debug(index, *args):
+    ''' Return a debug message. '''
     return message_generic(MESSAGE_DEBUG, index, *args)
 
 
@@ -498,13 +504,13 @@ def get_exception():
 # -----------------------------------------------------------------------------
 
 
-def get_configuration(args):
+def get_configuration(subcommand, args):
     ''' Order of precedence: CLI, OS environment variables, INI file, default. '''
     result = {}
 
     # Copy default values into configuration dictionary.
 
-    for key, value in list(configuration_locator.items()):
+    for key, value in list(CONFIGURATION_LOCATOR.items()):
         result[key] = value.get('default', None)
 
     # "Prime the pump" with command line args. This will be done again as the last step.
@@ -516,7 +522,7 @@ def get_configuration(args):
 
     # Copy OS environment variables into configuration dictionary.
 
-    for key, value in list(configuration_locator.items()):
+    for key, value in list(CONFIGURATION_LOCATOR.items()):
         os_env_var = value.get('env', None)
         if os_env_var:
             os_env_value = os.getenv(os_env_var, None)
@@ -622,10 +628,10 @@ def validate_configuration(config):
 def redact_configuration(config):
     ''' Return a shallow copy of config with certain keys removed. '''
     result = config.copy()
-    for key in keys_to_redact:
+    for key in KEYS_TO_REDACT:
         try:
             result.pop(key)
-        except:
+        except Exception:
             pass
     return result
 
@@ -634,11 +640,8 @@ def redact_configuration(config):
 # -----------------------------------------------------------------------------
 
 
-def bootstrap_signal_handler(signal, frame):
-    sys.exit(0)
-
-
 def construct_line(command, line, properties):
+    ''' Construct a replacement line. '''
 
     result = line  # Default.
     if line.startswith(command):
@@ -659,9 +662,16 @@ def create_signal_handler_function(args):
 
     def result_function(signal_number, frame):
         logging.info(message_info(298, args))
+        logging.debug(message_debug(901, signal_number, frame))
         sys.exit(0)
 
     return result_function
+
+
+def bootstrap_signal_handler(signal_number, frame):
+    ''' Exit on signal error. '''
+    logging.debug(message_debug(901, signal_number, frame))
+    sys.exit(0)
 
 
 def entry_template(config):
@@ -676,18 +686,6 @@ def entry_template(config):
     return message_info(297, config_json)
 
 
-def exit_error(index, *args):
-    ''' Log error message and exit program. '''
-    logging.error(message_error(index, *args))
-    logging.error(message_error(698))
-    sys.exit(1)
-
-
-def exit_silently():
-    ''' Exit program. '''
-    sys.exit(0)
-
-
 def exit_template(config):
     ''' Format of exit message. '''
     debug = config.get("debug", False)
@@ -700,6 +698,18 @@ def exit_template(config):
         final_config = redact_configuration(config)
     config_json = json.dumps(final_config, sort_keys=True)
     return message_info(298, config_json)
+
+
+def exit_error(index, *args):
+    ''' Log error message and exit program. '''
+    logging.error(message_error(index, *args))
+    logging.error(message_error(698))
+    sys.exit(1)
+
+
+def exit_silently():
+    ''' Exit program. '''
+    sys.exit(0)
 
 
 def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
@@ -763,10 +773,9 @@ def run_query(headers, query):
     ''' A simple function to use requests.post to make the API call. Note the json= section. '''
 
     request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
-    if request.status_code == 200:
-        return request.json()
-    else:
+    if request.status_code != 200:
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+    return request.json()
 
 
 def symbolic_resolution(properties, values):
@@ -774,20 +783,20 @@ def symbolic_resolution(properties, values):
 
     # Simple symbolic resolution for a string.
 
-    if type(properties) is str:
+    if isinstance(properties, str):
         return values.get(properties, properties)
 
-    if type(properties) is bool:
+    if isinstance(properties, bool):
         return values.get(properties, properties)
 
     # Complex symbolic resolution for other data types.
 
-    if type(properties) is list:
+    if isinstance(properties, list) is list:
         result = []
         for value in properties:
             result.append(symbolic_resolution(value, values))
 
-    if type(properties) is dict:
+    if isinstance(properties, dict):
         result = {}
         for key, value in properties.items():
             result[key] = symbolic_resolution(value, values)
@@ -824,12 +833,12 @@ def add_property(dictionary, property_name, property_value):
 # -----------------------------------------------------------------------------
 
 
-def do_docker_acceptance_test(args):
+def do_docker_acceptance_test(subcommand, args):
     ''' For use with Docker acceptance testing. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
 
     # Prolog.
 
@@ -840,12 +849,12 @@ def do_docker_acceptance_test(args):
     logging.info(exit_template(config))
 
 
-def do_print_dependabot(args):
+def do_print_dependabot(subcommand, args):
     ''' Do a task. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Pull variables from config.
@@ -917,12 +926,12 @@ def do_print_dependabot(args):
             print("   - {0}".format(package))
 
 
-def do_print_git_clone(args):
+def do_print_git_clone(subcommand, args):
     ''' Do a task. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Pull variables from config.
@@ -941,12 +950,12 @@ def do_print_git_clone(args):
         print("git clone {0}".format(repo.clone_url))
 
 
-def do_print_git_clone_mirror(args):
+def do_print_git_clone_mirror(subcommand, args):
     ''' Do a task. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Pull variables from config.
@@ -965,12 +974,12 @@ def do_print_git_clone_mirror(args):
         print("git clone --mirror {0}".format(repo.clone_url))
 
 
-def do_print_pull_requests(args):
+def do_print_pull_requests(subcommand, args):
     ''' Do a task. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Pull variables from config.
@@ -997,12 +1006,12 @@ def do_print_pull_requests(args):
             print(print_format.format(print_string))
 
 
-def do_print_repository_names(args):
+def do_print_repository_names(subcommand, args):
     ''' Do a task. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Pull variables from config.
@@ -1042,11 +1051,12 @@ def do_print_repository_names(args):
             print(print_format.format(repo.name))
 
 
-def do_print_submodules_sh(args):
+def do_print_submodules_sh(subcommand, args):
+    ''' Print a list of submodules. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Prolog.
@@ -1065,10 +1075,10 @@ def do_print_submodules_sh(args):
     # Determine current version.
 
     github_organization = github.get_organization(organization)
-    for repository in repositories.keys():
+    for repository in G2_REPOSITORIES.keys():
         repo = github_organization.get_repo(repository)
         release = repo.get_latest_release()
-        repositories[repository]['version'] = release.title
+        G2_REPOSITORIES[repository]['version'] = release.title
 
     # Print output.
 
@@ -1077,7 +1087,7 @@ def do_print_submodules_sh(args):
     print('# Format: repository;version;artifact')
     print('')
     print('SUBMODULES=(')
-    for key, value in repositories.items():
+    for key, value in G2_REPOSITORIES.items():
         version = value.get('version', '0.0.0')
         artifacts = value.get('artifacts', [])
         for artifact in artifacts:
@@ -1089,12 +1099,12 @@ def do_print_submodules_sh(args):
     logging.info(exit_template(config))
 
 
-def do_print_branches(args):
+def do_print_branches(subcommand, args):
     ''' Do a task. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Pull variables from config.
@@ -1119,11 +1129,12 @@ def do_print_branches(args):
                 print(print_format.format(print_string))
 
 
-def do_print_copy_files_from_senzing_install(args):
+def do_print_copy_files_from_senzing_install(subcommand, args):
+    ''' Create a bash script to copy files. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Prolog.
@@ -1140,7 +1151,7 @@ def do_print_copy_files_from_senzing_install(args):
     print('')
     print('# Move files to individual repositories')
     print('')
-    for key, value in repositories.items():
+    for key, value in G2_REPOSITORIES.items():
         artifacts = value.get('artifacts', [])
         for artifact in artifacts:
             print(
@@ -1150,7 +1161,7 @@ def do_print_copy_files_from_senzing_install(args):
 
     print('# Move files to g2-python/g2/python ')
     print('')
-    for file in etc_files:
+    for file in ETC_FILES:
         print(
             "sudo cp -r  ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/g2-python/g2/python".format(file))
         print("sudo rm -rf ${{SOURCE_PYTHON_DIR}}/{0}".format(file))
@@ -1161,12 +1172,12 @@ def do_print_copy_files_from_senzing_install(args):
     logging.info(exit_template(config))
 
 
-def do_sleep(args):
+def do_sleep(subcommand, args):
     ''' Sleep.  Used for debugging. '''
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
 
     # Prolog.
 
@@ -1176,7 +1187,7 @@ def do_sleep(args):
 
     sleep_time_in_seconds = config.get('sleep_time_in_seconds')
 
-    # Sleep
+    # Sleep.
 
     if sleep_time_in_seconds > 0:
         logging.info(message_info(296, sleep_time_in_seconds))
@@ -1193,14 +1204,14 @@ def do_sleep(args):
     logging.info(exit_template(config))
 
 
-def do_update_dockerfiles(args):
+def do_update_dockerfiles(subcommand, args):
     ''' Update dockerfiles. '''
 
     # Reference: https://gist.github.com/nottrobin/a18f9e33286f9db4b83e48af6d285e29
 
     # Get context from CLI, environment variables, and ini files.
 
-    config = get_configuration(args)
+    config = get_configuration(subcommand, args)
     validate_configuration(config)
 
     # Prolog.
@@ -1216,16 +1227,14 @@ def do_update_dockerfiles(args):
 
     # Load configuration file
 
-    with open(configuration_file) as f:
-        config['file'] = json.load(f)
+    with open(configuration_file) as file:
+        config['file'] = json.load(file)
 
     # Pull values from configuration file.
 
     config_repositories = config.get('file', {}).get('repositories', {})
     config_properties = config.get('file', {}).get('properties', {})
     config_property_sets = config.get('file', {}).get('propertySets', {})
-
-    branch_name = config_properties.get('branchName', "github-util")
 
     # Log into GitHub and get the organization.
 
@@ -1319,11 +1328,10 @@ def do_update_dockerfiles(args):
         sha_of_main_branch = repository.get_branch(main_branch_name).commit.sha
 
         try:
-            branch = repository.create_git_ref(refs_heads_branch, sha_of_main_branch)
+            repository.create_git_ref(refs_heads_branch, sha_of_main_branch)
             logging.info(message_info(121, new_branch_name))
         except Exception as err:
             logging.warning(message_warning(350, new_branch_name, refs_heads_branch, err))
-            branch = repository.get_branch(new_branch_name)
 
         # Process files.
 
@@ -1377,10 +1385,11 @@ def do_update_dockerfiles(args):
     logging.info(exit_template(config))
 
 
-def do_version(args):
+def do_version(subcommand, args):
     ''' Log version information. '''
 
     logging.info(message_info(294, __version__, __updated__))
+    logging.debug(message_debug(902, subcommand, args))
 
 # -----------------------------------------------------------------------------
 # Main
@@ -1391,7 +1400,7 @@ if __name__ == "__main__":
 
     # Configure logging. See https://docs.python.org/2/library/logging.html#levels
 
-    log_level_map = {
+    LOG_LEVEL_MAP = {
         "notset": logging.NOTSET,
         "debug": logging.DEBUG,
         "info": logging.INFO,
@@ -1401,9 +1410,9 @@ if __name__ == "__main__":
         "critical": logging.CRITICAL
     }
 
-    log_level_parameter = os.getenv("SENZING_LOG_LEVEL", "info").lower()
-    log_level = log_level_map.get(log_level_parameter, logging.INFO)
-    logging.basicConfig(format=log_format, level=log_level)
+    LOG_LEVEL_PARAMETER = os.getenv("SENZING_LOG_LEVEL", "info").lower()
+    LOG_LEVEL = LOG_LEVEL_MAP.get(LOG_LEVEL_PARAMETER, logging.INFO)
+    logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
     logging.debug(message_debug(998))
 
     # Trap signals temporarily until args are parsed.
@@ -1413,38 +1422,38 @@ if __name__ == "__main__":
 
     # Parse the command line arguments.
 
-    subcommand = os.getenv("SENZING_SUBCOMMAND", None)
-    parser = get_parser()
+    SUBCOMMAND = os.getenv("SENZING_SUBCOMMAND", None)
+    PARSER = get_parser()
     if len(sys.argv) > 1:
-        args = parser.parse_args()
-        subcommand = args.subcommand
-    elif subcommand:
-        args = argparse.Namespace(subcommand=subcommand)
+        ARGS = PARSER.parse_args()
+        SUBCOMMAND = ARGS.subcommand
+    elif SUBCOMMAND:
+        ARGS = argparse.Namespace(subcommand=SUBCOMMAND)
     else:
-        parser.print_help()
-        if len(os.getenv("SENZING_DOCKER_LAUNCHED", "")):
-            subcommand = "sleep"
-            args = argparse.Namespace(subcommand=subcommand)
-            do_sleep(args)
+        PARSER.print_help()
+        if len(os.getenv("SENZING_DOCKER_LAUNCHED", "")) > 0:
+            SUBCOMMAND = "sleep"
+            ARGS = argparse.Namespace(subcommand=SUBCOMMAND)
+            do_sleep(SUBCOMMAND, ARGS)
         exit_silently()
 
     # Catch interrupts. Tricky code: Uses currying.
 
-    signal_handler = create_signal_handler_function(args)
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+    SIGNAL_HANDLER = create_signal_handler_function(ARGS)
+    signal.signal(signal.SIGINT, SIGNAL_HANDLER)
+    signal.signal(signal.SIGTERM, SIGNAL_HANDLER)
 
     # Transform subcommand from CLI parameter to function name string.
 
-    subcommand_function_name = "do_{0}".format(subcommand.replace('-', '_'))
+    SUBCOMMAND_FUNCTION_NAME = "do_{0}".format(SUBCOMMAND.replace('-', '_'))
 
     # Test to see if function exists in the code.
 
-    if subcommand_function_name not in globals():
-        logging.warning(message_warning(696, subcommand))
-        parser.print_help()
+    if SUBCOMMAND_FUNCTION_NAME not in globals():
+        logging.warning(message_warning(696, SUBCOMMAND))
+        PARSER.print_help()
         exit_silently()
 
     # Tricky code for calling function based on string.
 
-    globals()[subcommand_function_name](args)
+    globals()[SUBCOMMAND_FUNCTION_NAME](SUBCOMMAND, ARGS)
