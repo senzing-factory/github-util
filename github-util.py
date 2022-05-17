@@ -1088,6 +1088,7 @@ def do_print_submodules_sh(args):
 
     logging.info(exit_template(config))
 
+
 def do_print_branches(args):
     ''' Do a task. '''
 
@@ -1116,6 +1117,7 @@ def do_print_branches(args):
             if branch.name != "main":
                 print_string = "{0} - {1}".format(repository.name, branch.name)
                 print(print_format.format(print_string))
+
 
 def do_print_copy_files_from_senzing_install(args):
 
@@ -1309,12 +1311,6 @@ def do_update_dockerfiles(args):
         if not has_changed:
             logging.info(message_info(126, repository_name))
             continue
-
-        # FIXME: temporary.
-
-        changed_repositories.append(repository_name)
-        continue
-        logging.info(message_info(299, ">>>>>>>>>>>>>>>>>> Shouldn't be here"))
 
         # Create or find branch.
 
