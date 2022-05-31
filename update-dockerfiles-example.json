@@ -1,8 +1,8 @@
 {
     "properties": {
-        "branchNameNew": "github-util.update-dockerfiles.20220516",
+        "branchNameNew": "github-util.update-dockerfiles.20220531",
         "commitMessage": "#1 Update version",
-        "imageAlpine": "alpine:3.16.0@sha256:sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c",
+        "imageAlpine": "alpine:3.16.0@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c",
         "imageAmazon": "amazonlinux:2@sha256:246ef631c75ea83005889621119fd5cc9cbb5500e193707c38b6c060d597a146",
         "imageBusybox": "busybox:1.34.1@sha256:ebadf81a7f2146e95f8c850ad7af8cf9755d31cdba380a8ffd5930fba5996095",
         "imageCentos7": "centos:7@sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407",
@@ -17,7 +17,7 @@
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.8",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2022-05-16"
+        "refreshedAt": "2022-05-31"
     },
     "propertySets": {
         "baseBuilderImageDebian": {
