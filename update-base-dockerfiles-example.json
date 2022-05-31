@@ -3,7 +3,7 @@
         "branchNameNew": "github-util.update-dockerfiles.20220516",
         "commitMessage": "#1 Update version",
         "imageCentos": "centos:7@sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407",
-        "imageDebian": "debian:11.3-slim@sha256:fbaacd55d14bd0ae0c0441c2347217da77ad83c517054623357d1f9d07f79f5e",
+        "imageDebian": "debian:11.3-slim@sha256:06a93cbdd49a265795ef7b24fe374fee670148a7973190fb798e43b3cf7c5d0f",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
         "refreshedAt": "2022-05-16"
