@@ -36,7 +36,7 @@ from github import Github
 __all__ = []
 __version__ = "1.4.0"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2022-05-17'
+__updated__ = '2022-05-31'
 
 # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
 
@@ -791,7 +791,7 @@ def symbolic_resolution(properties, values):
 
     # Complex symbolic resolution for other data types.
 
-    if isinstance(properties, list) is list:
+    if isinstance(properties, list):
         result = []
         for value in properties:
             result.append(symbolic_resolution(value, values))
