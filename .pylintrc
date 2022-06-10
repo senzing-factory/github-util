@@ -1,8 +1,6 @@
 [pylint]
 disable=
     broad-except,
-    consider-iterating-dictionary,
-    consider-using-dict-items,
     consider-using-f-string,
     import-error,
     line-too-long,
@@ -12,8 +10,6 @@ disable=
     too-many-locals,
     too-many-return-statements,
     too-many-statements,
-    unnecessary-dict-index-lookup,
-    unspecified-encoding,
 good-names=
     github-util
 ignore=
