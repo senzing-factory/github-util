@@ -34,9 +34,9 @@ import requests
 from github import Github
 
 __all__ = []
-__version__ = "1.4.0"  # See https://www.python.org/dev/peps/pep-0396/
+__version__ = "1.4.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2022-06-09'
+__updated__ = '2022-06-10'
 
 # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
 
@@ -126,6 +126,11 @@ CONFIGURATION_LOCATOR = {
     "subcommand": {
         "default": None,
         "env": "SENZING_SUBCOMMAND",
+    },
+    "with_archived": {
+        "default": False,
+        "env": "SENZING_WITH_ARCHIVED",
+        "cli": "with-archived"
     }
 }
 
@@ -300,6 +305,11 @@ def get_parser():
                     "metavar": "SENZING_TOPICS_NOT_ANY",
                     "help": "Any repository topics is not present. DEFAULT: '' (no evaluation)"
                 },
+                "--with-archived": {
+                    "dest": "with_archived",
+                    "action": "store_true",
+                    "help": "Include archived repositories. (SENZING_WITH_ARCHIVED) DEFAULT: 'False'"
+                },
             },
         },
         'print-repository-names-with-pages': {
@@ -383,14 +393,14 @@ def get_parser():
 
     # Augment "subcommands" variable with arguments specified by aspects.
 
-    for subcommand, subcommand_value in subcommands.items():
+    for subcommand_value in subcommands.values():
         if 'argument_aspects' in subcommand_value:
             for aspect in subcommand_value['argument_aspects']:
-                if 'arguments' not in subcommands[subcommand]:
-                    subcommands[subcommand]['arguments'] = {}
+                if 'arguments' not in subcommand_value:
+                    subcommand_value['arguments'] = {}
                 arguments = argument_aspects.get(aspect, {})
                 for argument, argument_value in arguments.items():
-                    subcommands[subcommand]['arguments'][argument] = argument_value
+                    subcommand_value['arguments'][argument] = argument_value
 
     parser = argparse.ArgumentParser(
         description="Reports from GitHub. For more information, see https://github.com/Senzing/github-util")
@@ -562,6 +572,7 @@ def get_configuration(subcommand, args):
     booleans = [
         'debug',
         'is_user',
+        'with_archived',
     ]
     for boolean in booleans:
         boolean_value = result.get(boolean)
@@ -1037,6 +1048,7 @@ def do_print_repository_names(subcommand, args):
     topics_not_all_list = config.get("topics_not_all_list")
     topics_not_any_list = config.get("topics_not_any_list")
     is_user = config.get("is_user")
+    with_archived = config.get("with_archived")
 
     # Log into GitHub.
 
@@ -1058,8 +1070,20 @@ def do_print_repository_names(subcommand, args):
         # https://pygithub.readthedocs.io/en/latest/github_objects/Repository.html
 
         topics = repo.get_topics()
-        if has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
+        archived = repo.archived
+        if with_archived:
+            archived = False
+
+        if not archived and has_valid_topic(
+            topics,
+            topics_all_list,
+            topics_any_list,
+            topics_excluded_list,
+            topics_included_list,
+            topics_not_all_list,
+            topics_not_any_list):
             print(print_format.format(repo.name))
+
 
 def do_print_repository_names_with_pages(subcommand, args):
     ''' Do a task. '''
@@ -1098,6 +1122,7 @@ def do_print_repository_names_with_pages(subcommand, args):
         if repo.has_pages:
             print(print_format.format(repo.name))
 
+
 def do_print_submodules_sh(subcommand, args):
     ''' Print a list of submodules. '''
 
@@ -1122,10 +1147,10 @@ def do_print_submodules_sh(subcommand, args):
     # Determine current version.
 
     github_organization = github.get_organization(organization)
-    for repository in G2_REPOSITORIES.keys():
-        repo = github_organization.get_repo(repository)
+    for repository_key, repository_value in G2_REPOSITORIES.items():
+        repo = github_organization.get_repo(repository_key)
         release = repo.get_latest_release()
-        G2_REPOSITORIES[repository]['version'] = release.title
+        repository_value['version'] = release.title
 
     # Print output.
 
@@ -1274,7 +1299,7 @@ def do_update_dockerfiles(subcommand, args):
 
     # Load configuration file
 
-    with open(configuration_file) as file:
+    with open(configuration_file, encoding="utf-8") as file:
         config['file'] = json.load(file)
 
     # Pull values from configuration file.
