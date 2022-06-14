@@ -1,6 +1,6 @@
 {
     "properties": {
-        "branchNameNew": "github-util.update-dockerfiles.20220531",
+        "branchNameNew": "github-util.update-dockerfiles.20220614",
         "commitMessage": "#1 Update version",
         "imageAlpine": "alpine:3.16.0@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c",
         "imageAmazon": "amazonlinux:2@sha256:246ef631c75ea83005889621119fd5cc9cbb5500e193707c38b6c060d597a146",
@@ -10,6 +10,8 @@
         "imageDebian": "debian:11.3-slim@sha256:06a93cbdd49a265795ef7b24fe374fee670148a7973190fb798e43b3cf7c5d0f",
         "imageGolang": "golang:1.18.2-alpine3.16@sha256:4795c5d21f01e0777707ada02408debe77fe31848be97cf9fa8a1462da78d949",
         "imageLambdaPython": "public.ecr.aws/lambda/python:3.8",
+        "imageNodeAlpine": "node:16-alpine3.15",
+        "imageNodeBullseyeSlim": "node:16-bullseye-slim",
         "imageNodeLtsBusterSlim": "node:lts-buster-slim",
         "imageSenzingBaseImageCentos": "senzing/base-image-centos:1.0.4",
         "imageSenzingBaseImageDebian": "senzing/base-image-debian:1.0.8",
@@ -17,7 +19,7 @@
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.8",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2022-05-31"
+        "refreshedAt": "2022-06-14"
     },
     "propertySets": {
         "baseBuilderImageDebian": {
@@ -80,6 +82,13 @@
                 "BASE_IMAGE": "imageLambdaPython"
             }
         },
+        "baseImageNode": {
+            "arg": {
+                "BUILD_IMAGE": "imageNodeBullseyeSlim",
+                "PROD_IMAGE": "imageNodeAlpine",
+                "TEST_IMAGE": "imageNodeBullseyeSlim"
+            }
+        },
         "baseImageSenzing": {
             "arg": {
                 "BASE_IMAGE": "imageSenzingSenzingBase"
@@ -111,6 +120,12 @@
         },
         "reviewersDefault": {
             "assignee": "docktermj",
+            "reviewers": [
+                "roncewind"
+            ]
+        },
+        "reviewersNode": {
+            "assignee": "arawinters",
             "reviewers": [
                 "roncewind"
             ]
@@ -358,16 +373,11 @@
         "entity-search-web-app": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageNode",
                 "main",
-                "reviewersDefault"
-            ],
-            "properties": {
-                "reviewers": [
-                    "arawinters"
-                ]
-            }
-        },
+                "reviewersNode"
+            ]
+        }        
         "g2-configuration-initializer": {
             "propertySets": [
                 "common",
