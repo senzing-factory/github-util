@@ -377,7 +377,7 @@
                 "main",
                 "reviewersNode"
             ]
-        }        
+        },
         "g2-configuration-initializer": {
             "propertySets": [
                 "common",
