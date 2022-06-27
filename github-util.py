@@ -36,7 +36,7 @@ from github import Github
 __all__ = []
 __version__ = "1.4.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2022-06-10'
+__updated__ = '2022-06-27'
 
 # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
 
@@ -236,6 +236,17 @@ def get_parser():
     ''' Parse commandline arguments. '''
 
     subcommands = {
+        'check-for-archived': {
+            "help": 'Check for archived repositories',
+            "argument_aspects": ["common"],
+            "arguments": {
+                "--configuration-file": {
+                    "dest": "configuration_file",
+                    "metavar": "SENZING_CONFIGURATION_FILE",
+                    "help": "Configuration file. DEFAULT: None"
+                },
+            }
+        },
         'print-branches': {
             "help": 'Print branches',
             "argument_aspects": ["common"],
@@ -854,6 +865,53 @@ def add_property(dictionary, property_name, property_value):
 #   Common function signature: do_XXX(args)
 # -----------------------------------------------------------------------------
 
+def do_check_for_archived(subcommand, args):
+    ''' Do a task. '''
+
+    # Reference: https://gist.github.com/nottrobin/a18f9e33286f9db4b83e48af6d285e29
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(subcommand, args)
+    validate_configuration(config)
+
+    # Prolog.
+
+    logging.info(entry_template(config))
+
+    # Pull values from configuration.
+
+    configuration_file = config.get("configuration_file")
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+
+    # Load configuration file
+
+    with open(configuration_file, encoding="utf-8") as file:
+        config['file'] = json.load(file)
+
+    # Pull values from configuration file.
+
+    config_repositories = config.get('file', {}).get('repositories', {})
+
+    # Log into GitHub and get the organization.
+
+    github = Github(github_access_token)
+    github_organization = github.get_organization(organization)
+
+    # Process each repository listed in the configuration.
+
+    for repository_name in config_repositories.keys():
+
+
+        repository = github_organization.get_repo(repository_name)
+        if repository.archived:
+            print(repository)
+
+    # Epilog.
+
+    logging.info(exit_template(config))
+
 
 def do_docker_acceptance_test(subcommand, args):
     ''' For use with Docker acceptance testing. '''
@@ -1065,24 +1123,24 @@ def do_print_repository_names(subcommand, args):
 
     # Print repository names.
 
-    for repo in repos:
+        for repo in repos:
 
-        # https://pygithub.readthedocs.io/en/latest/github_objects/Repository.html
+            # https://pygithub.readthedocs.io/en/latest/github_objects/Repository.html
 
-        topics = repo.get_topics()
-        archived = repo.archived
-        if with_archived:
-            archived = False
+            topics = repo.get_topics()
+            archived = repo.archived
+            if with_archived:
+                archived = False
 
-        if not archived and has_valid_topic(
-            topics,
-            topics_all_list,
-            topics_any_list,
-            topics_excluded_list,
-            topics_included_list,
-            topics_not_all_list,
-            topics_not_any_list):
-            print(print_format.format(repo.name))
+            if not archived and has_valid_topic(
+                topics,
+                topics_all_list,
+                topics_any_list,
+                topics_excluded_list,
+                topics_included_list,
+                topics_not_all_list,
+                topics_not_any_list):
+                print(print_format.format(repo.name))
 
 
 def do_print_repository_names_with_pages(subcommand, args):
