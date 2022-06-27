@@ -239,7 +239,6 @@ def get_parser():
         'check-for-archived': {
             "help": 'Check for archived repositories',
             "argument_aspects": ["common"],
-            "arguments": {},
             "arguments": {
                 "--configuration-file": {
                     "dest": "configuration_file",
@@ -902,7 +901,7 @@ def do_check_for_archived(subcommand, args):
 
     # Process each repository listed in the configuration.
 
-    for repository_name, repository_properties in config_repositories.items():
+    for repository_name in config_repositories.keys():
 
 
         repository = github_organization.get_repo(repository_name)
