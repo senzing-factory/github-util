@@ -12,6 +12,8 @@
         "imageNodeBullseyeSlim": "node:16-bullseye-slim",
         "imageNodeLtsBusterSlim": "node:lts-buster-slim",
         "imageSenzingBaseImageDebian": "senzing/base-image-debian:1.0.9",
+        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.1.2",
+        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.1.2",
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.9",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
@@ -73,6 +75,11 @@
         "baseImageSenzing": {
             "arg": {
                 "BASE_IMAGE": "imageSenzingSenzingBase"
+            }
+        },
+        "baseImageSenzingSenzingapiRuntime": {
+            "arg": {
+                "BASE_IMAGE": "imageSenzingSenzingapiRuntime"
             }
         },
         "common": {
@@ -191,7 +198,7 @@
         "docker-init-container": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ]
@@ -317,7 +324,7 @@
         "redoer": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ],
@@ -330,7 +337,7 @@
         "resolver": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "imageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ]
@@ -352,7 +359,7 @@
         "senzing-api-server": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "baseBuilderImageSenzingBuilderDebian",
                 "main",
                 "reviewersDefault"
@@ -374,7 +381,7 @@
         "senzing-poc-server": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "baseBuilderImageSenzingBuilderDebian",
                 "reviewersDefault"
             ]
@@ -382,7 +389,7 @@
         "stream-loader": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ],
