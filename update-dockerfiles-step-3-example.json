@@ -13,7 +13,7 @@
         "imageNodeLtsBusterSlim": "node:lts-buster-slim",
         "imageSenzingBaseImageDebian": "senzing/base-image-debian:1.0.9",
         "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.1.2",
-        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.1.2",
+        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.1.1",
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.9",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
