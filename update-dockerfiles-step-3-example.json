@@ -82,6 +82,11 @@
                 "BASE_IMAGE": "imageSenzingSenzingapiRuntime"
             }
         },
+        "baseImageSenzingSenzingapiTools": {
+            "arg": {
+                "BASE_IMAGE": "imageSenzingSenzingapiTools"
+            }
+        },
         "common": {
             "branchNameMain": "main",
             "branchNameNew": "branchNameNew",
