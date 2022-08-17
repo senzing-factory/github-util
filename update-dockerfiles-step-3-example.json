@@ -326,6 +326,14 @@
                 "reviewersNode"
             ]
         },
+        "init-postgresql": {
+            "propertySets": [
+                "common",
+                "imageSenzingSenzingapiRuntime",
+                "main",
+                "reviewersDefault"
+            ]
+        },
         "postgresql-client": {
             "propertySets": [
                 "common",
