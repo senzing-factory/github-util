@@ -1,0 +1,55 @@
+{
+    "properties": {
+        "branchNameNew": "github-util/update-dockerfiles/20220815",
+        "commitMessage": "#1 Update version",
+        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.1.2",
+        "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
+        "pullRequestTitle": "github-util: Update FROM version",
+        "refreshedAt": "2022-08-15"
+    },
+    "propertySets": {
+        "baseImageSenzingSenzingapiRuntime": {
+            "arg": {
+                "BASE_IMAGE": "imageSenzingSenzingapiRuntime"
+            }
+        },
+        "common": {
+            "branchNameMain": "main",
+            "branchNameNew": "branchNameNew",
+            "commitMessage": "commitMessage",
+            "env": {
+                "REFRESHED_AT": "refreshedAt"
+            },
+            "files": [
+                "Dockerfile"
+            ],
+            "pullRequestBody": "pullRequestBody",
+            "pullRequestTitle": "pullRequestTitle"
+        },
+        "debug": {
+            "debug": true
+        },
+        "main": {
+            "branchNameMain": "main"
+        },
+        "reviewersDefault": {
+            "assignee": "docktermj",
+            "reviewers": [
+                "roncewind"
+            ]
+        },
+        "skip": {
+            "skip": true
+        }
+    },
+    "repositories": {
+        "senzingapi-tools": {
+            "propertySets": [
+                "common",
+                "baseImageSenzingSenzingapiRuntime",
+                "main",
+                "reviewersDefault"
+            ]
+        }
+    }
+}

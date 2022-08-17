@@ -1,6 +1,6 @@
 {
     "properties": {
-        "branchNameNew": "github-util.update-dockerfiles.20220627",
+        "branchNameNew": "github-util/update-dockerfiles/20220815",
         "commitMessage": "#1 Update version",
         "imageAlpine": "alpine:3.16.2@sha256:bc41182d7ef5ffc53a40b044e725193bc10142a1243f395ee852a8d9730fc2ad",
         "imageAmazon": "amazonlinux:2@sha256:3535ab19660e96ed538ae7814f12eda76606064e40e2b8775aa74613bc8e6592",
@@ -11,11 +11,13 @@
         "imageNodeAlpine": "node:16-alpine3.15",
         "imageNodeBullseyeSlim": "node:16-bullseye-slim",
         "imageNodeLtsBusterSlim": "node:lts-buster-slim",
-        "imageSenzingBaseImageDebian": "senzing/base-image-debian:1.0.9",
-        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.9",
+        "imageSenzingBaseImageDebian": "senzing/base-image-debian:1.0.10",
+        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.1.2",
+        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.1.1",
+        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.10",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2022-08-12"
+        "refreshedAt": "2022-08-15"
     },
     "propertySets": {
         "baseBuilderImageDebian": {
@@ -73,6 +75,16 @@
         "baseImageSenzing": {
             "arg": {
                 "BASE_IMAGE": "imageSenzingSenzingBase"
+            }
+        },
+        "baseImageSenzingSenzingapiRuntime": {
+            "arg": {
+                "BASE_IMAGE": "imageSenzingSenzingapiRuntime"
+            }
+        },
+        "baseImageSenzingSenzingapiTools": {
+            "arg": {
+                "BASE_IMAGE": "imageSenzingSenzingapiTools"
             }
         },
         "common": {
@@ -191,7 +203,7 @@
         "docker-init-container": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ]
@@ -317,7 +329,7 @@
         "redoer": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ],
@@ -330,7 +342,7 @@
         "resolver": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "imageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ]
@@ -352,7 +364,7 @@
         "senzing-api-server": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "baseBuilderImageSenzingBuilderDebian",
                 "main",
                 "reviewersDefault"
@@ -374,7 +386,7 @@
         "senzing-poc-server": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "baseBuilderImageSenzingBuilderDebian",
                 "reviewersDefault"
             ]
@@ -382,7 +394,7 @@
         "stream-loader": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "imageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ],
