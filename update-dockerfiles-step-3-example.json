@@ -318,6 +318,22 @@
                 "reviewersNode"
             ]
         },
+        "entity-search-web-app-console": {
+            "propertySets": [
+                "common",
+                "imageSenzingSenzingapiTools",
+                "main",
+                "reviewersNode"
+            ]
+        },
+        "init-postgresql": {
+            "propertySets": [
+                "common",
+                "imageSenzingSenzingapiRuntime",
+                "main",
+                "reviewersDefault"
+            ]
+        },
         "postgresql-client": {
             "propertySets": [
                 "common",
