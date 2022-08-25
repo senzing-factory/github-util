@@ -11,9 +11,9 @@
         "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:20f33cfb14df6d6af0564ba53335d1048682aaf410c881ddc6fb13ceb2e74a8e",
         "imageNodeAlpine": "node:16-alpine3.15@sha256:a60b681e1c28f60ea63f8394dea5384c69bdc464b9655e880f74aafaa5945665",
         "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:18ae6567b623f8c1caada3fefcc8746f8e84ad5c832abd909e129f6b13df25b4",
-        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.1.2",
-        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.1.1",
-        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.10",
+        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.2.0",
+        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.2.0",
+        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.11",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
         "refreshedAt": "2022-08-25"
