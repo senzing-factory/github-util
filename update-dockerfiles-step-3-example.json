@@ -6,14 +6,11 @@
         "imageAmazon": "amazonlinux:2@sha256:3535ab19660e96ed538ae7814f12eda76606064e40e2b8775aa74613bc8e6592",
         "imageBusybox": "busybox:1.35.0@sha256:09439c073bd3eb029a91c72eff2c0d9f12ab9c84f66bdef360fcf3f91a81bf7c",
         "imageDebian": "debian:11.4-slim@sha256:68c1f6bae105595d2ebec1589d9d476ba2939fdb11eaba1daec4ea826635ce75",
-        "imageGolang": "golang:1.19.0-alpine3.16@sha256:0eb08c89ab1b0c638a9fe2780f7ae3ab18f6ecda2c76b908e09eb8073912045d",
         "imageIbmcomDb2": "ibmcom/db2:11.5.7.0a@sha256:81d01c71ed0d1ae27ee51ab53133610970b25b60de385a0c1906fe53017f4c96",
         "imageJupyter": "jupyter/minimal-notebook:ubuntu-20.04@sha256:2d53044baa4ea352a1a22ab5866c093c0b2df73c8d5bcda3ee205d5abbbe592b",
         "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:20f33cfb14df6d6af0564ba53335d1048682aaf410c881ddc6fb13ceb2e74a8e",
         "imageNodeAlpine": "node:16-alpine3.15@sha256:a60b681e1c28f60ea63f8394dea5384c69bdc464b9655e880f74aafaa5945665",
         "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:18ae6567b623f8c1caada3fefcc8746f8e84ad5c832abd909e129f6b13df25b4",
-        "imageNodeLtsBusterSlim": "node:lts-buster-slim@sha256:b1c919a0df558951c358a3cd68df1698eec365000b188528cc86628bdf07056b",
-        "imageSenzingBaseImageDebian": "senzing/base-image-debian:1.0.10",
         "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.1.2",
         "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.1.1",
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.10",
@@ -25,16 +22,6 @@
         "baseBuilderImageDebian": {
             "arg": {
                 "BASE_BUILDER_IMAGE": "imageDebian"
-            }
-        },
-        "baseBuilderImageNodeLtsBusterSlim": {
-            "arg": {
-                "BASE_BUILDER_IMAGE": "imageNodeLtsBusterSlim"
-            }
-        },
-        "baseBuilderImageSenzingBuilderDebian": {
-            "arg": {
-                "BASE_BUILDER_IMAGE": "imageSenzingBaseImageDebian"
             }
         },
         "baseImageAlpine": {
@@ -55,11 +42,6 @@
         "baseImageDebian": {
             "arg": {
                 "BASE_IMAGE": "imageDebian"
-            }
-        },
-        "baseImageGolang": {
-            "arg": {
-                "BASE_IMAGE": "imageGolang"
             }
         },
         "baseImageIbmcomDb2": {
