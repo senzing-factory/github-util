@@ -266,9 +266,6 @@
                 "reviewersDefault"
             ],
             "properties": {
-                "files": [
-                    "Dockerfile-unstable"
-                ],
                 "reviewers": [
                     "arawinters"
                 ]
