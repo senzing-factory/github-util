@@ -1,10 +1,10 @@
 {
     "properties": {
-        "branchNameNew": "github-util/update-dockerfiles/20220825",
+        "branchNameNew": "github-util/update-dockerfiles/20220829",
         "commitMessage": "#1 Update version",
         "imageAlpine": "alpine:3.16.2@sha256:bc41182d7ef5ffc53a40b044e725193bc10142a1243f395ee852a8d9730fc2ad",
-        "imageAmazon": "amazonlinux:2@sha256:3535ab19660e96ed538ae7814f12eda76606064e40e2b8775aa74613bc8e6592",
-        "imageBusybox": "busybox:1.35.0@sha256:09439c073bd3eb029a91c72eff2c0d9f12ab9c84f66bdef360fcf3f91a81bf7c",
+        "imageAmazon": "amazonlinux:2@sha256:cb8a67164376ecca3b9993e6bb7d81dd868b7836d2631582becd140c8edf27bf",
+        "imageBusybox": "busybox:1.34.1@sha256:ef320ff10026a50cf5f0213d35537ce0041ac1d96e9b7800bafd8bc9eff6c693",
         "imageDebian": "debian:11.4-slim@sha256:68c1f6bae105595d2ebec1589d9d476ba2939fdb11eaba1daec4ea826635ce75",
         "imageIbmcomDb2": "ibmcom/db2:11.5.7.0a@sha256:81d01c71ed0d1ae27ee51ab53133610970b25b60de385a0c1906fe53017f4c96",
         "imageJupyter": "jupyter/minimal-notebook:ubuntu-20.04@sha256:2d53044baa4ea352a1a22ab5866c093c0b2df73c8d5bcda3ee205d5abbbe592b",
@@ -16,7 +16,7 @@
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.11",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2022-08-25"
+        "refreshedAt": "2022-08-29"
     },
     "propertySets": {
         "baseBuilderImageDebian": {
