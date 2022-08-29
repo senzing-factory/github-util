@@ -387,12 +387,7 @@
                 "baseImageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
-            ],
-            "properties": {
-                "files": [
-                    "Dockerfile-with-data"
-                ]
-            }
+            ]
         },
         "resolver": {
             "propertySets": [
@@ -460,12 +455,7 @@
                 "baseImageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
-            ],
-            "properties": {
-                "files": [
-                    "Dockerfile-with-data"
-                ]
-            }
+            ]
         },
         "stream-logger": {
             "propertySets": [
