@@ -229,7 +229,7 @@
         "docker-python-demo": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "baseImageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ]
