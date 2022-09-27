@@ -229,7 +229,7 @@
         "docker-python-demo": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "baseImageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ]
@@ -361,6 +361,14 @@
             "propertySets": [
                 "common",
                 "baseImageSenzingSenzingapiTools",
+                "main",
+                "reviewersDefault"
+            ]
+        },
+        "init-mysql": {
+            "propertySets": [
+                "common",
+                "baseImageSenzingSenzingapiRuntime",
                 "main",
                 "reviewersDefault"
             ]
