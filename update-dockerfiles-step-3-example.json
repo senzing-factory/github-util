@@ -365,6 +365,14 @@
                 "reviewersDefault"
             ]
         },
+        "init-mysql": {
+            "propertySets": [
+                "common",
+                "baseImageSenzingSenzingapiRuntime",
+                "main",
+                "reviewersDefault"
+            ]
+        },
         "init-postgresql": {
             "propertySets": [
                 "common",
