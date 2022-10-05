@@ -141,7 +141,7 @@
         "configurator": {
             "propertySets": [
                 "common",
-                "baseImageDebian",
+                "baseImageSenzingSenzingapiRuntime",
                 "reviewersDefault",
                 "main"
             ]
@@ -149,7 +149,7 @@
         "connector-neo4j": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageSenzingSenzingapiRuntime",
                 "baseBuilderImageSenzingBuilderDebian",
                 "main",
                 "reviewersDefault"
@@ -158,7 +158,7 @@
         "data-encryption-aes256cbc-sample": {
             "propertySets": [
                 "common",
-                "baseImageBusybox",
+                "baseImageSenzingSenzingapiRuntime",
                 "baseBuilderImageDebian",
                 "reviewersDefault"
             ]
