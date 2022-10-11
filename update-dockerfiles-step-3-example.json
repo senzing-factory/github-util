@@ -408,7 +408,7 @@
         "risk-score-calculator": {
             "propertySets": [
                 "common",
-                "baseImageSenzing",
+                "baseImageSenzingSenzingapiRuntime",
                 "baseBuilderImageSenzingBuilderDebian",
                 "main",
                 "reviewersDefault"
