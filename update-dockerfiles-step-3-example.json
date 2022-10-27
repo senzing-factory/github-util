@@ -1,6 +1,6 @@
 {
     "properties": {
-        "branchNameNew": "github-util/update-dockerfiles/20221011",
+        "branchNameNew": "github-util/update-dockerfiles/20221027",
         "commitMessage": "#1 Update version",
         "imageAlpine": "alpine:3.16.2@sha256:bc41182d7ef5ffc53a40b044e725193bc10142a1243f395ee852a8d9730fc2ad",
         "imageAmazon": "amazonlinux:2@sha256:b393108d01e77ff923d602f837fabb1aa545e8b913fbb1f7130d2ca30bde3c54",
@@ -11,12 +11,12 @@
         "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:20f33cfb14df6d6af0564ba53335d1048682aaf410c881ddc6fb13ceb2e74a8e",
         "imageNodeAlpine": "node:16-alpine3.15@sha256:a60b681e1c28f60ea63f8394dea5384c69bdc464b9655e880f74aafaa5945665",
         "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:18ae6567b623f8c1caada3fefcc8746f8e84ad5c832abd909e129f6b13df25b4",
-        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.3.1",
-        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.3.1",
+        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.3.2",
+        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.3.2",
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.13",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2022-10-11"
+        "refreshedAt": "2022-10-27"
     },
     "propertySets": {
         "baseBuilderImageDebian": {
