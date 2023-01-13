@@ -36,7 +36,7 @@ from github import Github
 __all__ = []
 __version__ = "1.4.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2022-06-27'
+__updated__ = '2023-01-12'
 
 # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
 
@@ -1254,7 +1254,7 @@ def do_print_branches(subcommand, args):
     for repository in repositories:
         branches = repository.get_branches()
         for branch in branches:
-            if branch.name != "main":
+            if branch.name not in ["main", "master"]:
                 print_string = "{0} - {1}".format(repository.name, branch.name)
                 print(print_format.format(print_string))
 
