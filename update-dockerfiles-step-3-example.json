@@ -1,22 +1,22 @@
 {
     "properties": {
-        "branchNameNew": "github-util/update-dockerfiles/20230112",
+        "branchNameNew": "github-util/update-dockerfiles/20230210",
         "commitMessage": "#1 Update version",
         "imageAlpine": "alpine:3.17.1@sha256:f271e74b17ced29b915d351685fd4644785c6d1559dd1f2d4189a5e851ef753a",
         "imageAmazon": "amazonlinux:2@sha256:217c5852461fafd257cf72f82ac37f5317fbb74036d28fbb8228b0e195b9f2c7",
         "imageBusybox": "busybox:1.35.0@sha256:f4ed5f2163110c26d42741fdc92bd1710e118aed4edb19212548e8ca4e5fca22",
-        "imageDebian": "debian:11.6-slim@sha256:98d3b4b0cee264301eb1354e0b549323af2d0633e1c43375d0b25c01826b6790",
+        "imageDebian": "debian:11.6-slim@sha256:8eaee63a5ea83744e62d5bf88e7d472d7f19b5feda3bfc6a2304cc074f269269",
         "imageIbmcomDb2": "ibmcom/db2:11.5.8.0@sha256:d678ec116f66992366bf8e7f23df24fe16ccc3f70710243d2c88e3c687670e4c",
         "imageJupyter": "jupyter/minimal-notebook:ubuntu-20.04@sha256:143f7cc7e7bdf5a86c0ef3b2717c24d477359a3cf798b243c574d3efe453bfaa",
         "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:b34bd5e42c111aaa23f05c5440064c0254e3b6085e83af7772c7fbe9356216ab",
         "imageNodeAlpine": "node:16-alpine3.16@sha256:e023c53915c5e20df594809477dc249dd595a8e731a6e214c4dbdcf7431bf942",
         "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:cfb2b5e2b39f341056ac624d32fae00ba0ab94145364111b7edfd9db703526e0",
-        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.4.0",
-        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.4.0",
+        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.4.2",
+        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.4.2",
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.15",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2023-01-12"
+        "refreshedAt": "2023-02-10"
     },
     "propertySets": {
         "baseBuilderImageDebian": {

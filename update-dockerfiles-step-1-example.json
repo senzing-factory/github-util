@@ -1,11 +1,11 @@
 {
     "properties": {
-        "branchNameNew": "github-util/update-dockerfiles/20230112",
+        "branchNameNew": "github-util/update-dockerfiles/20230210",
         "commitMessage": "#1 Update version",
-        "imageDebian": "debian:11.6-slim@sha256:98d3b4b0cee264301eb1354e0b549323af2d0633e1c43375d0b25c01826b6790",
+        "imageDebian": "debian:11.6-slim@sha256:8eaee63a5ea83744e62d5bf88e7d472d7f19b5feda3bfc6a2304cc074f269269",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2023-01-12"
+        "refreshedAt": "2023-02-10"
     },
     "propertySets": {
         "baseImageDebian": {
