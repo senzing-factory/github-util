@@ -326,6 +326,14 @@
                 "reviewersNode"
             ]
         },
+        "file-loader": {
+            "propertySets": [
+                "common",
+                "baseImageSenzingSenzingapiRuntime",
+                "main",
+                "reviewersDefault"
+            ]
+        },
         "g2command": {
             "propertySets": [
                 "common",
