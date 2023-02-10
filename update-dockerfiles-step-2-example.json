@@ -1,11 +1,11 @@
 {
     "properties": {
-        "branchNameNew": "github-util/update-dockerfiles/20230112",
+        "branchNameNew": "github-util/update-dockerfiles/20230210",
         "commitMessage": "#1 Update version",
-        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.4.0",
+        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.4.2",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2023-01-12"
+        "refreshedAt": "2023-02-10"
     },
     "propertySets": {
         "baseImageSenzingSenzingapiRuntime": {
