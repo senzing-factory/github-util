@@ -36,7 +36,7 @@ from github import Github
 __all__ = []
 __version__ = "1.4.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2020-03-12'
-__updated__ = '2023-01-12'
+__updated__ = '2023-02-17'
 
 # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
 
@@ -278,6 +278,52 @@ def get_parser():
             "arguments": {},
         },
         'print-repository-names': {
+            "help": 'Print repository names.',
+            "argument_aspects": ["common", "print"],
+            "arguments": {
+                "--is-user": {
+                    "dest": "is_user",
+                    "metavar": "SENZING_IS_USER",
+                    "help": "Use a GitHub User, not GitHub Organization. DEFAULT: 'False' (not a user)"
+                },
+                "--topics-all": {
+                    "dest": "topics_all",
+                    "metavar": "SENZING_TOPICS_ALL",
+                    "help": "All repository topics must be present. DEFAULT: '' (no evaluation)"
+                },
+                "--topics-any": {
+                    "dest": "topics_any",
+                    "metavar": "SENZING_TOPICS_ANY",
+                    "help": "Any repository topics must be present. DEFAULT: '' (no evaluation)"
+                },
+                "--topics-excluded": {
+                    "dest": "topics_excluded",
+                    "metavar": "SENZING_TOPICS_EXCLUDED",
+                    "help": "Which repository topics to exclude. DEFAULT: '' (exclude none)"
+                },
+                "--topics-included": {
+                    "dest": "topics_included",
+                    "metavar": "SENZING_TOPICS_INCLUDED",
+                    "help": "Which repository topics to include. DEFAULT: '' (include all)"
+                },
+                "--topics-not-all": {
+                    "dest": "topics_not_all",
+                    "metavar": "SENZING_TOPICS_NOT_ALL",
+                    "help": "All repository topics are bit present. DEFAULT: '' (no evaluation)"
+                },
+                "--topics-not-any": {
+                    "dest": "topics_not_any",
+                    "metavar": "SENZING_TOPICS_NOT_ANY",
+                    "help": "Any repository topics is not present. DEFAULT: '' (no evaluation)"
+                },
+                "--with-archived": {
+                    "dest": "with_archived",
+                    "action": "store_true",
+                    "help": "Include archived repositories. (SENZING_WITH_ARCHIVED) DEFAULT: 'False'"
+                },
+            },
+        },
+        'print-repository-names-with-description': {
             "help": 'Print repository names.',
             "argument_aspects": ["common", "print"],
             "arguments": {
@@ -1141,6 +1187,65 @@ def do_print_repository_names(subcommand, args):
                 topics_not_all_list,
                 topics_not_any_list):
                 print(print_format.format(repo.name))
+
+def do_print_repository_names_with_description(subcommand, args):
+    ''' Do a task. '''
+
+    # Get context from CLI, environment variables, and ini files.
+
+    config = get_configuration(subcommand, args)
+    validate_configuration(config)
+
+    # Pull variables from config.
+
+    github_access_token = config.get("github_access_token")
+    organization = config.get("organization")
+    print_format = config.get("print_format")
+    topics_all_list = config.get("topics_all_list")
+    topics_any_list = config.get("topics_any_list")
+    topics_excluded_list = config.get("topics_excluded_list")
+    topics_included_list = config.get("topics_included_list")
+    topics_not_all_list = config.get("topics_not_all_list")
+    topics_not_any_list = config.get("topics_not_any_list")
+    is_user = config.get("is_user")
+    with_archived = config.get("with_archived")
+
+    print_format = "| [{0}](https://github.com/Senzing/{0}) | | {1} |"
+
+    # Log into GitHub.
+
+    github = Github(github_access_token)
+
+    if is_user:
+        # https://pygithub.readthedocs.io/en/latest/github_objects/AuthenticatedUser.html
+        github_organization = github.get_user()
+        repos = github_organization.get_repos(affiliation="owner")
+    else:
+        # https://pygithub.readthedocs.io/en/latest/github_objects/Organization.html
+        github_organization = github.get_organization(organization)
+        repos = github_organization.get_repos()
+
+    # Print repository names.
+
+        for repo in repos:
+
+            # https://pygithub.readthedocs.io/en/latest/github_objects/Repository.html
+
+            topics = repo.get_topics()
+            archived = repo.archived
+            if with_archived:
+                archived = False
+
+            if not archived and has_valid_topic(
+                topics,
+                topics_all_list,
+                topics_any_list,
+                topics_excluded_list,
+                topics_included_list,
+                topics_not_all_list,
+                topics_not_any_list):
+                print(print_format.format(repo.name, repo.description))
+
 
 
 def do_print_repository_names_with_pages(subcommand, args):
