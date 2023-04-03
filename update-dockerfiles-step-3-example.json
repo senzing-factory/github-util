@@ -379,6 +379,14 @@
                 "reviewersDefault"
             ]
         },
+        "init-database": {
+            "propertySets": [
+                "common",
+                "baseImageGolang",
+                "main",
+                "reviewersDefault"
+            ]
+        },
         "init-mysql": {
             "propertySets": [
                 "common",
@@ -473,6 +481,14 @@
             ]
         },
         "senzing-tools": {
+            "propertySets": [
+                "common",
+                "baseImageGolang",
+                "main",
+                "reviewersDefault"
+            ]
+        },
+        "serve-grpc": {
             "propertySets": [
                 "common",
                 "baseImageGolang",
