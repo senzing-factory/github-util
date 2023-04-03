@@ -23,7 +23,7 @@
 1. [ ] [senzing-api-server](https://github.com/Senzing/senzing-api-server)
 1. [x] [senzing-console](https://github.com/Senzing/docker-senzing-console)
 1. [ ] [senzing-poc-server](https://github.com/Senzing/senzing-poc-server)
-1. [ ] [senzing-tools](https://github.com/Senzing/senzing-tools)
+1. [x] [senzing-tools](https://github.com/Senzing/senzing-tools)
 1. [x] [sshd](https://github.com/Senzing/docker-sshd)
 1. [x] [stream-loader](https://github.com/Senzing/stream-loader)
 1. [x] [stream-producer](https://github.com/Senzing/stream-producer)
@@ -38,6 +38,8 @@
 1. [ ] [g2loader](https://github.com/Senzing/g2loader)
 1. [ ] [g2configtool](https://github.com/Senzing/g2configtool)
 1. [ ] [g2command](https://github.com/Senzing/g2command)
+1. [x] [docker-db2-driver-installer](https://github.com/Senzing/docker-db2-driver-installer)
+1. [ ] [configurator](https://github.com/Senzing/configurator)
 
 ### Phase 4
 
