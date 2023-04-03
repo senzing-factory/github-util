@@ -16,7 +16,7 @@
 
 1. [x] [data-encryption-aes256cbc-sample](https://github.com/Senzing/data-encryption-aes256cbc-sample)
 1. [x] [entity-search-web-app-console](https://github.com/Senzing/entity-search-web-app-console)
-1. [/] [entity-search-web-app](https://github.com/Senzing/entity-search-web-app)
+1. [ ] [entity-search-web-app](https://github.com/Senzing/entity-search-web-app)
 1. [x] [init-container](https://github.com/Senzing/docker-init-container)
 1. [x] [init-postgresql](https://github.com/Senzing/init-postgresql)
 1. [x] [redoer](https://github.com/Senzing/redoer)
