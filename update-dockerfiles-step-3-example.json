@@ -307,14 +307,6 @@
                 "reviewersDefault"
             ]
         },
-        "docker-yumdownloader": {
-            "propertySets": [
-                "common",
-                "baseImageAmazon",
-                "main",
-                "reviewersDefault"
-            ]
-        },
         "dockerhub-util": {
             "propertySets": [
                 "common",
