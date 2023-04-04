@@ -158,7 +158,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageDebian",
+                "baseBuilderImageSenzingBuilderDebian",
                 "main",
                 "reviewersDefault"
             ]
@@ -429,7 +429,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageDebian",
+                "baseBuilderImageSenzingBuilderDebian",
                 "main",
                 "reviewersDefault"
             ],
@@ -465,7 +465,7 @@
             "propertySets": [
                 "common",
                 "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageDebian",
+                "baseBuilderImageSenzingBuilderDebian",
                 "reviewersDefault"
             ]
         },
