@@ -39,7 +39,7 @@
 1. [ ] [g2configtool](https://github.com/Senzing/g2configtool)
 1. [ ] [g2command](https://github.com/Senzing/g2command)
 1. [x] [docker-db2-driver-installer](https://github.com/Senzing/docker-db2-driver-installer)
-1. [ ] [configurator](https://github.com/Senzing/configurator)
+1. [x] [configurator](https://github.com/Senzing/configurator)
 
 ### Phase 4
 
