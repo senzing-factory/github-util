@@ -1,11 +1,11 @@
 {
     "properties": {
-        "branchNameNew": "github-util/update-dockerfiles/20230509",
+        "branchNameNew": "github-util/update-dockerfiles/20230606",
         "commitMessage": "#1 Update version",
         "imageAlpine": "alpine:3.17.3@sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
         "imageAmazon": "amazonlinux:2@sha256:3385565b4b75c4f15fd59a5dd7e4510ac5ad4b1825df9deed6be6af1092c8829",
         "imageBusybox": "busybox:1.35.0@sha256:223ae047b1065bd069aac01ae3ac8088b3ca4a527827e283b85112f29385fb1b",
-        "imageDebian": "debian:11.7-slim@sha256:f4da3f9b18fc242b739807a0fb3e77747f644f2fb3f67f4403fafce2286b431a",
+        "imageDebian": "debian:11.7-slim@sha256:7606bef5684b393434f06a50a3d1a09808fee5a0240d37da5d181b1b121e7637",
         "imageGolang": "golang:1.20.4@sha256:31a8f92b17829b3ccddf0add184f18203acfd79ccc1bcb5c43803ab1c4836cca",
         "imageIbmcomDb2": "ibmcom/db2:11.5.8.0@sha256:d678ec116f66992366bf8e7f23df24fe16ccc3f70710243d2c88e3c687670e4c",
         "imageJupyter": "jupyter/minimal-notebook:ubuntu-20.04@sha256:143f7cc7e7bdf5a86c0ef3b2717c24d477359a3cf798b243c574d3efe453bfaa",
@@ -18,7 +18,7 @@
         "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.17",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2023-05-09"
+        "refreshedAt": "2023-06-06"
     },
     "propertySets": {
         "baseBuilderImageDebian": {
