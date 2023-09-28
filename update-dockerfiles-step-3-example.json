@@ -9,7 +9,7 @@
         "imageGolang": "golang:1.21.0-bullseye@sha256:02f350d8452d3f9693a450586659ecdc6e40e9be8f8dfc6d402300d87223fdfa",
         "imageIbmcomDb2": "ibmcom/db2:11.5.8.0@sha256:d678ec116f66992366bf8e7f23df24fe16ccc3f70710243d2c88e3c687670e4c",
         "imageJupyter": "jupyter/minimal-notebook:ubuntu-20.04@sha256:143f7cc7e7bdf5a86c0ef3b2717c24d477359a3cf798b243c574d3efe453bfaa",
-        "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:209f374bb976d9d340937785ebae761a2446d19c342246fcf4522316060dec9a",
+        "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:d7d85feff5991c0df1d1b21b4cffd73dc51d4d7fee09cbd813a95b86f0a7b644",
         "imageNodeAlpine": "node:16-alpine3.18@sha256:a1f9d027912b58a7c75be7716c97cfbc6d3099f3a97ed84aa490be9dee20e787",
         "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:503446c15c6236291222f8192513c2eb56a02a8949cbadf4fe78cce19815c734",
         "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.7.1",
