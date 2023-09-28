@@ -14,7 +14,7 @@
         "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:503446c15c6236291222f8192513c2eb56a02a8949cbadf4fe78cce19815c734",
         "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.7.1",
         "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.7.1",
-        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.22",
+        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.21",
         "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.20",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
