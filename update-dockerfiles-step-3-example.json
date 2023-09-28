@@ -15,7 +15,7 @@
         "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.7.1",
         "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.7.1",
         "imageSenzingSenzingBase": "senzing/senzing-base:1.6.22",
-        "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.19",
+        "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.20",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
         "refreshedAt": "2023-09-25"
