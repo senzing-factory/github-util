@@ -1,2 +1,2 @@
-pyGithub==1.59.1
+pyGithub==2.1.1
 requests==2.31.0
