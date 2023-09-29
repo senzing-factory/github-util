@@ -1,24 +1,24 @@
 {
     "properties": {
-        "branchNameNew": "github-util/update-dockerfiles/20230629",
+        "branchNameNew": "github-util/update-dockerfiles/20230929",
         "commitMessage": "#1 Update version",
-        "imageAlpine": "alpine:3.18.2@sha256:82d1e9d7ed48a7523bdebc18cf6290bdb97b82302a8a9c27d4fe885949ea94d1",
-        "imageAmazon": "amazonlinux:2@sha256:ebfbaa3d1e0d2fedbbb60c8d5ba4a4dde6c12748b2340a5668a208ac1c964c07",
-        "imageBusybox": "busybox:1.36.1@sha256:2376a0c12759aa1214ba83e771ff252c7b1663216b192fbe5e0fb364e952f85c",
-        "imageDebian": "debian:11.7-slim@sha256:924df86f8aad741a0134b2de7d8e70c5c6863f839caadef62609c1be1340daf5",
-        "imageGolang": "golang:1.20.4@sha256:690e4135bf2a4571a572bfd5ddfa806b1cb9c3dea0446ebadaf32bc2ea09d4f9",
+        "imageAlpine": "alpine:3.18.4@sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293fc851978",
+        "imageAmazon": "amazonlinux:2@sha256:7c24b50b9f0ad83b7219edb704962f361bcf3ec85fdfd302121159bf0d0a6cb7",
+        "imageBusybox": "busybox:1.36.1@sha256:3fbc632167424a6d997e74f52b878d7cc478225cffac6bc977eedfe51c7f4e79",
+        "imageDebian": "debian:11.7-slim@sha256:c618be84fc82aa8ba203abbb07218410b0f5b3c7cb6b4e7248fda7785d4f9946",
+        "imageGolang": "golang:1.21.0-bullseye@sha256:02f350d8452d3f9693a450586659ecdc6e40e9be8f8dfc6d402300d87223fdfa",
         "imageIbmcomDb2": "ibmcom/db2:11.5.8.0@sha256:d678ec116f66992366bf8e7f23df24fe16ccc3f70710243d2c88e3c687670e4c",
         "imageJupyter": "jupyter/minimal-notebook:ubuntu-20.04@sha256:143f7cc7e7bdf5a86c0ef3b2717c24d477359a3cf798b243c574d3efe453bfaa",
-        "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:209f374bb976d9d340937785ebae761a2446d19c342246fcf4522316060dec9a",
-        "imageNodeAlpine": "node:16-alpine3.17@sha256:77e07be8ecf734e337b1b7d8eaa44abcb87320decffc030ad073354e609aa951",
-        "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:7bd75ac51451826df0d46f8e1446ca806a94f64025f7d7c307dde25117815e71",
-        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.6.0",
-        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.6.0",
-        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.20",
-        "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.19",
+        "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:792f2bf43029d35f88de33a4d244db99e8d81319ce4e306d1ba257a0a9a16b30",
+        "imageNodeAlpine": "node:16-alpine3.18@sha256:a1f9d027912b58a7c75be7716c97cfbc6d3099f3a97ed84aa490be9dee20e787",
+        "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:503446c15c6236291222f8192513c2eb56a02a8949cbadf4fe78cce19815c734",
+        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.7.1",
+        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.7.1",
+        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.21",
+        "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.20",
         "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
         "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2023-06-29"
+        "refreshedAt": "2023-09-29"
     },
     "propertySets": {
         "baseBuilderImageDebian": {
