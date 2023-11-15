@@ -228,14 +228,6 @@
                 "reviewersDefault"
             ]
         },
-        "docker-jupyter": {
-            "propertySets": [
-                "common",
-                "baseImageJupyter",
-                "main",
-                "reviewersDefault"
-            ]
-        },
         "docker-python-demo": {
             "propertySets": [
                 "common",
