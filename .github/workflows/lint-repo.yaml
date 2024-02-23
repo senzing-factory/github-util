@@ -10,6 +10,8 @@ jobs:
   lint-code-base:
     permissions:
       contents: read
+      packages: read
+      statuses: write
     uses: senzing-factory/build-resources/.github/workflows/linter.yaml@python-black-debug
     with:
       validate-all-codebase: true
