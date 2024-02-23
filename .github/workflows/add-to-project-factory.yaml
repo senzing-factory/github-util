@@ -9,6 +9,8 @@ on:
 jobs:
   add-to-project:
     name: add issue to project
+    permissions:
+      repository-projects: write
     runs-on: ubuntu-latest
 
     steps:
