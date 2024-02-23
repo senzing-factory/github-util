@@ -27,8 +27,8 @@ mkdir -p ${GIT_REPOSITORY_DIR}
 
 # Process each submodule.
 
-export REPOSITORIES=$(${GITHUB_UTIL_DIR}/github-util.py print-repository-names)
-for REPOSITORY in ${REPOSITORIES[@]};
+REPOSITORIES=$(${GITHUB_UTIL_DIR}/github-util.py print-repository-names)
+for REPOSITORY in "${REPOSITORIES[@]}";
 do
     echo "---- ${REPOSITORY} ------------------------------------------"
 
@@ -36,12 +36,12 @@ do
 
     # Clone repository.
 
-    cd ${GIT_REPOSITORY_DIR}
+    cd ${GIT_REPOSITORY_DIR} || { echo "[ERROR] Failed to change directory"; exit 1; }
     git clone "git@github.com:Senzing/${REPOSITORY}.git"
 
     # Make repository directory the current working directory.
 
-    cd ${GIT_REPOSITORY_DIR}/${REPOSITORY}
+    cd ${GIT_REPOSITORY_DIR}/"${REPOSITORY}" || { echo "[ERROR] Failed to change directory"; exit 1; }
 
     # Checkout current main/main branch.
 
@@ -51,8 +51,8 @@ do
 
     # Manipulate the files in the repository.
 
-    mkdir -p ${DESTINATION_DIR}
-    cp ${ACTION_SOURCE_FILE} ${DESTINATION_DIR}
+    mkdir -p "${DESTINATION_DIR}"
+    cp "${ACTION_SOURCE_FILE}" "${DESTINATION_DIR}"
 
     # Add and commit all changes to local git repository.
 

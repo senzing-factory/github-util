@@ -22,50 +22,50 @@
 
 ## add-to-project.sh
 
-1. Run `add-to-project.sh` for `t-ast`.
+1. Run `add-to-project.sh` for `senzing-app-server`.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
 
-    export SENZING_TOPICS_INCLUDED=t-ast
-    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-t-ast.yaml
+    export SENZING_TOPICS_INCLUDED=senzing-app-server
+    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-app-server.yaml
 
     ./add-to-project.sh
     ```
 
-1. Run `add-to-project.sh` for `t-comm`.
+1. Run `add-to-project.sh` for `senzing-community`.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
 
-    export SENZING_TOPICS_INCLUDED=t-comm
-    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-t-comm.yaml
+    export SENZING_TOPICS_INCLUDED=senzing-community
+    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-community.yaml
 
     ./add-to-project.sh
     ```
 
-1. Run `add-to-project.sh` for `t-g2-python`.
+1. Run `add-to-project.sh` for `senzing-g2-python`.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
 
-    export SENZING_TOPICS_INCLUDED=t-g2-python
-    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-t-g2-python.yaml
+    export SENZING_TOPICS_INCLUDED=senzing-g2-python
+    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-g2-python.yaml
 
     ./add-to-project.sh
     ```
 
-1. Run `add-to-project.sh` for `t-gdev`.
+1. Run `add-to-project.sh` for `senzing-gdev`.
    Example:
 
     ```console
     cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
 
-    export SENZING_TOPICS_INCLUDED=t-gdev
-    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-t-gdev.yaml
+    export SENZING_TOPICS_INCLUDED=senzing-gdev
+    export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-gdev.yaml
 
     ./add-to-project.sh
     ```
