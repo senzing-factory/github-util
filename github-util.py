@@ -28,12 +28,13 @@ import signal
 import sys
 import time
 
-# Import from https://pypi.org/
-
 import requests
 from github import Github
 
-__all__ = []
+# Import from https://pypi.org/
+
+
+__all__: list[str] = []
 __version__ = "1.4.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = "2020-03-12"
 __updated__ = "2023-02-17"
@@ -1637,7 +1638,7 @@ if __name__ == "__main__":
 
     # Parse the command line arguments.
 
-    SUBCOMMAND = os.getenv("SENZING_SUBCOMMAND", None)
+    SUBCOMMAND = os.getenv("SENZING_SUBCOMMAND", "value does not exist")
     PARSER = get_parser()
     if len(sys.argv) > 1:
         ARGS = PARSER.parse_args()

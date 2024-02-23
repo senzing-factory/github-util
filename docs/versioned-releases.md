@@ -30,7 +30,6 @@
 1. [ ] [xterm](https://github.com/Senzing/docker-xterm)
 1. [ ] [resolver](https://github.com/Senzing/resolver)
 
-
 ### Phase 3 - lower priority
 
 1. [ ] [g2configtool](https://github.com/Senzing/g2configtool)
