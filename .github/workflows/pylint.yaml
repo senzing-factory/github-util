@@ -2,10 +2,11 @@ name: pylint
 
 on: [push]
 
+permissions:
+  contents: read
+
 jobs:
   build:
-    permissions:
-      contents: read
     runs-on: ubuntu-latest
     strategy:
       matrix:
