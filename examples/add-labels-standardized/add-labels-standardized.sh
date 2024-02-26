@@ -8,7 +8,8 @@
 
 GITHUB_UTIL_DIR=~/senzing.git/github-util
 GIT_REPOSITORY_DIR=~/senzing-test.git
-GIT_MESSAGE="Add add-to-project.yaml"
+GIT_MESSAGE="Add add-labels-standardized.yaml"
+ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-labels-standardized/add-labels-standardized.yaml
 
 # -----------------------------------------------------------------------------
 # Main
@@ -57,7 +58,7 @@ for REPOSITORY in "${REPOSITORIES[@]}"; do
   # Manipulate the files in the repository.
 
   mkdir -p "${DESTINATION_DIR}"
-  cp "${ACTION_SOURCE_FILE}" "${DESTINATION_DIR}"
+  cp ${ACTION_SOURCE_FILE} "${DESTINATION_DIR}"
 
   # Add and commit all changes to local git repository.
 

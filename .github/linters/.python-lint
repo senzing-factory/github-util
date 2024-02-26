@@ -1,0 +1,17 @@
+[pylint]
+disable=
+    broad-except,
+    broad-exception-raised,
+    consider-using-f-string,
+    import-error,
+    line-too-long,
+    too-many-arguments,
+    too-many-branches,
+    too-many-lines,
+    too-many-locals,
+    too-many-return-statements,
+    too-many-statements,
+good-names=
+    github-util
+ignore=
+    __init__.py,

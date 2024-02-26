@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-'''
+"""
 # -----------------------------------------------------------------------------
 # github-util.py
 #
@@ -12,7 +12,7 @@
 #   - https://pygithub.readthedocs.io/
 #   - https://pygithub.readthedocs.io/en/latest/github_objects.html
 # -----------------------------------------------------------------------------
-'''
+"""
 
 # Import from standard library. https://docs.python.org/3/library/
 
@@ -28,20 +28,21 @@ import signal
 import sys
 import time
 
-# Import from https://pypi.org/
-
 import requests
 from github import Github
 
-__all__ = []
+# Import from https://pypi.org/
+
+
+__all__: list[str] = []
 __version__ = "1.4.1"  # See https://www.python.org/dev/peps/pep-0396/
-__date__ = '2020-03-12'
-__updated__ = '2023-02-17'
+__date__ = "2020-03-12"
+__updated__ = "2023-02-17"
 
 # See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
 
 SENZING_PRODUCT_ID = "5012"
-LOG_FORMAT = '%(asctime)s %(message)s'
+LOG_FORMAT = "%(asctime)s %(message)s"
 
 # Working with bytes.
 
@@ -56,72 +57,56 @@ CONFIGURATION_LOCATOR = {
     "configuration_file": {
         "default": None,
         "env": "GITHUB_CONFIGURATION_FILE",
-        "cli": "github-configuration-file"
+        "cli": "github-configuration-file",
     },
-    "debug": {
-        "default": False,
-        "env": "SENZING_DEBUG",
-        "cli": "debug"
-    },
+    "debug": {"default": False, "env": "SENZING_DEBUG", "cli": "debug"},
     "github_access_token": {
         "default": None,
         "env": "GITHUB_ACCESS_TOKEN",
-        "cli": "github-access-token"
+        "cli": "github-access-token",
     },
-    "is_user": {
-        "default": False,
-        "env": "SENZING_IS_USER",
-        "cli": "is-user"
-    },
+    "is_user": {"default": False, "env": "SENZING_IS_USER", "cli": "is-user"},
     "organization": {
         "default": "Senzing",
         "env": "GITHUB_ORGANIZATION",
-        "cli": "organization"
+        "cli": "organization",
     },
     "print_format": {
         "default": "{0}",
         "env": "SENZING_PRINT_FORMAT",
-        "cli": "print-format"
+        "cli": "print-format",
     },
     "sleep_time_in_seconds": {
         "default": 0,
         "env": "SENZING_SLEEP_TIME_IN_SECONDS",
-        "cli": "sleep-time-in-seconds"
+        "cli": "sleep-time-in-seconds",
     },
     "sleep_time_in_seconds_dockerfiles": {
         "default": 10,
         "env": "SENZING_SLEEP_TIME_IN_SECONDS_DOCKERFILES",
-        "cli": "sleep-time-in-seconds-dockerfiles"
+        "cli": "sleep-time-in-seconds-dockerfiles",
     },
-    "topics_all": {
-        "default": "",
-        "env": "SENZING_TOPICS_ALL",
-        "cli": "topics-all"
-    },
-    "topics_any": {
-        "default": "",
-        "env": "SENZING_TOPICS_ANY",
-        "cli": "topics-any"
-    },
+    "topics_all": {"default": "", "env": "SENZING_TOPICS_ALL", "cli": "topics-all"},
+    "topics_any": {"default": "", "env": "SENZING_TOPICS_ANY", "cli": "topics-any"},
     "topics_excluded": {
         "default": "",
         "env": "SENZING_TOPICS_EXCLUDED",
-        "cli": "topics-excluded"
+        "cli": "topics-excluded",
     },
     "topics_included": {
         "default": "",
         "env": "SENZING_TOPICS_INCLUDED",
-        "cli": "topics-included"
+        "cli": "topics-included",
     },
     "topics_not_all": {
         "default": "",
         "env": "SENZING_TOPICS_NOT_ALL",
-        "cli": "topics-not-all"
+        "cli": "topics-not-all",
     },
     "topics_not_any": {
         "default": "",
         "env": "SENZING_TOPICS_NOT_ANY",
-        "cli": "topics-not-any"
+        "cli": "topics-not-any",
     },
     "subcommand": {
         "default": None,
@@ -130,95 +115,44 @@ CONFIGURATION_LOCATOR = {
     "with_archived": {
         "default": False,
         "env": "SENZING_WITH_ARCHIVED",
-        "cli": "with-archived"
-    }
+        "cli": "with-archived",
+    },
 }
 
-# Enumerate keys in 'configuration_locator' that should not be printed to the log.
+# Enumerate keys in 'configuration_locator' that
+# should not be printed to the log.
 
 KEYS_TO_REDACT = [
     "github_access_token",
 ]
 
 G2_REPOSITORIES = {
-    "compressedfile": {
-        "artifacts": ["CompressedFile.py"]
-    },
-    "dumpstack": {
-        "artifacts": ["DumpStack.py"]
-    },
-    "g2audit": {
-        "artifacts": ["G2Audit.py"]
-    },
-    "g2command": {
-        "artifacts": ["G2Command.py"]
-    },
-    "g2config": {
-        "artifacts": ["G2Config.py"]
-    },
-    "g2configmgr": {
-        "artifacts": ["G2ConfigMgr.py"]
-    },
-    "g2configtables": {
-        "artifacts": ["G2ConfigTables.py"]
-    },
-    "g2configtool": {
-        "artifacts": ["G2ConfigTool.py", "G2ConfigTool.readme"]
-    },
-    "g2createproject": {
-        "artifacts": ["G2CreateProject.py"]
-    },
-    "g2database": {
-        "artifacts": ["G2Database.py"]
-    },
-    "g2diagnostic": {
-        "artifacts": ["G2Diagnostic.py"]
-    },
-    "g2engine": {
-        "artifacts": ["G2Engine.py"]
-    },
-    "g2exception": {
-        "artifacts": ["G2Exception.py"]
-    },
-    "g2explorer": {
-        "artifacts": ["G2Explorer.py"]
-    },
-    "g2export": {
-        "artifacts": ["G2Export.py"]
-    },
-    "g2health": {
-        "artifacts": ["G2Health.py"]
-    },
-    "g2hasher": {
-        "artifacts": ["G2Hasher.py"]
-    },
-    "g2iniparams": {
-        "artifacts": ["G2IniParams.py"]
-    },
-    "g2loader": {
-        "artifacts": ["G2Loader.py"]
-    },
-    "g2paths": {
-        "artifacts": ["G2Paths.py"]
-    },
-    "g2product": {
-        "artifacts": ["G2Product.py"]
-    },
-    "g2project": {
-        "artifacts": ["G2Project.py"]
-    },
-    "g2s3": {
-        "artifacts": ["G2S3.py"]
-    },
-    "g2setupconfig": {
-        "artifacts": ["G2SetupConfig.py"]
-    },
-    "g2snapshot": {
-        "artifacts": ["G2Snapshot.py"]
-    },
-    "g2updateproject": {
-        "artifacts": ["G2UpdateProject.py"]
-    }
+    "compressedfile": {"artifacts": ["CompressedFile.py"]},
+    "dumpstack": {"artifacts": ["DumpStack.py"]},
+    "g2audit": {"artifacts": ["G2Audit.py"]},
+    "g2command": {"artifacts": ["G2Command.py"]},
+    "g2config": {"artifacts": ["G2Config.py"]},
+    "g2configmgr": {"artifacts": ["G2ConfigMgr.py"]},
+    "g2configtables": {"artifacts": ["G2ConfigTables.py"]},
+    "g2configtool": {"artifacts": ["G2ConfigTool.py", "G2ConfigTool.readme"]},
+    "g2createproject": {"artifacts": ["G2CreateProject.py"]},
+    "g2database": {"artifacts": ["G2Database.py"]},
+    "g2diagnostic": {"artifacts": ["G2Diagnostic.py"]},
+    "g2engine": {"artifacts": ["G2Engine.py"]},
+    "g2exception": {"artifacts": ["G2Exception.py"]},
+    "g2explorer": {"artifacts": ["G2Explorer.py"]},
+    "g2export": {"artifacts": ["G2Export.py"]},
+    "g2health": {"artifacts": ["G2Health.py"]},
+    "g2hasher": {"artifacts": ["G2Hasher.py"]},
+    "g2iniparams": {"artifacts": ["G2IniParams.py"]},
+    "g2loader": {"artifacts": ["G2Loader.py"]},
+    "g2paths": {"artifacts": ["G2Paths.py"]},
+    "g2product": {"artifacts": ["G2Product.py"]},
+    "g2project": {"artifacts": ["G2Project.py"]},
+    "g2s3": {"artifacts": ["G2S3.py"]},
+    "g2setupconfig": {"artifacts": ["G2SetupConfig.py"]},
+    "g2snapshot": {"artifacts": ["G2Snapshot.py"]},
+    "g2updateproject": {"artifacts": ["G2UpdateProject.py"]},
 }
 
 ETC_FILES = [
@@ -233,189 +167,189 @@ ETC_FILES = [
 
 
 def get_parser():
-    ''' Parse commandline arguments. '''
+    """Parse commandline arguments."""
 
     subcommands = {
-        'check-for-archived': {
-            "help": 'Check for archived repositories',
+        "check-for-archived": {
+            "help": "Check for archived repositories",
             "argument_aspects": ["common"],
             "arguments": {
                 "--configuration-file": {
                     "dest": "configuration_file",
                     "metavar": "SENZING_CONFIGURATION_FILE",
-                    "help": "Configuration file. DEFAULT: None"
+                    "help": "Configuration file. DEFAULT: None",
                 },
-            }
+            },
         },
-        'print-branches': {
-            "help": 'Print branches',
+        "print-branches": {
+            "help": "Print branches",
             "argument_aspects": ["common"],
             "arguments": {},
         },
-        'print-copy-files-from-senzing-install': {
-            "help": 'Print copy-files-from-senzing-install.sh',
+        "print-copy-files-from-senzing-install": {
+            "help": "Print copy-files-from-senzing-install.sh",
             "argument_aspects": ["common"],
             "arguments": {},
         },
-        'print-dependabot': {
-            "help": 'Print dependabot alerts',
+        "print-dependabot": {
+            "help": "Print dependabot alerts",
             "argument_aspects": ["common"],
             "arguments": {},
         },
-        'print-git-clone': {
-            "help": 'Print git clone https://...',
+        "print-git-clone": {
+            "help": "Print git clone https://...",
             "argument_aspects": ["common"],
             "arguments": {},
         },
-        'print-git-clone-mirror': {
-            "help": 'Print git clone --mirror https://...',
+        "print-git-clone-mirror": {
+            "help": "Print git clone --mirror https://...",
             "argument_aspects": ["common"],
             "arguments": {},
         },
-        'print-pull-requests': {
-            "help": 'Print pull requests',
+        "print-pull-requests": {
+            "help": "Print pull requests",
             "argument_aspects": ["common"],
             "arguments": {},
         },
-        'print-repository-names': {
-            "help": 'Print repository names.',
+        "print-repository-names": {
+            "help": "Print repository names.",
             "argument_aspects": ["common", "print"],
             "arguments": {
                 "--is-user": {
                     "dest": "is_user",
                     "metavar": "SENZING_IS_USER",
-                    "help": "Use a GitHub User, not GitHub Organization. DEFAULT: 'False' (not a user)"
+                    "help": "Use a GitHub User, not GitHub Organization. DEFAULT: 'False' (not a user)",
                 },
                 "--topics-all": {
                     "dest": "topics_all",
                     "metavar": "SENZING_TOPICS_ALL",
-                    "help": "All repository topics must be present. DEFAULT: '' (no evaluation)"
+                    "help": "All repository topics must be present. DEFAULT: '' (no evaluation)",
                 },
                 "--topics-any": {
                     "dest": "topics_any",
                     "metavar": "SENZING_TOPICS_ANY",
-                    "help": "Any repository topics must be present. DEFAULT: '' (no evaluation)"
+                    "help": "Any repository topics must be present. DEFAULT: '' (no evaluation)",
                 },
                 "--topics-excluded": {
                     "dest": "topics_excluded",
                     "metavar": "SENZING_TOPICS_EXCLUDED",
-                    "help": "Which repository topics to exclude. DEFAULT: '' (exclude none)"
+                    "help": "Which repository topics to exclude. DEFAULT: '' (exclude none)",
                 },
                 "--topics-included": {
                     "dest": "topics_included",
                     "metavar": "SENZING_TOPICS_INCLUDED",
-                    "help": "Which repository topics to include. DEFAULT: '' (include all)"
+                    "help": "Which repository topics to include. DEFAULT: '' (include all)",
                 },
                 "--topics-not-all": {
                     "dest": "topics_not_all",
                     "metavar": "SENZING_TOPICS_NOT_ALL",
-                    "help": "All repository topics are bit present. DEFAULT: '' (no evaluation)"
+                    "help": "All repository topics are bit present. DEFAULT: '' (no evaluation)",
                 },
                 "--topics-not-any": {
                     "dest": "topics_not_any",
                     "metavar": "SENZING_TOPICS_NOT_ANY",
-                    "help": "Any repository topics is not present. DEFAULT: '' (no evaluation)"
+                    "help": "Any repository topics is not present. DEFAULT: '' (no evaluation)",
                 },
                 "--with-archived": {
                     "dest": "with_archived",
                     "action": "store_true",
-                    "help": "Include archived repositories. (SENZING_WITH_ARCHIVED) DEFAULT: 'False'"
+                    "help": "Include archived repositories. (SENZING_WITH_ARCHIVED) DEFAULT: 'False'",
                 },
             },
         },
-        'print-repository-names-with-description': {
-            "help": 'Print repository names.',
+        "print-repository-names-with-description": {
+            "help": "Print repository names.",
             "argument_aspects": ["common", "print"],
             "arguments": {
                 "--is-user": {
                     "dest": "is_user",
                     "metavar": "SENZING_IS_USER",
-                    "help": "Use a GitHub User, not GitHub Organization. DEFAULT: 'False' (not a user)"
+                    "help": "Use a GitHub User, not GitHub Organization. DEFAULT: 'False' (not a user)",
                 },
                 "--topics-all": {
                     "dest": "topics_all",
                     "metavar": "SENZING_TOPICS_ALL",
-                    "help": "All repository topics must be present. DEFAULT: '' (no evaluation)"
+                    "help": "All repository topics must be present. DEFAULT: '' (no evaluation)",
                 },
                 "--topics-any": {
                     "dest": "topics_any",
                     "metavar": "SENZING_TOPICS_ANY",
-                    "help": "Any repository topics must be present. DEFAULT: '' (no evaluation)"
+                    "help": "Any repository topics must be present. DEFAULT: '' (no evaluation)",
                 },
                 "--topics-excluded": {
                     "dest": "topics_excluded",
                     "metavar": "SENZING_TOPICS_EXCLUDED",
-                    "help": "Which repository topics to exclude. DEFAULT: '' (exclude none)"
+                    "help": "Which repository topics to exclude. DEFAULT: '' (exclude none)",
                 },
                 "--topics-included": {
                     "dest": "topics_included",
                     "metavar": "SENZING_TOPICS_INCLUDED",
-                    "help": "Which repository topics to include. DEFAULT: '' (include all)"
+                    "help": "Which repository topics to include. DEFAULT: '' (include all)",
                 },
                 "--topics-not-all": {
                     "dest": "topics_not_all",
                     "metavar": "SENZING_TOPICS_NOT_ALL",
-                    "help": "All repository topics are bit present. DEFAULT: '' (no evaluation)"
+                    "help": "All repository topics are bit present. DEFAULT: '' (no evaluation)",
                 },
                 "--topics-not-any": {
                     "dest": "topics_not_any",
                     "metavar": "SENZING_TOPICS_NOT_ANY",
-                    "help": "Any repository topics is not present. DEFAULT: '' (no evaluation)"
+                    "help": "Any repository topics is not present. DEFAULT: '' (no evaluation)",
                 },
                 "--with-archived": {
                     "dest": "with_archived",
                     "action": "store_true",
-                    "help": "Include archived repositories. (SENZING_WITH_ARCHIVED) DEFAULT: 'False'"
+                    "help": "Include archived repositories. (SENZING_WITH_ARCHIVED) DEFAULT: 'False'",
                 },
             },
         },
-        'print-repository-names-with-pages': {
-            "help": 'Print repository having GitPages.',
+        "print-repository-names-with-pages": {
+            "help": "Print repository having GitPages.",
             "argument_aspects": ["common", "print"],
             "arguments": {
                 "--is-user": {
                     "dest": "is_user",
                     "metavar": "SENZING_IS_USER",
-                    "help": "Use a GitHub User, not GitHub Organization. DEFAULT: 'False' (not a user)"
+                    "help": "Use a GitHub User, not GitHub Organization. DEFAULT: 'False' (not a user)",
                 },
             },
         },
-        'print-submodules-sh': {
-            "help": 'Print modules.sh',
+        "print-submodules-sh": {
+            "help": "Print modules.sh",
             "argument_aspects": ["common"],
             "arguments": {},
         },
-        'sleep': {
-            "help": 'Do nothing but sleep. For Docker testing.',
+        "sleep": {
+            "help": "Do nothing but sleep. For Docker testing.",
             "arguments": {
                 "--sleep-time-in-seconds": {
                     "dest": "sleep_time_in_seconds",
                     "metavar": "SENZING_SLEEP_TIME_IN_SECONDS",
-                    "help": "Sleep time in seconds. DEFAULT: 0 (infinite)"
+                    "help": "Sleep time in seconds. DEFAULT: 0 (infinite)",
                 },
             },
         },
-        'update-dockerfiles': {
-            "help": 'Update Dockerfiles.',
+        "update-dockerfiles": {
+            "help": "Update Dockerfiles.",
             "argument_aspects": ["common"],
             "arguments": {
                 "--configuration-file": {
                     "dest": "configuration_file",
                     "metavar": "SENZING_CONFIGURATION_FILE",
-                    "help": "Configuration file. DEFAULT: None"
+                    "help": "Configuration file. DEFAULT: None",
                 },
                 "--sleep-time-in-seconds-dockerfiles": {
                     "dest": "sleep_time_in_seconds_dockerfiles",
                     "metavar": "SENZING_SLEEP_TIME_IN_SECONDS_DOCKERFILES",
-                    "help": "Sleep time in seconds. DEFAULT: 10 seconds"
+                    "help": "Sleep time in seconds. DEFAULT: 10 seconds",
                 },
             },
         },
-        'version': {
-            "help": 'Print version of program.',
+        "version": {
+            "help": "Print version of program.",
         },
-        'docker-acceptance-test': {
-            "help": 'For Docker acceptance testing.',
+        "docker-acceptance-test": {
+            "help": "For Docker acceptance testing.",
         },
     }
 
@@ -426,24 +360,24 @@ def get_parser():
             "--debug": {
                 "dest": "debug",
                 "action": "store_true",
-                "help": "Enable debugging. (SENZING_DEBUG) Default: False"
+                "help": "Enable debugging. (SENZING_DEBUG) Default: False",
             },
             "--github-access-token": {
                 "dest": "github_access_token",
                 "metavar": "GITHUB_ACCESS_TOKEN",
-                "help": "GitHub Personal Access token. See https://github.com/settings/tokens"
+                "help": "GitHub Personal Access token. See https://github.com/settings/tokens",
             },
             "--organization": {
                 "dest": "organization",
                 "metavar": "GITHUB_ORGANIZATION",
-                "help": "GitHub account/organization name."
+                "help": "GitHub account/organization name.",
             },
         },
         "print": {
             "--print-format": {
                 "dest": "print_format",
                 "metavar": "SENZING_PRINT_FORMAT",
-                "help": "Format of output. Default: '{0}'"
+                "help": "Format of output. Default: '{0}'",
             },
         },
     }
@@ -451,27 +385,30 @@ def get_parser():
     # Augment "subcommands" variable with arguments specified by aspects.
 
     for subcommand_value in subcommands.values():
-        if 'argument_aspects' in subcommand_value:
-            for aspect in subcommand_value['argument_aspects']:
-                if 'arguments' not in subcommand_value:
-                    subcommand_value['arguments'] = {}
+        if "argument_aspects" in subcommand_value:
+            for aspect in subcommand_value["argument_aspects"]:
+                if "arguments" not in subcommand_value:
+                    subcommand_value["arguments"] = {}
                 arguments = argument_aspects.get(aspect, {})
                 for argument, argument_value in arguments.items():
-                    subcommand_value['arguments'][argument] = argument_value
+                    subcommand_value["arguments"][argument] = argument_value
 
     parser = argparse.ArgumentParser(
-        description="Reports from GitHub. For more information, see https://github.com/Senzing/github-util")
+        description="Reports from GitHub. For more information, see https://github.com/Senzing/github-util"
+    )
     subparsers = parser.add_subparsers(
-        dest='subcommand', help='Subcommands (SENZING_SUBCOMMAND):')
+        dest="subcommand", help="Subcommands (SENZING_SUBCOMMAND):"
+    )
 
     for subcommand_key, subcommand_values in subcommands.items():
-        subcommand_help = subcommand_values.get('help', "")
-        subcommand_arguments = subcommand_values.get('arguments', {})
+        subcommand_help = subcommand_values.get("help", "")
+        subcommand_arguments = subcommand_values.get("arguments", {})
         subparser = subparsers.add_parser(subcommand_key, help=subcommand_help)
         for argument_key, argument_values in subcommand_arguments.items():
             subparser.add_argument(argument_key, **argument_values)
 
     return parser
+
 
 # -----------------------------------------------------------------------------
 # Message handling
@@ -529,39 +466,41 @@ MESSAGE_DICTIONARY = {
 
 
 def message(index, *args):
-    ''' Return an instantiated message. '''
+    """Return an instantiated message."""
     index_string = str(index)
-    template = MESSAGE_DICTIONARY.get(index_string, "No message for index {0}.".format(index_string))
+    template = MESSAGE_DICTIONARY.get(
+        index_string, "No message for index {0}.".format(index_string)
+    )
     return template.format(*args)
 
 
 def message_generic(generic_index, index, *args):
-    ''' Return a formatted message. '''
+    """Return a formatted message."""
     return "{0} {1}".format(message(generic_index, index), message(index, *args))
 
 
 def message_info(index, *args):
-    ''' Return an info message. '''
+    """Return an info message."""
     return message_generic(MESSAGE_INFO, index, *args)
 
 
 def message_warning(index, *args):
-    ''' Return a warning message. '''
+    """Return a warning message."""
     return message_generic(MESSAGE_WARN, index, *args)
 
 
 def message_error(index, *args):
-    ''' Return an error message. '''
+    """Return an error message."""
     return message_generic(MESSAGE_ERROR, index, *args)
 
 
 def message_debug(index, *args):
-    ''' Return a debug message. '''
+    """Return a debug message."""
     return message_generic(MESSAGE_DEBUG, index, *args)
 
 
 def get_exception():
-    ''' Get details about an exception. '''
+    """Get details about an exception."""
     exception_type, exception_object, traceback = sys.exc_info()
     frame = traceback.tb_frame
     line_number = traceback.tb_lineno
@@ -577,31 +516,32 @@ def get_exception():
         "traceback": traceback,
     }
 
+
 # -----------------------------------------------------------------------------
 # Configuration
 # -----------------------------------------------------------------------------
 
 
 def get_configuration(subcommand, args):
-    ''' Order of precedence: CLI, OS environment variables, INI file, default. '''
+    """Order of precedence: CLI, OS environment variables, INI file, default."""
     result = {}
 
     # Copy default values into configuration dictionary.
 
     for key, value in list(CONFIGURATION_LOCATOR.items()):
-        result[key] = value.get('default', None)
+        result[key] = value.get("default", None)
 
     # "Prime the pump" with command line args. This will be done again as the last step.
 
     for key, value in list(args.__dict__.items()):
-        new_key = key.format(subcommand.replace('-', '_'))
+        new_key = key.format(subcommand.replace("-", "_"))
         if value:
             result[new_key] = value
 
     # Copy OS environment variables into configuration dictionary.
 
     for key, value in list(CONFIGURATION_LOCATOR.items()):
-        os_env_var = value.get('env', None)
+        os_env_var = value.get("env", None)
         if os_env_var:
             os_env_value = os.getenv(os_env_var, None)
             if os_env_value:
@@ -610,42 +550,39 @@ def get_configuration(subcommand, args):
     # Copy 'args' into configuration dictionary.
 
     for key, value in list(args.__dict__.items()):
-        new_key = key.format(subcommand.replace('-', '_'))
+        new_key = key.format(subcommand.replace("-", "_"))
         if value:
             result[new_key] = value
 
     # Add program information.
 
-    result['program_version'] = __version__
-    result['program_updated'] = __updated__
+    result["program_version"] = __version__
+    result["program_updated"] = __updated__
 
     # Special case: subcommand from command-line
 
     if args.subcommand:
-        result['subcommand'] = args.subcommand
+        result["subcommand"] = args.subcommand
 
     # Special case: Change boolean strings to booleans.
 
     booleans = [
-        'debug',
-        'is_user',
-        'with_archived',
+        "debug",
+        "is_user",
+        "with_archived",
     ]
     for boolean in booleans:
         boolean_value = result.get(boolean)
         if isinstance(boolean_value, str):
             boolean_value_lower_case = boolean_value.lower()
-            if boolean_value_lower_case in ['true', '1', 't', 'y', 'yes']:
+            if boolean_value_lower_case in ["true", "1", "t", "y", "yes"]:
                 result[boolean] = True
             else:
                 result[boolean] = False
 
     # Special case: Change integer strings to integers.
 
-    integers = [
-        'sleep_time_in_seconds',
-        'sleep_time_in_seconds_dockerfiles'
-    ]
+    integers = ["sleep_time_in_seconds", "sleep_time_in_seconds_dockerfiles"]
     for integer in integers:
         integer_string = result.get(integer)
         result[integer] = int(integer_string)
@@ -658,29 +595,29 @@ def get_configuration(subcommand, args):
         "topics_excluded",
         "topics_included",
         "topics_not_all",
-        "topics_not_any"
+        "topics_not_any",
     ]
 
     for topic in topic_list:
         if result.get(topic):
-            result["{0}_list".format(topic)] = result.get(topic).split(',')
+            result["{0}_list".format(topic)] = result.get(topic).split(",")
 
     return result
 
 
 def validate_configuration(config):
-    ''' Check aggregate configuration from commandline options, environment variables, config files, and defaults. '''
+    """Check aggregate configuration from commandline options, environment variables, config files, and defaults."""
 
     user_warning_messages = []
     user_error_messages = []
 
     # Perform subcommand specific checking.
 
-    subcommand = config.get('subcommand')
+    subcommand = config.get("subcommand")
 
-    if subcommand in ['comments']:
+    if subcommand in ["comments"]:
 
-        if not config.get('github_access_token'):
+        if not config.get("github_access_token"):
             user_error_messages.append(message_error(701))
 
     # Log warning messages.
@@ -705,7 +642,7 @@ def validate_configuration(config):
 
 
 def redact_configuration(config):
-    ''' Return a shallow copy of config with certain keys removed. '''
+    """Return a shallow copy of config with certain keys removed."""
     result = config.copy()
     for key in KEYS_TO_REDACT:
         try:
@@ -714,13 +651,14 @@ def redact_configuration(config):
             pass
     return result
 
+
 # -----------------------------------------------------------------------------
 # Utility functions
 # -----------------------------------------------------------------------------
 
 
 def construct_line(command, line, properties):
-    ''' Construct a replacement line. '''
+    """Construct a replacement line."""
 
     result = line  # Default.
     if line.startswith(command):
@@ -735,9 +673,9 @@ def construct_line(command, line, properties):
 
 
 def create_signal_handler_function(args):
-    ''' Tricky code.  Uses currying technique. Create a function for signal handling.
-        that knows about "args".
-    '''
+    """Tricky code.  Uses currying technique. Create a function for signal handling.
+    that knows about "args".
+    """
 
     def result_function(signal_number, frame):
         logging.info(message_info(298, args))
@@ -748,15 +686,15 @@ def create_signal_handler_function(args):
 
 
 def bootstrap_signal_handler(signal_number, frame):
-    ''' Exit on signal error. '''
+    """Exit on signal error."""
     logging.debug(message_debug(901, signal_number, frame))
     sys.exit(0)
 
 
 def entry_template(config):
-    ''' Format of entry message. '''
+    """Format of entry message."""
     debug = config.get("debug", False)
-    config['start_time'] = time.time()
+    config["start_time"] = time.time()
     if debug:
         final_config = config
     else:
@@ -766,11 +704,11 @@ def entry_template(config):
 
 
 def exit_template(config):
-    ''' Format of exit message. '''
+    """Format of exit message."""
     debug = config.get("debug", False)
     stop_time = time.time()
-    config['stop_time'] = stop_time
-    config['elapsed_time'] = stop_time - config.get('start_time', stop_time)
+    config["stop_time"] = stop_time
+    config["elapsed_time"] = stop_time - config.get("start_time", stop_time)
     if debug:
         final_config = config
     else:
@@ -780,19 +718,27 @@ def exit_template(config):
 
 
 def exit_error(index, *args):
-    ''' Log error message and exit program. '''
+    """Log error message and exit program."""
     logging.error(message_error(index, *args))
     logging.error(message_error(698))
     sys.exit(1)
 
 
 def exit_silently():
-    ''' Exit program. '''
+    """Exit program."""
     sys.exit(0)
 
 
-def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_list, topics_included_list, topics_not_all_list, topics_not_any_list):
-    ''' Verify that the topic qualifies the repository. '''
+def has_valid_topic(
+    topics,
+    topics_all_list,
+    topics_any_list,
+    topics_excluded_list,
+    topics_included_list,
+    topics_not_all_list,
+    topics_not_any_list,
+):
+    """Verify that the topic qualifies the repository."""
 
     if topics_excluded_list:
         for topic in topics:
@@ -849,16 +795,22 @@ def has_valid_topic(topics, topics_all_list, topics_any_list, topics_excluded_li
 
 
 def run_query(headers, query):
-    ''' A simple function to use requests.post to make the API call. Note the json= section. '''
+    """A simple function to use requests.post to make the API call. Note the json= section."""
 
-    request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
+    request = requests.post(
+        "https://api.github.com/graphql", json={"query": query}, headers=headers
+    )
     if request.status_code != 200:
-        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+        raise Exception(
+            "Query failed to run by returning code of {}. {}".format(
+                request.status_code, query
+            )
+        )
     return request.json()
 
 
 def symbolic_resolution(properties, values):
-    ''' Do symbolic resolution recursively through a dictionary. '''
+    """Do symbolic resolution recursively through a dictionary."""
 
     # Simple symbolic resolution for a string.
 
@@ -884,7 +836,7 @@ def symbolic_resolution(properties, values):
 
 
 def update_line(line, resolved_properties):
-    '''Update line based on Docker Keyword.'''
+    """Update line based on Docker Keyword."""
 
     if line.startswith("ARG"):
         result = construct_line("ARG", line, resolved_properties.get("arg", {}))
@@ -896,7 +848,7 @@ def update_line(line, resolved_properties):
 
 
 def add_property(dictionary, property_name, property_value):
-    '''Add a property to a dictionary.'''
+    """Add a property to a dictionary."""
 
     property_type = type(dictionary.get(property_name))
     if property_type is dict:
@@ -906,13 +858,15 @@ def add_property(dictionary, property_name, property_value):
     else:
         dictionary[property_name] = property_value
 
+
 # -----------------------------------------------------------------------------
 # do_* functions
 #   Common function signature: do_XXX(args)
 # -----------------------------------------------------------------------------
 
+
 def do_check_for_archived(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Reference: https://gist.github.com/nottrobin/a18f9e33286f9db4b83e48af6d285e29
 
@@ -934,11 +888,11 @@ def do_check_for_archived(subcommand, args):
     # Load configuration file
 
     with open(configuration_file, encoding="utf-8") as file:
-        config['file'] = json.load(file)
+        config["file"] = json.load(file)
 
     # Pull values from configuration file.
 
-    config_repositories = config.get('file', {}).get('repositories', {})
+    config_repositories = config.get("file", {}).get("repositories", {})
 
     # Log into GitHub and get the organization.
 
@@ -948,7 +902,6 @@ def do_check_for_archived(subcommand, args):
     # Process each repository listed in the configuration.
 
     for repository_name in config_repositories.keys():
-
 
         repository = github_organization.get_repo(repository_name)
         if repository.archived:
@@ -960,7 +913,7 @@ def do_check_for_archived(subcommand, args):
 
 
 def do_docker_acceptance_test(subcommand, args):
-    ''' For use with Docker acceptance testing. '''
+    """For use with Docker acceptance testing."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -976,7 +929,7 @@ def do_docker_acceptance_test(subcommand, args):
 
 
 def do_print_dependabot(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -994,9 +947,7 @@ def do_print_dependabot(subcommand, args):
 
     # See https://gist.github.com/gbaman/b3137e18c739e0cf98539bf4ec4366ad
 
-    headers = {
-        "Authorization": "Bearer {0}".format(config.get("github_access_token"))
-    }
+    headers = {"Authorization": "Bearer {0}".format(config.get("github_access_token"))}
 
     query = """
 {{
@@ -1024,14 +975,17 @@ def do_print_dependabot(subcommand, args):
 
         # Query GitHub's GraphQL API https://docs.github.com/en/graphql
 
-        variables = {
-            "repository-name": repository.name
-        }
+        variables = {"repository-name": repository.name}
         result = run_query(headers, query.format(**variables))
 
         # Parse results.
 
-        nodes = result.get('data', {}).get('repository', {}).get('vulnerabilityAlerts', {}).get('nodes', [])
+        nodes = (
+            result.get("data", {})
+            .get("repository", {})
+            .get("vulnerabilityAlerts", {})
+            .get("nodes", [])
+        )
         if len(nodes) == 0:
             continue
 
@@ -1039,7 +993,9 @@ def do_print_dependabot(subcommand, args):
 
         packages = []
         for node in nodes:
-            package_name = node.get("securityVulnerability", {}).get("package", {}).get('name')
+            package_name = (
+                node.get("securityVulnerability", {}).get("package", {}).get("name")
+            )
             if package_name not in packages:
                 packages.append(package_name)
         packages.sort()
@@ -1053,7 +1009,7 @@ def do_print_dependabot(subcommand, args):
 
 
 def do_print_git_clone(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1077,7 +1033,7 @@ def do_print_git_clone(subcommand, args):
 
 
 def do_print_git_clone_mirror(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1101,7 +1057,7 @@ def do_print_git_clone_mirror(subcommand, args):
 
 
 def do_print_pull_requests(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1128,12 +1084,14 @@ def do_print_pull_requests(subcommand, args):
             assignee = "none"
             if pull.assignee is not None:
                 assignee = pull.assignee.login
-            print_string = "{0} - {1} - {2}".format(repository.name, assignee, pull.title)
+            print_string = "{0} - {1} - {2}".format(
+                repository.name, assignee, pull.title
+            )
             print(print_format.format(print_string))
 
 
 def do_print_repository_names(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1167,7 +1125,7 @@ def do_print_repository_names(subcommand, args):
         github_organization = github.get_organization(organization)
         repos = github_organization.get_repos()
 
-    # Print repository names.
+        # Print repository names.
 
         for repo in repos:
 
@@ -1185,11 +1143,13 @@ def do_print_repository_names(subcommand, args):
                 topics_excluded_list,
                 topics_included_list,
                 topics_not_all_list,
-                topics_not_any_list):
+                topics_not_any_list,
+            ):
                 print(print_format.format(repo.name))
 
+
 def do_print_repository_names_with_description(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1225,7 +1185,7 @@ def do_print_repository_names_with_description(subcommand, args):
         github_organization = github.get_organization(organization)
         repos = github_organization.get_repos()
 
-    # Print repository names.
+        # Print repository names.
 
         for repo in repos:
 
@@ -1243,13 +1203,13 @@ def do_print_repository_names_with_description(subcommand, args):
                 topics_excluded_list,
                 topics_included_list,
                 topics_not_all_list,
-                topics_not_any_list):
+                topics_not_any_list,
+            ):
                 print(print_format.format(repo.name, repo.description))
 
 
-
 def do_print_repository_names_with_pages(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1287,7 +1247,7 @@ def do_print_repository_names_with_pages(subcommand, args):
 
 
 def do_print_submodules_sh(subcommand, args):
-    ''' Print a list of submodules. '''
+    """Print a list of submodules."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1313,21 +1273,21 @@ def do_print_submodules_sh(subcommand, args):
     for repository_key, repository_value in G2_REPOSITORIES.items():
         repo = github_organization.get_repo(repository_key)
         release = repo.get_latest_release()
-        repository_value['version'] = release.title
+        repository_value["version"] = release.title
 
     # Print output.
 
-    print('#!/usr/bin/env bash')
-    print('')
-    print('# Format: repository;version;artifact')
-    print('')
-    print('SUBMODULES=(')
+    print("#!/usr/bin/env bash")
+    print("")
+    print("# Format: repository;version;artifact")
+    print("")
+    print("SUBMODULES=(")
     for key, value in G2_REPOSITORIES.items():
-        version = value.get('version', '0.0.0')
-        artifacts = value.get('artifacts', [])
+        version = value.get("version", "0.0.0")
+        artifacts = value.get("artifacts", [])
         for artifact in artifacts:
             print('    "{0};{1};{2}"'.format(key, version, artifact))
-    print(')')
+    print(")")
 
     # Epilog.
 
@@ -1335,7 +1295,7 @@ def do_print_submodules_sh(subcommand, args):
 
 
 def do_print_branches(subcommand, args):
-    ''' Do a task. '''
+    """Do a task."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1365,7 +1325,7 @@ def do_print_branches(subcommand, args):
 
 
 def do_print_copy_files_from_senzing_install(subcommand, args):
-    ''' Create a bash script to copy files. '''
+    """Create a bash script to copy files."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1378,27 +1338,33 @@ def do_print_copy_files_from_senzing_install(subcommand, args):
 
     # Print output.
 
-    print('#!/usr/bin/env bash')
-    print('')
-    print('# Read metadata.')
-    print('')
-    print('source 01-user-variables.sh')
-    print('')
-    print('# Move files to individual repositories')
-    print('')
+    print("#!/usr/bin/env bash")
+    print("")
+    print("# Read metadata.")
+    print("")
+    print("source 01-user-variables.sh")
+    print("")
+    print("# Move files to individual repositories")
+    print("")
     for key, value in G2_REPOSITORIES.items():
-        artifacts = value.get('artifacts', [])
+        artifacts = value.get("artifacts", [])
         for artifact in artifacts:
             print(
-                "sudo cp ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/{1}".format(artifact, key))
+                "sudo cp ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/{1}".format(
+                    artifact, key
+                )
+            )
             print("sudo rm ${{SOURCE_PYTHON_DIR}}/{0}".format(artifact))
-            print('')
+            print("")
 
-    print('# Move files to g2-python/g2/python ')
-    print('')
+    print("# Move files to g2-python/g2/python ")
+    print("")
     for file in ETC_FILES:
         print(
-            "sudo cp -r  ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/g2-python/g2/python".format(file))
+            "sudo cp -r  ${{SOURCE_PYTHON_DIR}}/{0} ${{GIT_ACCOUNT_DIR}}/g2-python/g2/python".format(
+                file
+            )
+        )
         print("sudo rm -rf ${{SOURCE_PYTHON_DIR}}/{0}".format(file))
         print("")
 
@@ -1408,7 +1374,7 @@ def do_print_copy_files_from_senzing_install(subcommand, args):
 
 
 def do_sleep(subcommand, args):
-    ''' Sleep.  Used for debugging. '''
+    """Sleep.  Used for debugging."""
 
     # Get context from CLI, environment variables, and ini files.
 
@@ -1420,7 +1386,7 @@ def do_sleep(subcommand, args):
 
     # Pull values from configuration.
 
-    sleep_time_in_seconds = config.get('sleep_time_in_seconds')
+    sleep_time_in_seconds = config.get("sleep_time_in_seconds")
 
     # Sleep.
 
@@ -1440,7 +1406,7 @@ def do_sleep(subcommand, args):
 
 
 def do_update_dockerfiles(subcommand, args):
-    ''' Update dockerfiles. '''
+    """Update dockerfiles."""
 
     # Reference: https://gist.github.com/nottrobin/a18f9e33286f9db4b83e48af6d285e29
 
@@ -1458,18 +1424,18 @@ def do_update_dockerfiles(subcommand, args):
     configuration_file = config.get("configuration_file")
     github_access_token = config.get("github_access_token")
     organization = config.get("organization")
-    sleep_time_in_seconds_dockerfiles = config.get('sleep_time_in_seconds_dockerfiles')
+    sleep_time_in_seconds_dockerfiles = config.get("sleep_time_in_seconds_dockerfiles")
 
     # Load configuration file
 
     with open(configuration_file, encoding="utf-8") as file:
-        config['file'] = json.load(file)
+        config["file"] = json.load(file)
 
     # Pull values from configuration file.
 
-    config_repositories = config.get('file', {}).get('repositories', {})
-    config_properties = config.get('file', {}).get('properties', {})
-    config_property_sets = config.get('file', {}).get('propertySets', {})
+    config_repositories = config.get("file", {}).get("repositories", {})
+    config_properties = config.get("file", {}).get("properties", {})
+    config_property_sets = config.get("file", {}).get("propertySets", {})
 
     # Log into GitHub and get the organization.
 
@@ -1497,7 +1463,9 @@ def do_update_dockerfiles(subcommand, args):
 
         aggregated_properties = {}
         for property_set_name in property_set_names:
-            property_set = copy.deepcopy(config_property_sets.get(property_set_name, {}))
+            property_set = copy.deepcopy(
+                config_property_sets.get(property_set_name, {})
+            )
             for property_name, property_value in property_set.items():
                 add_property(aggregated_properties, property_name, property_value)
         for property_name, property_value in properties.items():
@@ -1505,8 +1473,12 @@ def do_update_dockerfiles(subcommand, args):
 
         # Symbolic replacement of property values.
 
-        resolved_properties = symbolic_resolution(aggregated_properties, config_properties)
-        resolved_properties_test = symbolic_resolution(aggregated_properties, config_properties)
+        resolved_properties = symbolic_resolution(
+            aggregated_properties, config_properties
+        )
+        resolved_properties_test = symbolic_resolution(
+            aggregated_properties, config_properties
+        )
         resolved_properties_test.get("env").pop("REFRESHED_AT")
 
         # Short circuit if "skip" requested.
@@ -1518,7 +1490,9 @@ def do_update_dockerfiles(subcommand, args):
         # Debug a particular repository. Will exit on first use.
 
         if resolved_properties.get("debug", False):
-            logging.info(message_info(125, json.dumps(resolved_properties, sort_keys=True)))
+            logging.info(
+                message_info(125, json.dumps(resolved_properties, sort_keys=True))
+            )
             return
 
         # Get values from properties.
@@ -1540,9 +1514,9 @@ def do_update_dockerfiles(subcommand, args):
             logging.info(message_info(122, source_file_name))
 
             source_file = repository.get_contents(source_file_name, main_branch_name)
-            source_file_content = base64.b64decode(source_file.content).decode('utf-8')
+            source_file_content = base64.b64decode(source_file.content).decode("utf-8")
             target_list = []
-            for line in source_file_content.split('\n'):
+            for line in source_file_content.split("\n"):
                 target_list.append(update_line(line, resolved_properties_test))
             target_file = "\n".join(target_list)
             target_file_content = target_file.encode()
@@ -1559,14 +1533,18 @@ def do_update_dockerfiles(subcommand, args):
         # Create or find branch.
 
         repository = github_organization.get_repo(repository_name)
-        refs_heads_branch = 'refs/heads/{branch_name}'.format(branch_name=new_branch_name)
+        refs_heads_branch = "refs/heads/{branch_name}".format(
+            branch_name=new_branch_name
+        )
         sha_of_main_branch = repository.get_branch(main_branch_name).commit.sha
 
         try:
             repository.create_git_ref(refs_heads_branch, sha_of_main_branch)
             logging.info(message_info(121, new_branch_name))
         except Exception as err:
-            logging.warning(message_warning(350, new_branch_name, refs_heads_branch, err))
+            logging.warning(
+                message_warning(350, new_branch_name, refs_heads_branch, err)
+            )
 
         # Process files.
 
@@ -1576,9 +1554,9 @@ def do_update_dockerfiles(subcommand, args):
             # Modify file.
 
             source_file = repository.get_contents(source_file_name, refs_heads_branch)
-            source_file_content = base64.b64decode(source_file.content).decode('utf-8')
+            source_file_content = base64.b64decode(source_file.content).decode("utf-8")
             target_list = []
-            for line in source_file_content.split('\n'):
+            for line in source_file_content.split("\n"):
                 target_list.append(update_line(line, resolved_properties))
             target_file = "\n".join(target_list)
             target_file_content = target_file.encode()
@@ -1590,7 +1568,8 @@ def do_update_dockerfiles(subcommand, args):
                 message=commit_message,
                 content=target_file_content,
                 sha=source_file.sha,
-                branch=new_branch_name)
+                branch=new_branch_name,
+            )
 
         # Create pull request.
 
@@ -1599,7 +1578,8 @@ def do_update_dockerfiles(subcommand, args):
                 title=pull_request_title,
                 body=pull_request_body,
                 base=main_branch_name,
-                head=new_branch_name)
+                head=new_branch_name,
+            )
             pull_request.create_review_request(reviewers)
             pull_request.add_to_assignees(assignee)
             logging.info(message_info(123, pull_request_title))
@@ -1621,10 +1601,11 @@ def do_update_dockerfiles(subcommand, args):
 
 
 def do_version(subcommand, args):
-    ''' Log version information. '''
+    """Log version information."""
 
     logging.info(message_info(294, __version__, __updated__))
     logging.debug(message_debug(902, subcommand, args))
+
 
 # -----------------------------------------------------------------------------
 # Main
@@ -1642,7 +1623,7 @@ if __name__ == "__main__":
         "fatal": logging.FATAL,
         "warning": logging.WARNING,
         "error": logging.ERROR,
-        "critical": logging.CRITICAL
+        "critical": logging.CRITICAL,
     }
 
     LOG_LEVEL_PARAMETER = os.getenv("SENZING_LOG_LEVEL", "info").lower()
@@ -1657,7 +1638,7 @@ if __name__ == "__main__":
 
     # Parse the command line arguments.
 
-    SUBCOMMAND = os.getenv("SENZING_SUBCOMMAND", None)
+    SUBCOMMAND = os.getenv("SENZING_SUBCOMMAND", "value does not exist")
     PARSER = get_parser()
     if len(sys.argv) > 1:
         ARGS = PARSER.parse_args()
@@ -1680,7 +1661,7 @@ if __name__ == "__main__":
 
     # Transform subcommand from CLI parameter to function name string.
 
-    SUBCOMMAND_FUNCTION_NAME = "do_{0}".format(SUBCOMMAND.replace('-', '_'))
+    SUBCOMMAND_FUNCTION_NAME = "do_{0}".format(SUBCOMMAND.replace("-", "_"))
 
     # Test to see if function exists in the code.
 

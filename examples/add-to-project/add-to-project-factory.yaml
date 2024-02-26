@@ -6,9 +6,6 @@ on:
       - opened
       - reopened
 
-permissions:
-  repository-projects: write
-
 jobs:
   add-to-project:
     name: add issue to project

@@ -20,12 +20,12 @@
     export GITHUB_ACCESS_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     ```
 
-## identify-customer.sh
+## add-labels-standardized.sh
 
-1. Run `update-git-action-add-triage-label.sh`.
+1. Run `add-labels-standardized.sh`.
    Example:
 
     ```console
-    cd ${GIT_REPOSITORY_DIR}/examples/identify-customer
-    ./identify-customer.sh
+    cd ${GIT_REPOSITORY_DIR}/examples/add-labels-standardized
+    ./add-labels-standardized.sh
     ```
