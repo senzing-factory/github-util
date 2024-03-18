@@ -417,20 +417,6 @@
         "reviewersDefault"
       ]
     },
-    "risk-score-calculator": {
-      "propertySets": [
-        "common",
-        "baseImageSenzingSenzingapiRuntime",
-        "baseBuilderImageSenzingBuilderDebian",
-        "main",
-        "reviewersDefault"
-      ],
-      "properties": {
-        "reviewers": [
-          "oskar700"
-        ]
-      }
-    },
     "senzing-api-server": {
       "propertySets": [
         "common",
