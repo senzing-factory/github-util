@@ -1,532 +1,532 @@
 {
-    "properties": {
-        "branchNameNew": "github-util/update-dockerfiles/20240119",
-        "commitMessage": "#1 Update version",
-        "imageAlpine": "alpine:3.19.0@sha256:51b67269f354137895d43f3b3d810bfacd3945438e94dc5ac55fdac340352f48",
-        "imageAmazon": "amazonlinux:2@sha256:c7bb98aab16b51fdda5072ce1956ba7f7b9d8f4a63ab7d005f5e936dda5dff37",
-        "imageBusybox": "busybox:1.36.1@sha256:3d3698b745b0c67ddf2c515650b42955b0bcd123c92060008aae4f4aac1c77b3",
-        "imageDebian": "debian:11.8-slim@sha256:41c3fecb70015fd9c72d6df95573de3f92d5f4f46fdabe8dbd8d2bfb1531594d",
-        "imageGolang": "golang:1.21.6-bullseye@sha256:adf7ccb07fe8ccadf7bb0317f02d2c3a4916f824a23f6975fd36c4bd7feece3f",
-        "imageIbmcomDb2": "ibmcom/db2:11.5.8.0@sha256:d678ec116f66992366bf8e7f23df24fe16ccc3f70710243d2c88e3c687670e4c",
-        "imageJupyter": "jupyter/minimal-notebook:ubuntu-20.04@sha256:143f7cc7e7bdf5a86c0ef3b2717c24d477359a3cf798b243c574d3efe453bfaa",
-        "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:c89455cc68bd43418b41e24b4de5408038f94bab960804981c702f449ceb8185",
-        "imageNodeAlpine": "node:16-alpine3.18@sha256:a1f9d027912b58a7c75be7716c97cfbc6d3099f3a97ed84aa490be9dee20e787",
-        "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:503446c15c6236291222f8192513c2eb56a02a8949cbadf4fe78cce19815c734",
-        "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.8.2",
-        "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.8.2",
-        "imageSenzingSenzingBase": "senzing/senzing-base:1.6.23",
-        "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.22",
-        "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
-        "pullRequestTitle": "github-util: Update FROM version",
-        "refreshedAt": "2024-01-19"
+  "properties": {
+    "branchNameNew": "github-util/update-dockerfiles/20240119",
+    "commitMessage": "#1 Update version",
+    "imageAlpine": "alpine:3.19.1@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b",
+    "imageAmazon": "amazonlinux:2@sha256:75f546e9de2593384b80137b0c5fb02e824c4e2839b6c15c1141b9609a0fefea",
+    "imageBusybox": "busybox:1.36.1@sha256:650fd573e056b679a5110a70aabeb01e26b76e545ec4b9c70a9523f2dfaf18c6",
+    "imageDebian": "debian:11.9-slim@sha256:a165446a88794db4fec31e35e9441433f9552ae048fb1ed26df352d2b537cb96",
+    "imageGolang": "golang:1.22.1-bullseye@sha256:dcff0d950cb4648fec14ee51baa76bf27db3bb1e70a49f75421a8828db7b9910",
+    "imageIbmcomDb2": "ibmcom/db2:11.5.8.0@sha256:d678ec116f66992366bf8e7f23df24fe16ccc3f70710243d2c88e3c687670e4c",
+    "imageJupyter": "jupyter/minimal-notebook:ubuntu-20.04@sha256:143f7cc7e7bdf5a86c0ef3b2717c24d477359a3cf798b243c574d3efe453bfaa",
+    "imageLambdaPython": "public.ecr.aws/lambda/python:3.8@sha256:c89455cc68bd43418b41e24b4de5408038f94bab960804981c702f449ceb8185",
+    "imageNodeAlpine": "node:16-alpine3.18@sha256:a1f9d027912b58a7c75be7716c97cfbc6d3099f3a97ed84aa490be9dee20e787",
+    "imageNodeBullseyeSlim": "node:16-bullseye-slim@sha256:503446c15c6236291222f8192513c2eb56a02a8949cbadf4fe78cce19815c734",
+    "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.9.0",
+    "imageSenzingSenzingapiTools": "senzing/senzingapi-tools:3.9.0",
+    "imageSenzingSenzingBase": "senzing/senzing-base:1.6.23",
+    "imageSenzingBuilderDebian": "senzing/base-image-debian:1.0.22",
+    "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
+    "pullRequestTitle": "github-util: Update FROM version",
+    "refreshedAt": "2024-01-19"
+  },
+  "propertySets": {
+    "baseBuilderImageDebian": {
+      "arg": {
+        "BASE_BUILDER_IMAGE": "imageDebian"
+      }
     },
-    "propertySets": {
-        "baseBuilderImageDebian": {
-            "arg": {
-                "BASE_BUILDER_IMAGE": "imageDebian"
-            }
-        },
-        "baseBuilderImageSenzingBuilderDebian": {
-            "arg": {
-                "BASE_BUILDER_IMAGE": "imageSenzingBuilderDebian"
-            }
-        },
-        "baseImageAlpine": {
-            "arg": {
-                "BASE_IMAGE": "imageAlpine"
-            }
-        },
-        "baseImageAmazon": {
-            "arg": {
-                "BASE_IMAGE": "imageAmazon"
-            }
-        },
-        "baseImageBusybox": {
-            "arg": {
-                "BASE_IMAGE": "imageBusybox"
-            }
-        },
-        "baseImageDebian": {
-            "arg": {
-                "BASE_IMAGE": "imageDebian"
-            }
-        },
-        "baseImageGolang": {
-            "arg": {
-                "IMAGE_GO_BUILDER": "imageGolang",
-                "IMAGE_FINAL": "imageSenzingSenzingapiRuntime"
-            }
-        },
-        "baseImageIbmcomDb2": {
-            "arg": {
-                "BASE_IMAGE": "imageIbmcomDb2"
-            }
-        },
-        "baseImageJupyter": {
-            "arg": {
-                "BASE_IMAGE": "imageJupyter"
-            }
-        },
-        "baseImageLambdaPython": {
-            "arg": {
-                "BASE_IMAGE": "imageLambdaPython"
-            }
-        },
-        "baseImageNode": {
-            "arg": {
-                "BUILD_IMAGE": "imageNodeBullseyeSlim",
-                "PROD_IMAGE": "imageNodeAlpine",
-                "TEST_IMAGE": "imageNodeBullseyeSlim"
-            }
-        },
-        "baseImageSenzing": {
-            "arg": {
-                "BASE_IMAGE": "imageSenzingSenzingBase"
-            }
-        },
-        "baseImageSenzingSenzingapiRuntime": {
-            "arg": {
-                "BASE_IMAGE": "imageSenzingSenzingapiRuntime"
-            }
-        },
-        "baseImageSenzingSenzingapiTools": {
-            "arg": {
-                "BASE_IMAGE": "imageSenzingSenzingapiTools"
-            }
-        },
-        "common": {
-            "branchNameMain": "main",
-            "branchNameNew": "branchNameNew",
-            "commitMessage": "commitMessage",
-            "env": {
-                "REFRESHED_AT": "refreshedAt"
-            },
-            "files": [
-                "Dockerfile"
-            ],
-            "pullRequestBody": "pullRequestBody",
-            "pullRequestTitle": "pullRequestTitle"
-        },
-        "debug": {
-            "debug": true
-        },
-        "main": {
-            "branchNameMain": "main"
-        },
-        "reviewersDefault": {
-            "assignee": "docktermj",
-            "reviewers": [
-                "roncewind"
-            ]
-        },
-        "reviewersNode": {
-            "assignee": "arawinters",
-            "reviewers": [
-                "roncewind"
-            ]
-        },
-        "skip": {
-            "skip": true
-        }
+    "baseBuilderImageSenzingBuilderDebian": {
+      "arg": {
+        "BASE_BUILDER_IMAGE": "imageSenzingBuilderDebian"
+      }
     },
-    "repositories": {
-        "aws-lambda-cognito-authorizer": {
-            "propertySets": [
-                "common",
-                "baseImageLambdaPython",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "aws-lambda-self-signed-certificate": {
-            "propertySets": [
-                "common",
-                "baseImageLambdaPython",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "configurator": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "connector-neo4j": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageSenzingBuilderDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "data-encryption-aes256cbc-sample": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-apt": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-aptdownloader": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-compose-air-gapper": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-db2-driver-installer": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-ibm-db2": {
-            "propertySets": [
-                "common",
-                "baseImageIbmcomDb2",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-init-container": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-installer": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-python-demo": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-senzing-console": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiTools",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-sshd": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiTools",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-test": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-web-app-demo": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ],
-            "properties": {
-                "reviewers": [
-                    "arawinters"
-                ]
-            }
-        },
-        "docker-wrap-image-with-senzing-apt": {
-            "propertySets": [
-                "common",
-                "baseImageSenzing",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-wrap-image-with-senzing-data": {
-            "propertySets": [
-                "common",
-                "baseImageSenzing",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-xterm": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiTools",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "docker-yum": {
-            "propertySets": [
-                "common",
-                "baseImageAmazon",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "dockerhub-util": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "entity-search-web-app": {
-            "propertySets": [
-                "common",
-                "baseImageNode",
-                "main",
-                "reviewersNode"
-            ]
-        },
-        "entity-search-web-app-console": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiTools",
-                "main",
-                "reviewersNode"
-            ]
-        },
-        "file-loader": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "g2command": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiTools",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "g2configtool": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiTools",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "g2loader": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiTools",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "g2search": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiTools",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "init-database": {
-            "propertySets": [
-                "common",
-                "baseImageGolang",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "init-mysql": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "init-postgresql": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "postgresql-client": {
-            "propertySets": [
-                "common",
-                "baseImageAlpine",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "redoer": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "resolver": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "risk-score-calculator": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageSenzingBuilderDebian",
-                "main",
-                "reviewersDefault"
-            ],
-            "properties": {
-                "reviewers": [
-                    "oskar700"
-                ]
-            }
-        },
-        "senzing-api-server": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageSenzingBuilderDebian",
-                "main",
-                "reviewersDefault"
-            ],
-            "properties": {
-                "reviewers": [
-                    "barrycaceres"
-                ]
-            }
-        },
-        "senzing-listener": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageSenzingBuilderDebian",
-                "reviewersDefault"
-            ]
-        },
-        "senzing-poc-server": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "baseBuilderImageSenzingBuilderDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "senzing-tools": {
-            "propertySets": [
-                "common",
-                "baseImageGolang",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "serve-grpc": {
-            "propertySets": [
-                "common",
-                "baseImageGolang",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "stream-loader": {
-            "propertySets": [
-                "common",
-                "baseImageSenzingSenzingapiRuntime",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "stream-logger": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "stream-producer": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "template-docker": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "template-python": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "main",
-                "reviewersDefault"
-            ]
-        },
-        "test-ground": {
-            "propertySets": [
-                "common",
-                "baseImageDebian",
-                "reviewersDefault"
-            ],
-            "properties": {
-                "branchNameMain": "main"
-            }
-        }
+    "baseImageAlpine": {
+      "arg": {
+        "BASE_IMAGE": "imageAlpine"
+      }
+    },
+    "baseImageAmazon": {
+      "arg": {
+        "BASE_IMAGE": "imageAmazon"
+      }
+    },
+    "baseImageBusybox": {
+      "arg": {
+        "BASE_IMAGE": "imageBusybox"
+      }
+    },
+    "baseImageDebian": {
+      "arg": {
+        "BASE_IMAGE": "imageDebian"
+      }
+    },
+    "baseImageGolang": {
+      "arg": {
+        "IMAGE_GO_BUILDER": "imageGolang",
+        "IMAGE_FINAL": "imageSenzingSenzingapiRuntime"
+      }
+    },
+    "baseImageIbmcomDb2": {
+      "arg": {
+        "BASE_IMAGE": "imageIbmcomDb2"
+      }
+    },
+    "baseImageJupyter": {
+      "arg": {
+        "BASE_IMAGE": "imageJupyter"
+      }
+    },
+    "baseImageLambdaPython": {
+      "arg": {
+        "BASE_IMAGE": "imageLambdaPython"
+      }
+    },
+    "baseImageNode": {
+      "arg": {
+        "BUILD_IMAGE": "imageNodeBullseyeSlim",
+        "PROD_IMAGE": "imageNodeAlpine",
+        "TEST_IMAGE": "imageNodeBullseyeSlim"
+      }
+    },
+    "baseImageSenzing": {
+      "arg": {
+        "BASE_IMAGE": "imageSenzingSenzingBase"
+      }
+    },
+    "baseImageSenzingSenzingapiRuntime": {
+      "arg": {
+        "BASE_IMAGE": "imageSenzingSenzingapiRuntime"
+      }
+    },
+    "baseImageSenzingSenzingapiTools": {
+      "arg": {
+        "BASE_IMAGE": "imageSenzingSenzingapiTools"
+      }
+    },
+    "common": {
+      "branchNameMain": "main",
+      "branchNameNew": "branchNameNew",
+      "commitMessage": "commitMessage",
+      "env": {
+        "REFRESHED_AT": "refreshedAt"
+      },
+      "files": [
+        "Dockerfile"
+      ],
+      "pullRequestBody": "pullRequestBody",
+      "pullRequestTitle": "pullRequestTitle"
+    },
+    "debug": {
+      "debug": true
+    },
+    "main": {
+      "branchNameMain": "main"
+    },
+    "reviewersDefault": {
+      "assignee": "docktermj",
+      "reviewers": [
+        "roncewind"
+      ]
+    },
+    "reviewersNode": {
+      "assignee": "arawinters",
+      "reviewers": [
+        "roncewind"
+      ]
+    },
+    "skip": {
+      "skip": true
     }
+  },
+  "repositories": {
+    "aws-lambda-cognito-authorizer": {
+      "propertySets": [
+        "common",
+        "baseImageLambdaPython",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "aws-lambda-self-signed-certificate": {
+      "propertySets": [
+        "common",
+        "baseImageLambdaPython",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "configurator": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "connector-neo4j": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "baseBuilderImageSenzingBuilderDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "data-encryption-aes256cbc-sample": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "baseBuilderImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-apt": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-aptdownloader": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-compose-air-gapper": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-db2-driver-installer": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-ibm-db2": {
+      "propertySets": [
+        "common",
+        "baseImageIbmcomDb2",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-init-container": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-installer": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-python-demo": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-senzing-console": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiTools",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-sshd": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiTools",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-test": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-web-app-demo": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ],
+      "properties": {
+        "reviewers": [
+          "arawinters"
+        ]
+      }
+    },
+    "docker-wrap-image-with-senzing-apt": {
+      "propertySets": [
+        "common",
+        "baseImageSenzing",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-wrap-image-with-senzing-data": {
+      "propertySets": [
+        "common",
+        "baseImageSenzing",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-xterm": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiTools",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "docker-yum": {
+      "propertySets": [
+        "common",
+        "baseImageAmazon",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "dockerhub-util": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "entity-search-web-app": {
+      "propertySets": [
+        "common",
+        "baseImageNode",
+        "main",
+        "reviewersNode"
+      ]
+    },
+    "entity-search-web-app-console": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiTools",
+        "main",
+        "reviewersNode"
+      ]
+    },
+    "file-loader": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "g2command": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiTools",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "g2configtool": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiTools",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "g2loader": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiTools",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "g2search": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiTools",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "init-database": {
+      "propertySets": [
+        "common",
+        "baseImageGolang",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "init-mysql": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "init-postgresql": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "postgresql-client": {
+      "propertySets": [
+        "common",
+        "baseImageAlpine",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "redoer": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "resolver": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "risk-score-calculator": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "baseBuilderImageSenzingBuilderDebian",
+        "main",
+        "reviewersDefault"
+      ],
+      "properties": {
+        "reviewers": [
+          "oskar700"
+        ]
+      }
+    },
+    "senzing-api-server": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "baseBuilderImageSenzingBuilderDebian",
+        "main",
+        "reviewersDefault"
+      ],
+      "properties": {
+        "reviewers": [
+          "barrycaceres"
+        ]
+      }
+    },
+    "senzing-listener": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "baseBuilderImageSenzingBuilderDebian",
+        "reviewersDefault"
+      ]
+    },
+    "senzing-poc-server": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "baseBuilderImageSenzingBuilderDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "senzing-tools": {
+      "propertySets": [
+        "common",
+        "baseImageGolang",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "serve-grpc": {
+      "propertySets": [
+        "common",
+        "baseImageGolang",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "stream-loader": {
+      "propertySets": [
+        "common",
+        "baseImageSenzingSenzingapiRuntime",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "stream-logger": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "stream-producer": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "template-docker": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "template-python": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "main",
+        "reviewersDefault"
+      ]
+    },
+    "test-ground": {
+      "propertySets": [
+        "common",
+        "baseImageDebian",
+        "reviewersDefault"
+      ],
+      "properties": {
+        "branchNameMain": "main"
+      }
+    }
+  }
 }
