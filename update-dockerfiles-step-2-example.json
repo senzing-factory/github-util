@@ -1,11 +1,11 @@
 {
   "properties": {
-    "branchNameNew": "github-util/update-dockerfiles/20240314-1",
+    "branchNameNew": "github-util/update-dockerfiles/20240522",
     "commitMessage": "#1 Update version",
-    "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.9.0",
+    "imageSenzingSenzingapiRuntime": "senzing/senzingapi-runtime:3.10.1",
     "pullRequestBody": "Update underlying docker images.\n\nIssue number: #1",
     "pullRequestTitle": "github-util: Update FROM version",
-    "refreshedAt": "2024-03-14"
+    "refreshedAt": "2024-05-22"
   },
   "propertySets": {
     "baseImageSenzingSenzingapiRuntime": {
@@ -33,9 +33,9 @@
       "branchNameMain": "main"
     },
     "reviewersDefault": {
-      "assignee": "docktermj",
+      "assignee": "kernelsam",
       "reviewers": [
-        "roncewind"
+        "docktermj"
       ]
     },
     "skip": {
