@@ -2,7 +2,7 @@
 
 ## Overview
 
-The [github-util.py](github-util.py) python script works with GitHub metadata.
+The [github-util.py] python script works with GitHub metadata.
 
 To see all of the subcommands, run:
 
@@ -37,3 +37,5 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
 ```
+
+[github-util.py]: github-util.py
