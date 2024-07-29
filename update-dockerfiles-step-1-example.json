@@ -43,23 +43,7 @@
     }
   },
   "repositories": {
-    "docker-base-image-debian": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
-    },
     "senzingapi-runtime": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
-    },
-    "docker-senzing-base": {
       "propertySets": [
         "common",
         "baseImageDebian",
