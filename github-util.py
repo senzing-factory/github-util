@@ -1466,8 +1466,6 @@ def do_update_dockerfiles(subcommand, args):
     # Pull values from configuration.
 
     configuration_file = config.get("configuration_file")
-    # github_access_token = config.get("github_access_token")
-    organization = config.get("organization")
     github_access_token = config.get("github_access_token")
     github_author = (
         config.get("github_author")
@@ -1481,6 +1479,7 @@ def do_update_dockerfiles(subcommand, args):
         else get_gitconfig_value("signingkey")
     )
     github_ssh_key_file = config.get("github_ssh_key_file")
+    organization = config.get("organization")
     sleep_time_in_seconds_dockerfiles = config.get("sleep_time_in_seconds_dockerfiles")
 
     # Load configuration file
