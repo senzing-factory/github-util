@@ -17,19 +17,25 @@
 # Import from standard library. https://docs.python.org/3/library/
 
 import argparse
-import base64
+import configparser
 import copy
+import fileinput
 import json
 import linecache
 import logging
 import os
 import re
+import shutil
 import signal
 import sys
+import tempfile
 import time
 
 import requests
 from github import Github
+from git import Repo
+from git import Git
+from pathlib import Path
 
 # Import from https://pypi.org/
 
@@ -338,6 +344,21 @@ def get_parser():
                     "metavar": "SENZING_CONFIGURATION_FILE",
                     "help": "Configuration file. DEFAULT: None",
                 },
+                "--github-author": {
+                    "dest": "github_author",
+                    "metavar": "GITHUB_AUTHOR",
+                    "help": "GitHub author. Defined in .gitconfig. DEFAULT: pulled from ~/.gitconfig",
+                },
+                "--github-gpg-signing-key": {
+                    "dest": "github_gpg_signing_key",
+                    "metavar": "GITHUB_GPG_SIGNING_KEY",
+                    "help": "GitHub gpg signing key. Defined in .gitconfig. DEFAULT: pulled from ~/.gitconfig",
+                },
+                "--github-ssh-key-file": {
+                    "dest": "github_ssh_key_file",
+                    "metavar": "GITHUB_SSH_KEY_FILE",
+                    "help": "GitHub ssh key file. Used for cloning. DEFAULT: None",
+                },
                 "--sleep-time-in-seconds-dockerfiles": {
                     "dest": "sleep_time_in_seconds_dockerfiles",
                     "metavar": "SENZING_SLEEP_TIME_IN_SECONDS_DOCKERFILES",
@@ -606,7 +627,8 @@ def get_configuration(subcommand, args):
 
 
 def validate_configuration(config):
-    """Check aggregate configuration from commandline options, environment variables, config files, and defaults."""
+    """Check aggregate configuration from commandline options,
+    environment variables, config files, and defaults."""
 
     user_warning_messages = []
     user_error_messages = []
@@ -668,13 +690,13 @@ def construct_line(command, line, properties):
             key = match.group(1).strip()
             value = properties.get(key)
             if value:
-                result = "{0} {1}={2}".format(command, key, value)
+                result = "{0} {1}={2}\n".format(command, key, value)
     return result
 
 
 def create_signal_handler_function(args):
-    """Tricky code.  Uses currying technique. Create a function for signal handling.
-    that knows about "args".
+    """Tricky code.  Uses currying technique. Create a function
+    for signal handling that knows about "args".
     """
 
     def result_function(signal_number, frame):
@@ -795,7 +817,8 @@ def has_valid_topic(
 
 
 def run_query(headers, query):
-    """A simple function to use requests.post to make the API call. Note the json= section."""
+    """A simple function to use requests.post to make the API call.
+    Note the json= section."""
 
     request = requests.post(
         "https://api.github.com/graphql", json={"query": query}, headers=headers
@@ -857,6 +880,27 @@ def add_property(dictionary, property_name, property_value):
         dictionary[property_name].extend(property_value)
     else:
         dictionary[property_name] = property_value
+
+
+def get_gitconfig_value(gitconfig_key):
+    """Get author defined in ~/.gitconfig"""
+
+    home = str(Path.home())
+    gitconfig_path = f"{home}/.gitconfig"
+    config = configparser.ConfigParser()
+    config.read(gitconfig_path)
+
+    return config.get("user", gitconfig_key)
+
+
+def delete_directory(directory_to_delete):
+    """Delete the supplied directory"""
+
+    if os.path.isdir(directory_to_delete):
+        try:
+            shutil.rmtree(directory_to_delete)
+        except OSError as e:
+            print("Error: %s - %s." % (e.filename, e.strerror))
 
 
 # -----------------------------------------------------------------------------
@@ -1422,8 +1466,21 @@ def do_update_dockerfiles(subcommand, args):
     # Pull values from configuration.
 
     configuration_file = config.get("configuration_file")
-    github_access_token = config.get("github_access_token")
+    # github_access_token = config.get("github_access_token")
     organization = config.get("organization")
+    github_access_token = config.get("github_access_token")
+    github_author = (
+        config.get("github_author")
+        if config.get("github_author") is not None
+        else get_gitconfig_value("email")
+    )
+    github_gpg_signing_key = config.get("github_gpg_signing_key")
+    github_gpg_signing_key = (
+        config.get("github_gpg_signing_key")
+        if config.get("github_gpg_signing_key") is not None
+        else get_gitconfig_value("signingkey")
+    )
+    github_ssh_key_file = config.get("github_ssh_key_file")
     sleep_time_in_seconds_dockerfiles = config.get("sleep_time_in_seconds_dockerfiles")
 
     # Load configuration file
@@ -1436,11 +1493,6 @@ def do_update_dockerfiles(subcommand, args):
     config_repositories = config.get("file", {}).get("repositories", {})
     config_properties = config.get("file", {}).get("properties", {})
     config_property_sets = config.get("file", {}).get("propertySets", {})
-
-    # Log into GitHub and get the organization.
-
-    github = Github(github_access_token)
-    github_organization = github.get_organization(organization)
 
     # Process each repository listed in the configuration.
 
@@ -1506,97 +1558,115 @@ def do_update_dockerfiles(subcommand, args):
         reviewers = resolved_properties.get("reviewers")
         source_file_names = resolved_properties.get("files")
 
-        # Determine if there are any changes.
+        # Clone the repository
 
-        has_changed = False
-        repository = github_organization.get_repo(repository_name)
-        for source_file_name in source_file_names:
-            logging.info(message_info(122, source_file_name))
-
-            source_file = repository.get_contents(source_file_name, main_branch_name)
-            source_file_content = base64.b64decode(source_file.content).decode("utf-8")
-            target_list = []
-            for line in source_file_content.split("\n"):
-                target_list.append(update_line(line, resolved_properties_test))
-            target_file = "\n".join(target_list)
-            target_file_content = target_file.encode()
-
-            if source_file_content != target_file:
-                has_changed = True
-
-        # If no changes, skip making a Pull Request.
-
-        if not has_changed:
-            logging.info(message_info(126, repository_name))
-            continue
+        git_ssh_cmd = "ssh -i %s" % github_ssh_key_file
+        local_repository_path = tempfile.mkdtemp()
+        repository_url = (
+            "git@github.com:" + organization + "/" + repository_name + ".git"
+        )
+        with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
+            Repo.clone_from(
+                repository_url, local_repository_path, branch=main_branch_name
+            )
 
         # Create or find branch.
 
-        repository = github_organization.get_repo(repository_name)
+        local_repo = Repo(local_repository_path)
         refs_heads_branch = "refs/heads/{branch_name}".format(
             branch_name=new_branch_name
         )
-        sha_of_main_branch = repository.get_branch(main_branch_name).commit.sha
 
-        try:
-            repository.create_git_ref(refs_heads_branch, sha_of_main_branch)
-            logging.info(message_info(121, new_branch_name))
-        except Exception as err:
-            logging.warning(
-                message_warning(350, new_branch_name, refs_heads_branch, err)
-            )
+        if new_branch_name in local_repo.remote().refs:
+            try:
+                local_repo.git.checkout(new_branch_name)
+                logging.info(message_info(121, new_branch_name))
+            except Exception as err:
+                logging.warning(
+                    message_warning(350, new_branch_name, refs_heads_branch, err)
+                )
+        else:
+            try:
+                local_repo.git.checkout("-b", new_branch_name)
+                logging.info(message_info(121, new_branch_name))
+            except Exception as err:
+                logging.warning(
+                    message_warning(350, new_branch_name, refs_heads_branch, err)
+                )
 
         # Process files.
+
+        has_changed = False
 
         for source_file_name in source_file_names:
             logging.info(message_info(122, source_file_name))
 
             # Modify file.
 
-            source_file = repository.get_contents(source_file_name, refs_heads_branch)
-            source_file_content = base64.b64decode(source_file.content).decode("utf-8")
-            target_list = []
-            for line in source_file_content.split("\n"):
-                target_list.append(update_line(line, resolved_properties))
-            target_file = "\n".join(target_list)
-            target_file_content = target_file.encode()
+            source_file = local_repository_path + "/" + source_file_name
+            for line in fileinput.input(source_file, inplace=True):
+                print("{}".format(update_line(line, resolved_properties)), end="")
 
-            # Commit file.
+            if local_repo.index.diff(None):
 
-            repository.update_file(
-                path=source_file_name,
-                message=commit_message,
-                content=target_file_content,
-                sha=source_file.sha,
-                branch=new_branch_name,
-            )
+                has_changed = True
 
-        # Create pull request.
+                # Commit file.
 
-        try:
-            pull_request = repository.create_pull(
-                title=pull_request_title,
-                body=pull_request_body,
-                base=main_branch_name,
-                head=new_branch_name,
-            )
-            pull_request.create_review_request(reviewers)
-            pull_request.add_to_assignees(assignee)
-            logging.info(message_info(123, pull_request_title))
-        except Exception as err:
-            logging.error(message_error(351, pull_request_title, err))
+                local_repo.index.add(source_file_name)
+                local_repo.index.write()
+                local_repo.git.commit(
+                    "-S",
+                    f"--gpg-sign={github_gpg_signing_key}",
+                    f"--author={github_author}",
+                    "-m",
+                    commit_message,
+                )
 
-        # Add to list of changed repositories.
+        # If no changes, skip making a Pull Request.
 
-        changed_repositories.append(repository_name)
+        if not has_changed:
+            delete_directory(local_repository_path)
+            logging.info(message_info(126, repository_name))
+            continue
 
-    # Log changed repositories.
+        else:
+            with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
+                local_repo.git.push("origin", new_branch_name)
 
-    changed_repository_list = ", ".join(changed_repositories)
-    logging.info(message_info(140, changed_repository_list))
+            # Log into GitHub and get the organization.
+
+            github = Github(github_access_token)
+            github_organization = github.get_organization(organization)
+            repository = github_organization.get_repo(repository_name)
+
+            # Create pull request.
+
+            try:
+                pull_request = repository.create_pull(
+                    title=pull_request_title,
+                    body=pull_request_body,
+                    base=main_branch_name,
+                    head=new_branch_name,
+                )
+                pull_request.create_review_request(reviewers)
+                pull_request.add_to_assignees(assignee)
+                logging.info(message_info(123, pull_request_title))
+            except Exception as err:
+                logging.error(message_error(351, pull_request_title, err))
+
+            # Add to list of changed repositories.
+
+            changed_repositories.append(repository_name)
+
+            # Log changed repositories.
+
+            changed_repository_list = ", ".join(changed_repositories)
+            logging.info(message_info(140, changed_repository_list))
 
     # Epilog.
 
+    delete_directory(local_repository_path)
     logging.info(exit_template(config))
 
 
