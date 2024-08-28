@@ -24,13 +24,13 @@ import json
 import linecache
 import logging
 import os
-from pathlib import Path
 import re
 import shutil
 import signal
 import sys
 import tempfile
 import time
+from pathlib import Path
 
 import requests
 from git import Git, Repo
