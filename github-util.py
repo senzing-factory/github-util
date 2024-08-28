@@ -883,7 +883,7 @@ def add_property(dictionary, property_name, property_value):
 
 
 def get_gitconfig_value(gitconfig_key):
-    """Get author defined in ~/.gitconfig"""
+    """Get value for key defined in ~/.gitconfig"""
 
     home = str(Path.home())
     gitconfig_path = f"{home}/.gitconfig"
