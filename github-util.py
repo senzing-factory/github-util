@@ -24,6 +24,7 @@ import json
 import linecache
 import logging
 import os
+from pathlib import Path
 import re
 import shutil
 import signal
@@ -32,10 +33,8 @@ import tempfile
 import time
 
 import requests
+from git import Git, Repo
 from github import Github
-from git import Repo
-from git import Git
-from pathlib import Path
 
 # Import from https://pypi.org/
 
@@ -1629,39 +1628,38 @@ def do_update_dockerfiles(subcommand, args):
             logging.info(message_info(126, repository_name))
             continue
 
-        else:
-            with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
-                local_repo.git.push("origin", new_branch_name)
+        with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
+            local_repo.git.push("origin", new_branch_name)
 
-            # Log into GitHub and get the organization.
+        # Log into GitHub and get the organization.
 
-            github = Github(github_access_token)
-            github_organization = github.get_organization(organization)
-            repository = github_organization.get_repo(repository_name)
+        github = Github(github_access_token)
+        github_organization = github.get_organization(organization)
+        repository = github_organization.get_repo(repository_name)
 
-            # Create pull request.
+        # Create pull request.
 
-            try:
-                pull_request = repository.create_pull(
-                    title=pull_request_title,
-                    body=pull_request_body,
-                    base=main_branch_name,
-                    head=new_branch_name,
-                )
-                pull_request.create_review_request(reviewers)
-                pull_request.add_to_assignees(assignee)
-                logging.info(message_info(123, pull_request_title))
-            except Exception as err:
-                logging.error(message_error(351, pull_request_title, err))
+        try:
+            pull_request = repository.create_pull(
+                title=pull_request_title,
+                body=pull_request_body,
+                base=main_branch_name,
+                head=new_branch_name,
+            )
+            pull_request.create_review_request(reviewers)
+            pull_request.add_to_assignees(assignee)
+            logging.info(message_info(123, pull_request_title))
+        except Exception as err:
+            logging.error(message_error(351, pull_request_title, err))
 
-            # Add to list of changed repositories.
+        # Add to list of changed repositories.
 
-            changed_repositories.append(repository_name)
+        changed_repositories.append(repository_name)
 
-            # Log changed repositories.
+        # Log changed repositories.
 
-            changed_repository_list = ", ".join(changed_repositories)
-            logging.info(message_info(140, changed_repository_list))
+        changed_repository_list = ", ".join(changed_repositories)
+        logging.info(message_info(140, changed_repository_list))
 
     # Epilog.
 
