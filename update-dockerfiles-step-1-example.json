@@ -20,9 +20,7 @@
       "env": {
         "REFRESHED_AT": "refreshedAt"
       },
-      "files": [
-        "Dockerfile"
-      ],
+      "files": ["Dockerfile"],
       "pullRequestBody": "pullRequestBody",
       "pullRequestTitle": "pullRequestTitle"
     },
@@ -34,9 +32,7 @@
     },
     "reviewersDefault": {
       "assignee": "kernelsam",
-      "reviewers": [
-        "docktermj"
-      ]
+      "reviewers": ["docktermj"]
     },
     "skip": {
       "skip": true
@@ -44,12 +40,7 @@
   },
   "repositories": {
     "senzingapi-runtime": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     }
   }
 }

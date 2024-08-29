@@ -101,9 +101,7 @@
       "env": {
         "REFRESHED_AT": "refreshedAt"
       },
-      "files": [
-        "Dockerfile"
-      ],
+      "files": ["Dockerfile"],
       "pullRequestBody": "pullRequestBody",
       "pullRequestTitle": "pullRequestTitle"
     },
@@ -115,15 +113,11 @@
     },
     "reviewersDefault": {
       "assignee": "kernelsam",
-      "reviewers": [
-        "docktermj"
-      ]
+      "reviewers": ["docktermj"]
     },
     "reviewersNode": {
       "assignee": "kernelsam",
-      "reviewers": [
-        "docktermj"
-      ]
+      "reviewers": ["docktermj"]
     },
     "skip": {
       "skip": true
@@ -173,36 +167,16 @@
       ]
     },
     "docker-apt": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "docker-aptdownloader": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "docker-compose-air-gapper": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "docker-db2-driver-installer": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "docker-ibm-db2": {
       "propertySets": [
@@ -221,12 +195,7 @@
       ]
     },
     "docker-installer": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "docker-python-demo": {
       "propertySets": [
@@ -253,12 +222,7 @@
       ]
     },
     "docker-test": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "docker-web-app-demo": {
       "propertySets": [
@@ -268,26 +232,14 @@
         "reviewersDefault"
       ],
       "properties": {
-        "reviewers": [
-          "arawinters"
-        ]
+        "reviewers": ["arawinters"]
       }
     },
     "docker-wrap-image-with-senzing-apt": {
-      "propertySets": [
-        "common",
-        "baseImageSenzing",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageSenzing", "main", "reviewersDefault"]
     },
     "docker-wrap-image-with-senzing-data": {
-      "propertySets": [
-        "common",
-        "baseImageSenzing",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageSenzing", "main", "reviewersDefault"]
     },
     "docker-xterm": {
       "propertySets": [
@@ -298,28 +250,13 @@
       ]
     },
     "docker-yum": {
-      "propertySets": [
-        "common",
-        "baseImageAmazon",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageAmazon", "main", "reviewersDefault"]
     },
     "dockerhub-util": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "entity-search-web-app": {
-      "propertySets": [
-        "common",
-        "baseImageNode",
-        "main",
-        "reviewersNode"
-      ]
+      "propertySets": ["common", "baseImageNode", "main", "reviewersNode"]
     },
     "entity-search-web-app-console": {
       "propertySets": [
@@ -370,12 +307,7 @@
       ]
     },
     "init-database": {
-      "propertySets": [
-        "common",
-        "baseImageGolang",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageGolang", "main", "reviewersDefault"]
     },
     "init-mysql": {
       "propertySets": [
@@ -394,12 +326,7 @@
       ]
     },
     "postgresql-client": {
-      "propertySets": [
-        "common",
-        "baseImageAlpine",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageAlpine", "main", "reviewersDefault"]
     },
     "redoer": {
       "propertySets": [
@@ -426,9 +353,7 @@
         "reviewersDefault"
       ],
       "properties": {
-        "reviewers": [
-          "barrycaceres"
-        ]
+        "reviewers": ["barrycaceres"]
       }
     },
     "senzing-listener": {
@@ -449,20 +374,10 @@
       ]
     },
     "senzing-tools": {
-      "propertySets": [
-        "common",
-        "baseImageGolang",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageGolang", "main", "reviewersDefault"]
     },
     "serve-grpc": {
-      "propertySets": [
-        "common",
-        "baseImageGolang",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageGolang", "main", "reviewersDefault"]
     },
     "stream-loader": {
       "propertySets": [
@@ -473,43 +388,19 @@
       ]
     },
     "stream-logger": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "stream-producer": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "template-docker": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "template-python": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "main",
-        "reviewersDefault"
-      ]
+      "propertySets": ["common", "baseImageDebian", "main", "reviewersDefault"]
     },
     "test-ground": {
-      "propertySets": [
-        "common",
-        "baseImageDebian",
-        "reviewersDefault"
-      ],
+      "propertySets": ["common", "baseImageDebian", "reviewersDefault"],
       "properties": {
         "branchNameMain": "main"
       }
