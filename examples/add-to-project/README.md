@@ -1,4 +1,4 @@
-# Update git action file
+# Update Git action file
 
 ## Prerequisites
 
