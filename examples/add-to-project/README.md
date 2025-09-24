@@ -36,18 +36,6 @@
    ./add-to-project.sh
    ```
 
-1. Run `add-to-project.sh` for `senzing-community`.
-   Example:
-
-   ```console
-   cd ${GIT_REPOSITORY_DIR}/examples/add-to-project
-
-   export SENZING_TOPICS_INCLUDED=senzing-community
-   export ACTION_SOURCE_FILE=~/senzing.git/github-util/examples/add-to-project/add-to-project-community.yaml
-
-   ./add-to-project.sh
-   ```
-
 1. Run `add-to-project.sh` for `senzing-garage`.
    Example:
 

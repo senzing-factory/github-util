@@ -32,14 +32,6 @@
    ./github-util.py print-repository-names --topics-include=senzing-app-server
    ```
 
-1. Repositories assigned to `senzing-community`.
-   Example:
-
-   ```console
-   cd ${GIT_REPOSITORY_DIR}
-   ./github-util.py print-repository-names --topics-include=senzing-community
-   ```
-
 1. Repositories assigned to `senzing-g2-python`.
    Example:
 
@@ -74,7 +66,7 @@
 
 ## Find repositories that aren't assigned to a team
 
-Currently there are 4 teams identified by GitHub topics: `senzing-app-server`, `senzing-community`, `senzing-g2-python`, `senzing-garage`, `senzing-gdev`, `senzing-factory`.
+Currently there are 4 teams identified by GitHub topics: `senzing-app-server`, `senzing`, `senzing-g2-python`, `senzing-garage`, `senzing-gdev`, `senzing-factory`.
 
 1. List any repositories that do not belong to a team and are not deprecated/archived/obsolete.
    Example:
@@ -83,7 +75,7 @@ Currently there are 4 teams identified by GitHub topics: `senzing-app-server`, `
    cd ${GIT_REPOSITORY_DIR}
 
    ./github-util.py print-repository-names \
-     --topics-not-any=senzing-community,senzing-app-server,senzing-g2-python,senzing-garage,senzing-gdev,senzing-factory \
+     --topics-not-any=senzing,senzing-app-server,senzing-g2-python,senzing-garage,senzing-gdev,senzing-factory \
      --topics-exclude=archived,deprecated,obsolete
    ```
 
