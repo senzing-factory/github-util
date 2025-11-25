@@ -67,9 +67,8 @@ venv: venv-osarch-specific
 
 .PHONY: dependencies-for-development
 dependencies-for-development: venv dependencies-for-development-osarch-specific
-	$(activate-venv); \
-		python3 -m pip install --upgrade pip; \
-		python3 -m pip install --requirement development-requirements.txt
+	$(activate-venv) && python3 -m pip install --upgrade pip
+	$(activate-venv) && python3 -m pip install --requirement development-requirements.txt
 
 
 .PHONY: dependencies
@@ -101,30 +100,30 @@ reports: reports-senzing reports-factory reports-garage
 
 .PHONY: reports-senzing
 reports-senzing: venv
-ifndef GITHUB_ACCESS_TOKEN
+ifeq ($(strip $(GITHUB_ACCESS_TOKEN)),)
 	$(error GITHUB_ACCESS_TOKEN is undefined)
 endif
-	mkdir $(TARGET_DIRECTORY) || true
+	mkdir -p $(TARGET_DIRECTORY)
 	$(activate-venv) && $(MAKEFILE_DIRECTORY)/github-util.py print-pull-requests --organization senzing > $(TARGET_DIRECTORY)/pull-requests-senzing.txt;
 	$(activate-venv) && $(MAKEFILE_DIRECTORY)/github-util.py print-branches      --organization senzing > $(TARGET_DIRECTORY)/branches-senzing.txt
 
 
 .PHONY: reports-factory
 reports-factory: venv
-ifndef GITHUB_ACCESS_TOKEN
+ifeq ($(strip $(GITHUB_ACCESS_TOKEN)),)
 	$(error GITHUB_ACCESS_TOKEN is undefined)
 endif
-	mkdir $(TARGET_DIRECTORY) || true
+	mkdir -p $(TARGET_DIRECTORY)
 	$(activate-venv) && $(MAKEFILE_DIRECTORY)/github-util.py print-pull-requests --organization senzing-factory > $(TARGET_DIRECTORY)/pull-requests-senzing-factory.txt;
 	$(activate-venv) && $(MAKEFILE_DIRECTORY)/github-util.py print-branches      --organization senzing-factory > $(TARGET_DIRECTORY)/branches-senzing-factory.txt
 
 
 .PHONY: reports-garage
 reports-garage: venv
-ifndef GITHUB_ACCESS_TOKEN
+ifeq ($(strip $(GITHUB_ACCESS_TOKEN)),)
 	$(error GITHUB_ACCESS_TOKEN is undefined)
 endif
-	mkdir $(TARGET_DIRECTORY) || true
+	mkdir -p $(TARGET_DIRECTORY)
 	$(activate-venv) && $(MAKEFILE_DIRECTORY)/github-util.py print-pull-requests --organization senzing-garage > $(TARGET_DIRECTORY)/pull-requests-senzing-garage.txt;
 	$(activate-venv) && $(MAKEFILE_DIRECTORY)/github-util.py print-branches      --organization senzing-garage > $(TARGET_DIRECTORY)/branches-senzing-garage.txt
 
