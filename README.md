@@ -45,8 +45,8 @@ optional arguments:
 1. Use `make` to run `github-util.py print-pull-requests` and `github-util.py print-branches` reports.
    Reports will be in the `target` directory.
 
-    ```console
-    make reports
-    ```
+   ```console
+   make reports
+   ```
 
 [github-util.py]: github-util.py
