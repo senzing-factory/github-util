@@ -133,11 +133,3 @@ dmypy.json
 !.vscode/cspell.json
 *.code-workspace
 .history
-
-
-branches-senzing-factory.txt
-branches-senzing-garage.txt
-branches-senzing.txt
-pull-requests-senzing-factory.txt
-pull-requests-senzing-garage.txt
-pull-requests-senzing.txt
