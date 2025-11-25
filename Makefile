@@ -102,30 +102,29 @@ reports: reports-senzing reports-factory reports-garage
 
 .PHONY: reports-senzing
 reports-senzing: venv
-	$(info Using GITHUB_ACCESS_TOKEN=$(GITHUB_ACCESS_TOKEN))
-	$(activate-venv); \
-		export GITHUB_ORGANIZATION="senzing";
-		./github-util.py print-pull-requests > pull-requests-senzing.txt;
-		./github-util.py print-branches > branches-senzing.txt
+ifndef GITHUB_ACCESS_TOKEN
+	$(error GITHUB_ACCESS_TOKEN is undefined)
+endif
+	$(activate-venv); ./github-util.py print-pull-requests --organization senzing > pull-requests-senzing.txt;
+	$(activate-venv); ./github-util.py print-branches      --organization senzing > branches-senzing.txt
 
 
 .PHONY: reports-factory
 reports-factory: venv
-	$(info Using GITHUB_ACCESS_TOKEN=$(GITHUB_ACCESS_TOKEN))
-	$(activate-venv); \
-		export GITHUB_ORGANIZATION="senzing-factory";
-		./github-util.py print-pull-requests > pull-requests-senzing-factory.txt;
-		./github-util.py print-branches > branches-senzing-factory.txt
+ifndef GITHUB_ACCESS_TOKEN
+	$(error GITHUB_ACCESS_TOKEN is undefined)
+endif
+	$(activate-venv); ./github-util.py print-pull-requests --organization senzing-factory > pull-requests-senzing-factory.txt;
+	$(activate-venv); ./github-util.py print-branches      --organization senzing-factory > branches-senzing-factory.txt
 
 
 .PHONY: reports-garage
-reports-garage: GITHUB_ORGANIZATION="senzing-garage"
 reports-garage: venv
-	$(info Using GITHUB_ACCESS_TOKEN=$(GITHUB_ACCESS_TOKEN))
-	$(activate-venv); \
-		export GITHUB_ORGANIZATION="senzing-garage";
-		./github-util.py print-pull-requests > pull-requests-senzing-garage.txt;
-		./github-util.py print-branches > branches-senzing-garage.txt
+ifndef GITHUB_ACCESS_TOKEN
+	$(error GITHUB_ACCESS_TOKEN is undefined)
+endif
+	$(activate-venv); ./github-util.py print-pull-requests --organization senzing-garage > pull-requests-senzing-garage.txt;
+	$(activate-venv); ./github-util.py print-branches      --organization senzing-garage > branches-senzing-garage.txt
 
 # -----------------------------------------------------------------------------
 # Clean
