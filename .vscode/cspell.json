@@ -2,6 +2,7 @@
   "version": "0.2",
   "language": "en",
   "words": [
+    "alnum",
     "amazonlinux",
     "aptdownloader",
     "arawinters",
@@ -23,10 +24,19 @@
     "ibmcom",
     "ICLA",
     "iniparams",
+    "isort",
     "kernelsam",
     "mypy",
+    "oneline",
+    "OSARCH",
+    "osdetect",
+    "OSTYPE",
+    "pycache",
     "pydev",
+    "pydoc",
     "pylint",
+    "pytest",
+    "PYTHONPATH",
     "redoer",
     "Senzing",
     "senzingapi",
@@ -34,8 +44,14 @@
     "signingkey",
     "stackoverflow",
     "strerror",
+    "toplevel",
     "updateproject",
     "venv"
   ],
-  "ignorePaths": [".git/**", ".gitignore", ".mypy_cache/**", ".venv/**"]
+  "ignorePaths": [
+    ".git/**",
+    ".gitignore",
+    ".mypy_cache/**",
+    ".venv/**"
+  ]
 }
