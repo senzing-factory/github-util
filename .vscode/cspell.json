@@ -51,10 +51,5 @@
     "updateproject",
     "venv"
   ],
-  "ignorePaths": [
-    ".git/**",
-    ".gitignore",
-    ".mypy_cache/**",
-    ".venv/**"
-  ]
+  "ignorePaths": [".git/**", ".gitignore", ".mypy_cache/**", ".venv/**"]
 }
