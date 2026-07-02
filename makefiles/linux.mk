@@ -12,7 +12,6 @@ PATH := $(MAKEFILE_DIRECTORY)/bin:$(PATH)
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
-	@docker rm --force senzing-serve-grpc 2> /dev/null || true
 	@rm -fr $(DIST_DIRECTORY) || true
 	@rm -fr $(MAKEFILE_DIRECTORY)/.mypy_cache || true
 	@rm -fr $(MAKEFILE_DIRECTORY)/.pytest_cache || true
