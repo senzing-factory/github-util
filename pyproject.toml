@@ -1,0 +1,62 @@
+[project]
+name = "github-util"
+version = "1.4.1"
+description = "Command-line utility for managing Senzing's GitHub repositories"
+authors = [{ name = "senzing", email = "support@senzing.com" }]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "GitPython==3.1.58",
+  "PyGithub==2.9.1",
+  "requests==2.34.2",
+]
+license = "Apache-2.0"
+license-files = [
+  "LICENSE",
+  ".github/senzing-corporate-contributor-license-agreement.pdf",
+  ".github/senzing-individual-contributor-license-agreement.pdf",
+]
+
+[project.urls]
+bugtracker = "https://github.com/senzing-factory/github-util/issues"
+changelog = "https://github.com/senzing-factory/github-util/blob/main/CHANGELOG.md"
+source = "https://github.com/senzing-factory/github-util"
+
+[build-system]
+requires = ["setuptools>=82.0.1", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# github-util.py is a standalone script run directly via its shebang; its name
+# is not an importable module, so nothing is packaged. pyproject.toml exists to
+# centralize dependency declarations and tool configuration.
+py-modules = []
+
+[dependency-groups]
+all = [{ include-group = "lint" }, { include-group = "test" }]
+lint = [
+  "bandit",
+  "black",
+  "flake8",
+  "isort",
+  "mypy",
+  "pylint",
+]
+test = [
+  "pytest",
+  "pytest-cov",
+  "pytest-schema",
+]
+
+[tool.bandit]
+skips = ["B101"]
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"

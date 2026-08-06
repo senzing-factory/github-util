@@ -68,13 +68,13 @@ venv: venv-osarch-specific
 .PHONY: dependencies-for-development
 dependencies-for-development: venv dependencies-for-development-osarch-specific
 	$(activate-venv) && python3 -m pip install --upgrade pip
-	$(activate-venv) && python3 -m pip install --requirement development-requirements.txt
+	$(activate-venv) && python3 -m pip install --group all .
 
 
 .PHONY: dependencies
 dependencies: venv
 	$(activate-venv) && python3 -m pip install --upgrade pip
-	$(activate-venv) && python3 -m pip install --requirement requirements.txt
+	$(activate-venv) && python3 -m pip install .
 
 # -----------------------------------------------------------------------------
 # Setup
@@ -159,7 +159,7 @@ print-make-variables:
 bandit:
 	$(info ${\n})
 	$(info --- bandit ---------------------------------------------------------------------)
-	@$(activate-venv); bandit -c project.toml $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
+	@$(activate-venv); bandit -c pyproject.toml $(shell git ls-files '*.py' ':!:docs/source/*' ':!:src/senzing_grpc/pb2_grpc/*')
 
 
 .PHONY: bearer
